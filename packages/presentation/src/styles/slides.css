@@ -215,6 +215,349 @@
   color: #00ff88;
 }
 
+/* Slide 9 - Architecture */
+
+.arch-content {
+  max-width: 1300px;
+}
+
+.arch-layout {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 24px;
+}
+
+/* Left: Persona + Surface */
+.arch-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.arch-persona {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.persona-icon {
+  font-size: 32px;
+}
+.persona-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  max-width: 80px;
+  line-height: 1.3;
+}
+
+/* Zones */
+.arch-zone {
+  padding: 16px;
+  border-radius: 14px;
+  border: 2px dashed;
+  position: relative;
+}
+
+.zone-label {
+  position: absolute;
+  top: -10px;
+  left: 14px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.zone-logo, .zone-logo-sf {
+  font-size: 12px;
+}
+
+.zone-surface {
+  border-color: rgba(0, 153, 255, 0.25);
+  background: rgba(0, 153, 255, 0.03);
+}
+.zone-surface .zone-label {
+  background: rgba(0, 153, 255, 0.1);
+  color: #0099ff;
+}
+
+.surface-logos {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+}
+.surface-logo-item {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 16px;
+  color: #555;
+  transition: all 0.2s;
+}
+.surface-logo-item:hover {
+  background: rgba(0, 153, 255, 0.1);
+  border-color: rgba(0, 153, 255, 0.3);
+}
+
+/* Horizontal arrows */
+.arch-arrow-h {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 10px;
+}
+.arch-arrow-main {
+  align-self: center;
+}
+.arch-arrow-mcp {
+  align-self: flex-start;
+  margin-top: 36px;
+}
+.arrow-line-h {
+  width: 36px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0, 217, 255, 0.3), rgba(0, 217, 255, 0.7));
+  border-radius: 2px;
+  position: relative;
+}
+.arrow-line-h::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -3px;
+  border-left: 7px solid rgba(0, 217, 255, 0.7);
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.arrow-label-h {
+  font-size: 8px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.4);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Center: Agentforce + Salesforce */
+.arch-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.zone-agent {
+  border-color: rgba(0, 217, 255, 0.3);
+  background: rgba(0, 217, 255, 0.04);
+}
+.zone-agent .zone-label {
+  background: rgba(0, 217, 255, 0.12);
+  color: #00aadd;
+}
+
+.agent-inner {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.card-mcp-client {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  min-width: auto;
+  white-space: nowrap;
+}
+.card-mcp-client .card-title {
+  margin-bottom: 0;
+}
+
+/* Vertical arrow */
+.arch-arrow-v {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+.arrow-line-v {
+  width: 2px;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(0, 200, 120, 0.3), rgba(0, 200, 120, 0.7));
+  border-radius: 2px;
+  position: relative;
+}
+.arrow-line-v::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: -3px;
+  border-top: 7px solid rgba(0, 200, 120, 0.7);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+.arrow-labels-v {
+  display: flex;
+  gap: 8px;
+}
+.arrow-labels-v span {
+  font-size: 8px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.zone-salesforce {
+  border-color: rgba(0, 200, 120, 0.3);
+  background: rgba(0, 200, 120, 0.03);
+}
+.zone-salesforce .zone-label {
+  background: rgba(0, 200, 120, 0.1);
+  color: #009960;
+}
+.sf-items {
+  display: flex;
+  gap: 8px;
+}
+.sf-items .arch-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 10px 12px;
+}
+.sf-card-icon {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+/* Right: MCP Server + Tools */
+.arch-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.zone-mcp {
+  border-color: rgba(150, 100, 255, 0.3);
+  background: rgba(150, 100, 255, 0.03);
+}
+.zone-mcp .zone-label {
+  background: rgba(150, 100, 255, 0.1);
+  color: #7744cc;
+}
+
+.mcp-tools-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8px;
+}
+.branch-line {
+  width: 2px;
+  height: 16px;
+  background: rgba(150, 100, 255, 0.4);
+}
+.mcp-tools {
+  display: flex;
+  gap: 10px;
+}
+
+.zone-tool {
+  border-color: rgba(255, 170, 0, 0.3);
+  background: rgba(255, 170, 0, 0.03);
+  padding: 12px;
+}
+.zone-tool .zone-label {
+  background: rgba(255, 170, 0, 0.1);
+  color: #cc8800;
+  font-size: 8px;
+}
+
+/* Cards */
+.arch-card {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+.arch-card:last-child {
+  margin-bottom: 0;
+}
+.arch-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-icon {
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3px;
+}
+
+.card-desc {
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.55);
+  line-height: 1.4;
+}
+
+.card-surface {
+  border-color: rgba(0, 153, 255, 0.2);
+  background: rgba(0, 153, 255, 0.04);
+}
+
+.card-agent {
+  border-color: rgba(0, 217, 255, 0.25);
+  background: rgba(0, 217, 255, 0.05);
+}
+.card-agent-main {
+  border-color: rgba(0, 217, 255, 0.4);
+  background: rgba(0, 217, 255, 0.08);
+}
+
+.card-mcp-server {
+  border-color: rgba(150, 100, 255, 0.25);
+  background: rgba(150, 100, 255, 0.05);
+}
+
+.card-tool {
+  border-color: rgba(255, 170, 0, 0.25);
+  background: rgba(255, 170, 0, 0.04);
+}
+
+.card-salesforce {
+  border-color: rgba(0, 200, 120, 0.25);
+  background: rgba(0, 200, 120, 0.04);
+  padding: 8px 12px;
+  margin-bottom: 0;
+}
+
 /* Detail Slides (4, 5, 6, 7) */
 .detail-slide {
   background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
@@ -601,37 +944,33 @@
     font-size: 12px;
   }
 
-  .solution-flow {
-    grid-template-columns: repeat(2, 1fr);
+  .arch-layout {
+    flex-direction: column;
+    align-items: center;
     gap: 12px;
-    margin: 30px 0 30px 0;
   }
 
-  .flow-item {
-    min-height: 160px;
-    padding: 16px 12px;
+  .arch-left {
+    flex-direction: column;
   }
 
-  .flow-number {
-    font-size: 24px;
-    margin-bottom: 8px;
+  .arch-arrow-h {
+    transform: rotate(90deg);
+    padding: 4px 0;
   }
 
-  .flow-item h3 {
-    font-size: 13px;
+  .agent-inner {
+    flex-direction: column;
   }
 
-  .flow-item p {
-    font-size: 11px;
+  .sf-items {
+    flex-direction: column;
+    gap: 6px;
   }
 
-  .solution-benefits {
-    margin-top: 20px;
+  .mcp-tools {
+    flex-direction: column;
     gap: 8px;
-  }
-
-  .benefit {
-    font-size: 12px;
   }
 
   .challenges-grid {
@@ -1006,21 +1345,111 @@
   background: rgba(0, 217, 255, 0.1);
   border: 2px solid rgba(0, 217, 255, 0.3);
 }
-
 .presentation-container.dark-mode .flow-item h3 {
   color: #ffffff;
 }
-
 .presentation-container.dark-mode .flow-item p {
   color: rgba(255, 255, 255, 0.6);
 }
-
 .presentation-container.dark-mode .solution-benefits {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
-
 .presentation-container.dark-mode .benefit {
   color: #ffffff;
+}
+
+.presentation-container.dark-mode .persona-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+.presentation-container.dark-mode .zone-surface {
+  border-color: rgba(0, 153, 255, 0.3);
+  background: rgba(0, 153, 255, 0.05);
+}
+.presentation-container.dark-mode .zone-surface .zone-label {
+  background: rgba(0, 153, 255, 0.15);
+  color: #66ccff;
+}
+.presentation-container.dark-mode .surface-logo-item {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+}
+.presentation-container.dark-mode .zone-agent {
+  border-color: rgba(0, 217, 255, 0.35);
+  background: rgba(0, 217, 255, 0.06);
+}
+.presentation-container.dark-mode .zone-agent .zone-label {
+  background: rgba(0, 217, 255, 0.15);
+  color: #00ddff;
+}
+.presentation-container.dark-mode .zone-salesforce {
+  border-color: rgba(0, 200, 120, 0.35);
+  background: rgba(0, 200, 120, 0.05);
+}
+.presentation-container.dark-mode .zone-salesforce .zone-label {
+  background: rgba(0, 200, 120, 0.15);
+  color: #44dd88;
+}
+.presentation-container.dark-mode .zone-mcp {
+  border-color: rgba(150, 100, 255, 0.35);
+  background: rgba(150, 100, 255, 0.05);
+}
+.presentation-container.dark-mode .zone-mcp .zone-label {
+  background: rgba(150, 100, 255, 0.15);
+  color: #bb99ff;
+}
+.presentation-container.dark-mode .zone-tool {
+  border-color: rgba(255, 170, 0, 0.35);
+  background: rgba(255, 170, 0, 0.05);
+}
+.presentation-container.dark-mode .zone-tool .zone-label {
+  background: rgba(255, 170, 0, 0.15);
+  color: #ffaa44;
+}
+.presentation-container.dark-mode .card-title {
+  color: #ffffff;
+}
+.presentation-container.dark-mode .card-desc {
+  color: rgba(255, 255, 255, 0.55);
+}
+.presentation-container.dark-mode .card-agent {
+  border-color: rgba(0, 217, 255, 0.3);
+  background: rgba(0, 217, 255, 0.07);
+}
+.presentation-container.dark-mode .card-agent-main {
+  border-color: rgba(0, 217, 255, 0.45);
+  background: rgba(0, 217, 255, 0.1);
+}
+.presentation-container.dark-mode .card-mcp-server {
+  border-color: rgba(150, 100, 255, 0.3);
+  background: rgba(150, 100, 255, 0.07);
+}
+.presentation-container.dark-mode .card-tool {
+  border-color: rgba(255, 170, 0, 0.3);
+  background: rgba(255, 170, 0, 0.06);
+}
+.presentation-container.dark-mode .card-salesforce {
+  border-color: rgba(0, 200, 120, 0.3);
+  background: rgba(0, 200, 120, 0.06);
+}
+.presentation-container.dark-mode .arrow-line-h {
+  background: linear-gradient(90deg, rgba(0, 217, 255, 0.3), rgba(0, 217, 255, 0.7));
+}
+.presentation-container.dark-mode .arrow-line-h::after {
+  border-left-color: rgba(0, 217, 255, 0.7);
+}
+.presentation-container.dark-mode .arrow-line-v {
+  background: linear-gradient(180deg, rgba(0, 200, 120, 0.3), rgba(0, 200, 120, 0.7));
+}
+.presentation-container.dark-mode .arrow-line-v::after {
+  border-top-color: rgba(0, 200, 120, 0.7);
+}
+.presentation-container.dark-mode .arrow-label-h,
+.presentation-container.dark-mode .arrow-labels-v span {
+  color: rgba(255, 255, 255, 0.4);
+}
+.presentation-container.dark-mode .branch-line {
+  background: rgba(150, 100, 255, 0.5);
 }
 
 .presentation-container.dark-mode .detail-slide {

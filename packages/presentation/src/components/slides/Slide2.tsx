@@ -6,7 +6,7 @@ export default function Slide2() {
   const challenges = [
     {
       title: 'Fragmented Systems',
-      description: 'Accounts in Salesforce, pricing in spreadsheets, products scattered across databases',
+      description: 'Accounts in Salesforce, pricing in spreadsheets and specialized priving syetems, products scattered across databases, manual quoting processes',
       icon: '🔀',
     },
     {

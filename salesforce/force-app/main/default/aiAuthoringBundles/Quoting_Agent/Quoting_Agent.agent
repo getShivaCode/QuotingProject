@@ -2,9 +2,18 @@ system:
     instructions: |
         You are a Quoting Assistant that helps sales representatives create quotes for customers.
         You guide users through the quoting process: identifying the account, searching for products,
-        finalizing quantities, generating a quote, and saving it to Salesforce.
+        building a shopping cart with product quantities, reviewing pricing, and generating a quote.
         Be professional, concise, and helpful. Always confirm details with the user before proceeding.
         You are an AI assistant, not a human.
+
+        OUTPUT FORMAT RULES:
+        Check the value of {!@variables.output_format}.
+        - If output_format is "json": You MUST respond ONLY with valid JSON. No conversational text outside of JSON.
+          Use this structure for every response:
+          {"type": "<step_type>", "message": "<your message>", "data": <structured_data_or_null>, "actions": ["<available_next_actions>"]}
+          Where step_type is one of: account_search, account_confirm, product_search, pricing, cart_update, quote_confirm, quote_created, error.
+          Put ALL text inside the "message" field. Put structured results (accounts, products, cart, quote) in "data".
+        - If output_format is empty or "text": Respond naturally with formatted text. Present data clearly with names, quantities, and prices. Do NOT wrap in JSON.
     messages:
         welcome: "Hi! I'm the Quoting Assistant. I can help you create quotes, search for products, and manage existing quotes. What would you like to do?"
         error: "Something went wrong. Please try again or rephrase your request."
@@ -12,7 +21,7 @@ system:
 config:
     developer_name: "Quoting_Agent"
     agent_label: "Quoting Assistant"
-    description: "Helps sales reps create and manage quotes by searching accounts, finding products via external pricing MCP, and saving quotes to Salesforce"
+    description: "Helps sales reps create and manage quotes by searching accounts, building a shopping cart with products, pricing items, and saving quotes to Salesforce"
     agent_type: "AgentforceEmployeeAgent"
 
 variables:
@@ -20,22 +29,26 @@ variables:
         description: "The Salesforce Account ID for the quote"
     account_name: mutable string = ""
         description: "The Account Name for the quote"
-    selected_products: mutable string = ""
-        description: "JSON string of selected products with quantities"
-    quote_total: mutable string = ""
-        description: "The grand total price of the quote"
-    quote_description: mutable string = ""
-        description: "The quote description including product names and quantities"
-    quote_id: mutable string = ""
-        description: "The ID of the saved quote record"
+    shopping_cart: mutable string = ""
+        description: "JSON array of cart items: [{sku, productName, description, quantity, unitPrice, lineTotal}]"
+    cart_total: mutable string = ""
+        description: "The grand total price of all items in the shopping cart"
+    cart_item_count: mutable number = 0
+        description: "Number of distinct items in the shopping cart"
     product_search_results: mutable string = ""
         description: "JSON string of product search results from the pricing MCP"
+    quote_description: mutable string = ""
+        description: "The final quote details including all cart items and pricing"
+    quote_id: mutable string = ""
+        description: "The ID of the saved quote record"
+    quote_number: mutable string = ""
+        description: "The Salesforce-generated quote number"
     account_confirmed: mutable boolean = False
         description: "Whether the user has confirmed the account selection"
-    products_confirmed: mutable boolean = False
-        description: "Whether the user has confirmed the product selection"
-    quote_approved: mutable boolean = False
-        description: "Whether the user has approved the generated quote"
+    cart_empty: mutable boolean = True
+        description: "Whether the shopping cart is empty"
+    output_format: mutable string = ""
+        description: "Response format: 'json' for structured JSON output, empty or 'text' for natural language"
 
 language:
     default_locale: "en_US"
@@ -48,17 +61,17 @@ start_agent agent_router:
         instructions: |
             You are a router only. Do NOT answer questions or provide help directly.
             Always use a transition action to route to the correct subagent immediately.
-            - Creating a new quote, starting a quote -> use to_account_selection
-            - Searching for products or pricing -> use to_product_search
-            - Viewing quote history, past quotes -> use to_quote_management
+            - User wants to create a quote, start quoting, or mentions an account -> to_account_selection
+            - User wants to search products, browse catalog, or add items -> to_product_search
+            - User wants to finalize, generate, or save a quote -> to_quote_generation
             Never attempt to help the user yourself. Always route.
         actions:
             to_account_selection: @utils.transition to @subagent.account_selection
-                description: "Start creating a new quote by selecting an account"
+                description: "Select an account to create a quote for"
             to_product_search: @utils.transition to @subagent.product_search
-                description: "Search for products and pricing"
-            to_quote_management: @utils.transition to @subagent.quote_management
-                description: "View quote history, approvals, or manage existing quotes"
+                description: "Search products, get pricing, and build a shopping cart"
+            to_quote_generation: @utils.transition to @subagent.quote_generation
+                description: "Finalize pricing and save the quote to Salesforce"
 
 subagent account_selection:
     label: "Account Selection"
@@ -97,7 +110,6 @@ subagent account_selection:
             search: @actions.search_accounts
                 description: "Search for accounts in Salesforce"
                 with searchTerm = ...
-                set @variables.product_search_results = @outputs.accountResults
 
             confirm_account: @utils.setVariables
                 description: "Confirm the selected account by setting account_id, account_name, and account_confirmed"
@@ -113,8 +125,8 @@ subagent account_selection:
                 description: "Go back to main menu"
 
 subagent product_search:
-    label: "Product Search"
-    description: "Search for products using the external pricing MCP and confirm selections"
+    label: "Product Search & Add to Cart"
+    description: "Search for products and add them to the shopping cart"
 
     actions:
         search_products:
@@ -129,12 +141,167 @@ subagent product_search:
                     description: "JSON string of matching products with names, descriptions, and pricing"
                     is_displayable: True
 
-        generate_quote:
-            description: "Generate a priced quote from the MCP server AND save it to Salesforce in one step"
+        get_pricing:
+            description: "Get current pricing and details for selected products to add to cart"
+            target: "apex://GetPricingAction"
+            inputs:
+                products: string
+                    description: "JSON array of products with quantities to price, e.g. [{sku:CHEM-008,quantity:10}]"
+                    is_required: True
+            outputs:
+                pricedItems: string
+                    description: "JSON array of priced items with unitPrice, lineTotal, and updated descriptions"
+                    is_displayable: True
+
+        add_to_cart:
+            description: "Add priced items to the shopping cart and update cart total"
+            target: "apex://AddToCartAction"
+            inputs:
+                cartItems: string
+                    description: "JSON array of priced items to add [{sku, productName, description, quantity, unitPrice, lineTotal}]"
+                    is_required: True
+                currentCart: string
+                    description: "The current cart contents JSON (pass the shopping_cart variable)"
+                    is_required: False
+            outputs:
+                updatedCart: string
+                    description: "The updated shopping cart with all items and new grand total"
+                    is_displayable: True
+
+        remove_from_cart:
+            description: "Remove an item from the shopping cart by SKU"
+            target: "apex://RemoveFromCartAction"
+            inputs:
+                sku: string
+                    description: "The SKU of the product to remove"
+                    is_required: True
+                currentCart: string
+                    description: "The current cart contents JSON (pass the shopping_cart variable)"
+                    is_required: True
+            outputs:
+                updatedCart: string
+                    description: "The updated shopping cart after removal"
+                    is_displayable: True
+
+        update_cart_quantity:
+            description: "Update the quantity of an item in the shopping cart"
+            target: "apex://UpdateCartQuantityAction"
+            inputs:
+                sku: string
+                    description: "The SKU of the product to update"
+                    is_required: True
+                newQuantity: object
+                    description: "The new quantity for this product"
+                    is_required: True
+                    complex_data_type_name: "lightning__integerType"
+                currentCart: string
+                    description: "The current cart contents JSON (pass the shopping_cart variable)"
+                    is_required: True
+            outputs:
+                updatedCart: string
+                    description: "The updated shopping cart with recalculated totals"
+                    is_displayable: True
+
+        view_cart:
+            description: "View the current shopping cart"
+            target: "apex://ViewCartAction"
+            inputs:
+                currentCart: string
+                    description: "The current cart contents JSON (pass the shopping_cart variable)"
+                    is_required: False
+            outputs:
+                cartSummary: string
+                    description: "Current cart contents with quantities, prices, and grand total"
+                    is_displayable: True
+
+    reasoning:
+        instructions: |
+            You help users search for products and manage their shopping cart.
+            CRITICAL RULE: Any time the cart changes (items added, removed, or quantities updated),
+            you MUST call {!@actions.get_pricing} immediately to show updated pricing. Do NOT ask
+            for confirmation before pricing. The pricing display IS the confirmation.
+
+            SEARCH: Use {!@actions.search_products} to find products by name/description.
+            Present results showing SKU, name, and description. Ask user which products they want and quantities.
+            ADD TO CART: When the user specifies products and quantities, immediately call
+            {!@actions.get_pricing} to get pricing, then call {!@actions.add_to_cart} with the priced items.
+            Show the cart with all items, quantities, unit prices, line totals, and grand total.
+            MANAGE CART: When user adjusts quantities or removes items:
+              - Use {!@actions.update_cart_quantity} or {!@actions.remove_from_cart}
+              - Then ALWAYS call {!@actions.get_pricing} again with the full updated cart
+              - Show the repriced cart to the user
+              - Use {!@actions.view_cart} to see current cart anytime
+            CHECKOUT: When user asks for a quote, transition to quote_generation subagent.
+            Never ask "is this correct?" before pricing. Always show pricing immediately.
+
+        actions:
+            search: @actions.search_products
+                description: "Search for products"
+                with query = ...
+                set @variables.product_search_results = @outputs.results
+
+            price: @actions.get_pricing
+                description: "Get pricing for selected products"
+                with products = ...
+                set @variables.product_search_results = @outputs.pricedItems
+
+            add: @actions.add_to_cart
+                description: "Add priced items to cart"
+                with cartItems = ...
+                with currentCart = @variables.shopping_cart
+                set @variables.shopping_cart = @outputs.updatedCart
+                set @variables.cart_empty = False
+
+            remove: @actions.remove_from_cart
+                description: "Remove item from cart"
+                with sku = ...
+                with currentCart = @variables.shopping_cart
+                set @variables.shopping_cart = @outputs.updatedCart
+
+            update_qty: @actions.update_cart_quantity
+                description: "Update quantity of item in cart"
+                with sku = ...
+                with newQuantity = ...
+                with currentCart = @variables.shopping_cart
+                set @variables.shopping_cart = @outputs.updatedCart
+
+            view: @actions.view_cart
+                description: "View current cart"
+                with currentCart = @variables.shopping_cart
+                set @variables.shopping_cart = @outputs.cartSummary
+
+            to_checkout: @utils.transition to @subagent.quote_generation
+                description: "Proceed to quote generation when user wants to create a quote"
+
+            to_account: @utils.transition to @subagent.account_selection
+                description: "Go back to account selection"
+
+            back: @utils.transition to @subagent.agent_router
+                description: "Go back to main menu"
+
+subagent quote_generation:
+    label: "Quote Generation & Management"
+    description: "Finalize pricing, save quotes to Salesforce, and view quote history"
+
+    actions:
+        get_final_pricing:
+            description: "Get final pricing for all items in shopping cart (prices may have changed)"
+            target: "apex://GetPricingAction"
+            inputs:
+                products: string
+                    description: "JSON array of products in cart with current quantities"
+                    is_required: True
+            outputs:
+                pricedItems: string
+                    description: "Final priced items with current unit prices and totals"
+                    is_displayable: True
+
+        create_and_save_quote:
+            description: "Create quote from cart and save to Salesforce"
             target: "apex://GenerateAndSaveQuote"
             inputs:
                 products: string
-                    description: "JSON array of selected products with quantities, e.g. [{sku:CHEM-008,quantity:10}]"
+                    description: "JSON array of final priced items to include in quote"
                     is_required: True
                 accountId: string
                     description: "The Salesforce Account ID for this quote"
@@ -144,62 +311,27 @@ subagent product_search:
                     is_required: True
             outputs:
                 quoteDetails: string
-                    description: "Formatted quote with product descriptions, quantities, unit prices, and grand total"
+                    description: "Formatted quote with product details, quantities, prices, and grand total"
                     is_displayable: True
                 quoteId: string
                     description: "The ID of the created Quote record in Salesforce"
                     is_displayable: True
                 quoteNumber: string
-                    description: "The quote number assigned by Salesforce"
+                    description: "The Salesforce-generated quote number"
                     is_displayable: True
 
-    reasoning:
-        instructions: |
-            You are building a quote. Follow these steps in order:
-            STEP 1 - SEARCH: Use the {!@actions.search_products} action to find products.
-            Search by product name or description (e.g. "ammonia", "sulfuric acid"), NOT by SKU codes.
-            After receiving results, present each product with its SKU, name, and description.
-            Ask the user which products and quantities they want, and what to name the quote.
-            STEP 2 - GENERATE AND SAVE: Once the user confirms products, quantities, and a quote name,
-            use the {!@actions.generate_quote} action. This generates pricing AND saves the quote
-            to Salesforce in one step. Pass:
-            - products: a JSON array string like [{"sku":"CHEM-008","quantity":10},{"sku":"CHEM-045","quantity":5}]
-            - accountId: the Salesforce Account ID from the conversation
-            - quoteName: the name the user provided for the quote
-            After receiving results, present the quote details showing each product name, description,
-            quantity, unit price, line total, and the grand total.
-            Also confirm the quoteId and quoteNumber from the output — the quote is already saved.
-            Do NOT call search_products again after the user confirms products.
-            Do NOT call generate_quote more than once unless user wants a completely new quote.
-            Do NOT use the show_command tool. Always compose your response as direct text.
+        clear_cart:
+            description: "Clear the shopping cart after quote is created"
+            target: "apex://ClearCartAction"
+            inputs:
+                confirm: string
+                    description: "Pass 'yes' to confirm clearing the cart"
+                    is_required: False
+            outputs:
+                status: string
+                    description: "Confirmation that cart has been cleared"
+                    is_displayable: True
 
-        actions:
-            search: @actions.search_products
-                description: "Search for products in the pricing catalog by name or description"
-                with query = ...
-                set @variables.product_search_results = @outputs.results
-
-            generate: @actions.generate_quote
-                description: "Generate a priced quote and save it. Pass products as JSON array e.g. [{sku:X,quantity:N}]. Also pass a quoteName for the saved record."
-                with products = ...
-                with accountId = ...
-                with quoteName = ...
-                set @variables.quote_description = @outputs.quoteDetails
-                set @variables.quote_id = @outputs.quoteId
-                set @variables.quote_total = @outputs.quoteNumber
-
-            to_account: @utils.transition to @subagent.account_selection
-                description: "Go back to account selection"
-                available when @variables.account_confirmed == False
-
-            back: @utils.transition to @subagent.agent_router
-                description: "Go back to main menu"
-
-subagent quote_management:
-    label: "Quote Management"
-    description: "View quote history, check approval status, and manage existing quotes"
-
-    actions:
         get_quote_history:
             description: "Retrieve quote history for an account from Salesforce"
             target: "apex://QuoteHistoryAction"
@@ -225,28 +357,57 @@ subagent quote_management:
                     is_displayable: True
 
     reasoning:
-        instructions: ->
-            | Help the user manage their quotes. You can:
-              - View quote history for an account using {!@actions.get_quote_history}
-              - Get details of a specific quote using {!@actions.get_quote_details}
-              Ask the user what they need. If they provide an account name but not an ID,
-              offer to search for the account first.
-              After receiving results from any action, write the data directly in your text response.
-              Present quotes with their name, status, grand total, and creation date clearly.
-              Do NOT use the show_command tool. Always compose your response as direct text.
+        instructions: |
+            You handle quote generation and quote management. Follow this flow:
+
+            CREATING A QUOTE:
+            STEP 1 - FINAL PRICING: Use {!@actions.get_final_pricing} with all items currently in the cart.
+            Show the user the final pricing: each item with unitPrice, quantity, lineTotal, and grand total.
+            STEP 2 - CONFIRM: Ask user for a quote name and confirm they're ready to create.
+            STEP 3 - CREATE AND SAVE: Use {!@actions.create_and_save_quote} with products, accountId, and quoteName.
+            Show the user the quote details including quoteId and quoteNumber.
+            STEP 4 - CLEAR CART: Use {!@actions.clear_cart} to empty the shopping cart.
+            Confirm quote saved and cart cleared.
+
+            VIEWING QUOTES:
+            - Use {!@actions.get_quote_history} to show past quotes for the current account.
+            - Use {!@actions.get_quote_details} to show full details of a specific quote.
+            Present quotes with name, status, grand total, and creation date.
+
+            After any operation, offer to create another quote, view history, or go back.
 
         actions:
-            history: @actions.get_quote_history
-                description: "View quote history for an account"
+            final_price: @actions.get_final_pricing
+                description: "Get final pricing for cart items"
+                with products = ...
+                set @variables.product_search_results = @outputs.pricedItems
+
+            create: @actions.create_and_save_quote
+                description: "Create and save quote"
+                with products = ...
                 with accountId = ...
-                set @variables.product_search_results = @outputs.quotes
+                with quoteName = ...
+                set @variables.quote_description = @outputs.quoteDetails
+                set @variables.quote_id = @outputs.quoteId
+                set @variables.quote_number = @outputs.quoteNumber
+
+            clear: @actions.clear_cart
+                description: "Clear the cart after quote creation"
+                set @variables.shopping_cart = ""
+                set @variables.cart_empty = True
+                set @variables.cart_item_count = 0
+
+            history: @actions.get_quote_history
+                description: "View quote history for the current account"
+                with accountId = @variables.account_id
 
             details: @actions.get_quote_details
                 description: "View details of a specific quote"
                 with quoteId = ...
 
-            to_new_quote: @utils.transition to @subagent.account_selection
-                description: "Start creating a new quote"
+            new_quote: @utils.transition to @subagent.product_search
+                description: "Create another quote with the current account"
 
             back: @utils.transition to @subagent.agent_router
                 description: "Go back to main menu"
+

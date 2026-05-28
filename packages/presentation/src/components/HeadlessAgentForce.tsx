@@ -232,13 +232,16 @@ export default function HeadlessAgentForce() {
           agentContent = `Which product would you like to remove?`;
         } else if (lowerMsg.match(/\d+/)) {
           // Assume it's a quantity update
-          const qty = parseInt(message);
-          if (cartItems.length > 0) {
+          const match = message.match(/\d+/);
+          const qty = match ? parseInt(match[0]) : NaN;
+          if (!isNaN(qty) && cartItems.length > 0) {
             const updatedCart = [...cartItems];
             updatedCart[0].qty = qty;
             updatedCart[0].total = qty * updatedCart[0].price;
             setCartItems(updatedCart);
             agentContent = `Updated quantity to ${qty} for ${updatedCart[0].name}.`;
+          } else if (isNaN(qty)) {
+            agentContent = `Please enter a valid number for the quantity.`;
           }
         } else {
           agentContent = `You can adjust quantities by typing numbers, or type "add more" to add more products.`;

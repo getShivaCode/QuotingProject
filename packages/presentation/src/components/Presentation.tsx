@@ -9,6 +9,7 @@ import Slide5 from './slides/Slide5';
 import Slide6 from './slides/Slide6';
 import Slide7 from './slides/Slide7';
 import Slide8 from './slides/Slide8';
+import Slide9 from './slides/Slide9';
 import '../styles/presentation.css';
 
 const slides = [
@@ -21,6 +22,12 @@ const slides = [
   { id: 7, component: Slide7, title: 'Step 4: Request Quote' },
   { id: 8, component: Slide8, title: 'Try It Live' },
 ];
+
+const hiddenSlides = [
+  { id: 9, component: Slide9, title: 'Architecture' },
+];
+
+const allSlides = [...slides, ...hiddenSlides];
 
 export default function Presentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -42,13 +49,19 @@ export default function Presentation() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') handleNext();
       if (e.key === 'ArrowLeft') handlePrev();
+      if (e.key === 'a' || e.key === 'A') {
+        setCurrentSlide(slides.length);
+      }
+      if (e.key === 'Escape' && currentSlide >= slides.length) {
+        setCurrentSlide(slides.length - 1);
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentSlide]);
 
-  const CurrentSlide = slides[currentSlide].component;
+  const CurrentSlide = allSlides[currentSlide].component;
 
   return (
     <div className={`presentation-container ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
@@ -91,21 +104,23 @@ export default function Presentation() {
         </AnimatePresence>
       </div>
 
-      {/* Breadcrumbs Navigation */}
-      <div className="breadcrumbs">
-        {slides.map((slide, index) => (
-          <motion.div
-            key={slide.id}
-            className={`breadcrumb ${index === currentSlide ? 'active' : ''} ${index < currentSlide ? 'completed' : ''}`}
-            onClick={() => setCurrentSlide(index)}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <div className="breadcrumb-dot"></div>
-            <span className="breadcrumb-label">{slide.title}</span>
-          </motion.div>
-        ))}
-      </div>
+      {/* Breadcrumbs Navigation - only show for visible slides */}
+      {currentSlide < slides.length && (
+        <div className="breadcrumbs">
+          {slides.map((slide, index) => (
+            <motion.div
+              key={slide.id}
+              className={`breadcrumb ${index === currentSlide ? 'active' : ''} ${index < currentSlide ? 'completed' : ''}`}
+              onClick={() => setCurrentSlide(index)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <div className="breadcrumb-dot"></div>
+              <span className="breadcrumb-label">{slide.title}</span>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Navigation Controls */}
       <div className="navigation-controls">
@@ -120,12 +135,12 @@ export default function Presentation() {
         </motion.button>
 
         <div className="slide-counter">
-          {currentSlide + 1} / {slides.length}
+          {currentSlide < slides.length ? `${currentSlide + 1} / ${slides.length}` : ''}
         </div>
 
         <motion.button
           onClick={handleNext}
-          disabled={currentSlide === slides.length - 1}
+          disabled={currentSlide === slides.length - 1 || currentSlide >= slides.length}
           className="nav-button"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}

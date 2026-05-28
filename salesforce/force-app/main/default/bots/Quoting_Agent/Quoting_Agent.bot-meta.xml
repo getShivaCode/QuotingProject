@@ -7,7 +7,7 @@
         <name>Quoting_Agent</name>
     </botMlDomain>
     <botSource>None</botSource>
-    <description>Helps sales reps create and manage quotes by searching accounts, finding products via external pricing MCP, and saving quotes to Salesforce</description>
+    <description>Helps sales reps create and manage quotes by searching accounts, building a shopping cart with products, pricing items, and saving quotes to Salesforce</description>
     <label>Quoting Assistant</label>
     <logPrivateConversationData>false</logPrivateConversationData>
     <richContentEnabled>true</richContentEnabled>

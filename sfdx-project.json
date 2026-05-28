@@ -1,0 +1,13 @@
+{
+  "schema": "https://developer.salesforce.com/media/schemas/wsc/sfdx-project.5.1.json",
+  "name": "QuotingProject",
+  "packageDirectories": [
+    {
+      "path": "salesforce/force-app",
+      "default": true
+    }
+  ],
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "63.0"
+}
