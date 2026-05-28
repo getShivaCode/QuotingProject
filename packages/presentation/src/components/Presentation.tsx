@@ -49,10 +49,10 @@ export default function Presentation() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') handleNext();
       if (e.key === 'ArrowLeft') handlePrev();
-      if (e.key === 'a' || e.key === 'A') {
+      if (e.key === 'ArrowDown') {
         setCurrentSlide(slides.length);
       }
-      if (e.key === 'Escape' && currentSlide >= slides.length) {
+      if ((e.key === 'Escape' || e.key === 'ArrowUp') && currentSlide >= slides.length) {
         setCurrentSlide(slides.length - 1);
       }
     };

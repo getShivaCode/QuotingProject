@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, LogOut, Code } from 'lucide-react';
+import { Send, MessageCircle, LogOut, Code, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { startSession, sendMessage as sendAgentMessage, endSession } from '../services/agentApi';
 import '../styles/agent.css';
 
 interface Message {
@@ -72,6 +73,10 @@ export default function HeadlessAgentForce() {
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showJson, setShowJson] = useState(false);
+  const [liveMode, setLiveMode] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isFirstMessage, setIsFirstMessage] = useState(true);
+  const [liveResponseData, setLiveResponseData] = useState<any>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -86,13 +91,19 @@ export default function HeadlessAgentForce() {
     setStage('start');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    if (liveMode && sessionId) {
+      try { await endSession(sessionId); } catch {}
+    }
     setAuthenticated(false);
     setStage('start');
     setSelectedAccount(null);
     setSelectedProducts([]);
     setCartItems([]);
     setShowJson(false);
+    setSessionId(null);
+    setIsFirstMessage(true);
+    setLiveResponseData(null);
     setMessages([
       {
         id: '1',
@@ -262,9 +273,65 @@ export default function HeadlessAgentForce() {
     }, 800);
   };
 
+  const handleLiveMessage = async (message: string) => {
+    let activeSessionId = sessionId;
+    if (!activeSessionId) {
+      try {
+        const session = await startSession();
+        activeSessionId = session.sessionId;
+        setSessionId(activeSessionId);
+      } catch (e) {
+        console.error('Failed to start session:', e);
+        return;
+      }
+    }
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: message,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue('');
+    setIsLoading(true);
+
+    try {
+      const utterance = isFirstMessage
+        ? `output_format: json. ${message}`
+        : message;
+      setIsFirstMessage(false);
+
+      const response = await sendAgentMessage(activeSessionId!, utterance);
+      setLiveResponseData(response);
+
+      const agentMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'agent',
+        content: response.message,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, agentMsg]);
+    } catch (e) {
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'agent',
+        content: 'Error communicating with agent. Please try again.',
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
-    handleMessageSubmit(inputValue);
+    if (liveMode) {
+      handleLiveMessage(inputValue);
+    } else {
+      handleMessageSubmit(inputValue);
+    }
   };
 
   const handleGenerateQuote = () => {
@@ -303,6 +370,33 @@ export default function HeadlessAgentForce() {
   };
 
   const renderVizContent = () => {
+    if (liveMode && liveResponseData) {
+      const jsonData = showJson ? liveResponseData : liveResponseData.data;
+      return (
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}>
+          <pre style={{
+            flex: 1,
+            overflow: 'auto',
+            padding: '12px',
+            background: 'rgba(0, 0, 0, 0.3)',
+            borderRadius: '6px',
+            fontSize: '11px',
+            fontFamily: "'Monaco', 'Courier New', monospace",
+            color: '#00ff88',
+            margin: 0,
+            lineHeight: '1.4',
+          }}>
+            {JSON.stringify(jsonData, null, 2)}
+          </pre>
+        </div>
+      );
+    }
+
     if (stage === 'cart-management' || stage === 'quote-generated') {
       if (showJson) {
         return (
@@ -458,15 +552,27 @@ export default function HeadlessAgentForce() {
           <div className="agent-title">
             <MessageCircle size={20} />
             <span>Quoting Assistant</span>
+            {liveMode && <span className="live-badge">LIVE</span>}
           </div>
-          <motion.button
-            className="logout-button"
-            onClick={handleLogout}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <LogOut size={18} />
-          </motion.button>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <motion.button
+              className={`live-toggle ${liveMode ? 'live-active' : ''}`}
+              onClick={() => setLiveMode(!liveMode)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              title={liveMode ? 'Switch to Demo Mode' : 'Switch to Live Agent'}
+            >
+              <Zap size={16} />
+            </motion.button>
+            <motion.button
+              className="logout-button"
+              onClick={handleLogout}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <LogOut size={18} />
+            </motion.button>
+          </div>
         </div>
 
         <div className="agent-messages">
@@ -547,7 +653,7 @@ export default function HeadlessAgentForce() {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSendMessage(); } }}
             placeholder={
               stage === 'start'
                 ? 'Search for a company...'
@@ -573,13 +679,15 @@ export default function HeadlessAgentForce() {
       <div className="agent-right">
         <div className="viz-header">
           <h3>
-            {stage === 'cart-management' || stage === 'quote-generated'
-              ? stage === 'quote-generated'
-                ? 'Generated Quote'
-                : 'Shopping Cart'
-              : 'Order Summary'}
+            {liveMode && liveResponseData
+              ? (liveResponseData.type === 'quote_created' ? 'Quote Created' : 'Agent Response')
+              : stage === 'cart-management' || stage === 'quote-generated'
+                ? stage === 'quote-generated'
+                  ? 'Generated Quote'
+                  : 'Shopping Cart'
+                : 'Order Summary'}
           </h3>
-          {(stage === 'cart-management' || stage === 'quote-generated') && (
+          {((stage === 'cart-management' || stage === 'quote-generated') || (liveMode && liveResponseData)) && (
             <motion.button
               onClick={() => setShowJson(!showJson)}
               style={{
