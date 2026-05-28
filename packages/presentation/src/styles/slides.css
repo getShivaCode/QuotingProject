@@ -321,13 +321,6 @@
   align-items: center;
   padding: 0 10px;
 }
-.arch-arrow-main {
-  align-self: center;
-}
-.arch-arrow-mcp {
-  align-self: flex-start;
-  margin-top: 36px;
-}
 .arrow-line-h {
   width: 36px;
   height: 2px;
@@ -373,19 +366,27 @@
 
 .agent-inner {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: stretch;
 }
 
+.card-agent-main {
+  flex: 1;
+}
+
 .card-mcp-client {
-  padding: 10px 12px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
-  min-width: auto;
-  white-space: nowrap;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  text-align: center;
 }
 .card-mcp-client .card-title {
   margin-bottom: 0;
+  font-size: 9px;
+  line-height: 1.3;
 }
 
 /* Vertical arrow */
@@ -1693,4 +1694,389 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Slide 10 - Prompts */
+.slide-10 {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.prompts-content {
+  max-width: 1000px;
+}
+
+.prompts-layout {
+  margin-top: 24px;
+}
+
+.prompts-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.prompts-tabs .prompt-tab {
+  flex: 1;
+  justify-content: center;
+}
+
+.prompt-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.prompt-tab:hover {
+  background: rgba(0, 217, 255, 0.05);
+  border-color: rgba(0, 217, 255, 0.3);
+}
+
+.prompt-tab.active {
+  background: rgba(0, 217, 255, 0.1);
+  border-color: rgba(0, 217, 255, 0.5);
+  color: #0088cc;
+}
+
+.tab-number {
+  font-weight: 700;
+  font-size: 11px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.prompt-tab.active .tab-number {
+  background: rgba(0, 217, 255, 0.3);
+  color: #006699;
+}
+
+.tab-label {
+  font-weight: 500;
+}
+
+.prompt-display {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.prompt-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #2d2d2d;
+}
+
+.prompt-terminal-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.prompt-terminal-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.red { background: #ff5f57; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #28c840; }
+
+.prompt-terminal-title {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.prompt-body {
+  display: flex;
+  padding: 20px;
+  background: #1a1a2e;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.prompt-prefix {
+  color: #00ff88;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.prompt-text {
+  color: #e0e0e0;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.arch-tab-content {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.presentation-container.dark-mode .arch-tab-content {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Architecture v2 layout */
+.arch-layout-v2 {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  grid-template-rows: auto auto auto;
+  align-items: start;
+  gap: 0;
+}
+
+.arch-col-left {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+}
+
+.arch-layout-v2 > .arch-arrow-h.arch-arrow-main {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+}
+
+.arch-col-center {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+
+.arch-layout-v2 > .arch-arrow-h.arch-arrow-mcp {
+  grid-column: 4;
+  grid-row: 1;
+  align-self: center;
+}
+
+.arch-col-right {
+  grid-column: 5;
+  grid-row: 1 / 3;
+}
+
+.arch-col-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arch-col-left .zone-surface {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.surface-logos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  padding: 10px;
+}
+
+.surface-logos-grid .surface-logo-item {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  color: #555;
+  transition: all 0.2s;
+}
+
+.arch-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.zone-stacked {
+  width: 280px;
+}
+
+.zone-stacked.zone-agent {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.zone-stacked.zone-salesforce {
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.arch-col-right .zone-mcp {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.arch-col-right .zone-tool {
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.arch-arrow-v-center {
+  display: flex;
+  justify-content: center;
+  padding: 6px 0;
+}
+
+.arch-arrow-v-center .arrow-line-v {
+  width: 2px;
+  height: 24px;
+  background: linear-gradient(180deg, rgba(0, 200, 120, 0.3), rgba(0, 200, 120, 0.7));
+  border-radius: 2px;
+  position: relative;
+}
+
+.arch-arrow-v-center .arrow-line-v::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: -3px;
+  border-top: 7px solid rgba(0, 200, 120, 0.7);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+}
+
+.sf-items-square {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.sf-card-square {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 200, 120, 0.25);
+  background: rgba(0, 200, 120, 0.04);
+  gap: 2px;
+}
+
+.sf-card-square .sf-card-icon {
+  font-size: 16px;
+}
+
+.sf-card-square .card-title {
+  font-size: 9px;
+  margin-bottom: 0;
+}
+
+.arch-col-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Dark mode for v2 */
+.presentation-container.dark-mode .surface-logos-grid .surface-logo-item {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.presentation-container.dark-mode .sf-card-square {
+  border-color: rgba(0, 200, 120, 0.3);
+  background: rgba(0, 200, 120, 0.06);
+}
+
+.presentation-container.dark-mode .arch-arrow-v-center .arrow-line-v {
+  background: linear-gradient(180deg, rgba(0, 200, 120, 0.3), rgba(0, 200, 120, 0.7));
+}
+
+.presentation-container.dark-mode .arch-arrow-v-center .arrow-line-v::after {
+  border-top-color: rgba(0, 200, 120, 0.7);
+}
+
+.prompts-footnote {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.prompts-footnote p {
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.5);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Dark mode for Slide 10 */
+.presentation-container.dark-mode .slide-10 {
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+}
+
+.presentation-container.dark-mode .prompt-tab {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.presentation-container.dark-mode .prompt-tab:hover {
+  background: rgba(0, 217, 255, 0.08);
+  border-color: rgba(0, 217, 255, 0.3);
+}
+
+.presentation-container.dark-mode .prompt-tab.active {
+  background: rgba(0, 217, 255, 0.12);
+  border-color: rgba(0, 217, 255, 0.5);
+  color: #00ddff;
+}
+
+.presentation-container.dark-mode .tab-number {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.presentation-container.dark-mode .prompt-tab.active .tab-number {
+  background: rgba(0, 217, 255, 0.3);
+  color: #00ddff;
+}
+
+.presentation-container.dark-mode .prompt-display {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.presentation-container.dark-mode .prompts-footnote p {
+  color: rgba(255, 255, 255, 0.45);
 }

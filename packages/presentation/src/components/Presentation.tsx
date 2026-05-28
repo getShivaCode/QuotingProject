@@ -9,7 +9,7 @@ import Slide5 from './slides/Slide5';
 import Slide6 from './slides/Slide6';
 import Slide7 from './slides/Slide7';
 import Slide8 from './slides/Slide8';
-import Slide9 from './slides/Slide9';
+import Slide10 from './slides/Slide10';
 import '../styles/presentation.css';
 
 const slides = [
@@ -24,7 +24,7 @@ const slides = [
 ];
 
 const hiddenSlides = [
-  { id: 9, component: Slide9, title: 'Architecture' },
+  { id: 9, component: Slide10, title: 'How I Built This' },
 ];
 
 const allSlides = [...slides, ...hiddenSlides];
@@ -49,8 +49,12 @@ export default function Presentation() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') handleNext();
       if (e.key === 'ArrowLeft') handlePrev();
-      if (e.key === 'ArrowDown') {
-        setCurrentSlide(slides.length);
+      if (e.key === 'ArrowDown' && currentSlide < allSlides.length - 1) {
+        if (currentSlide < slides.length) {
+          setCurrentSlide(slides.length);
+        } else {
+          setCurrentSlide(currentSlide + 1);
+        }
       }
       if ((e.key === 'Escape' || e.key === 'ArrowUp') && currentSlide >= slides.length) {
         setCurrentSlide(slides.length - 1);

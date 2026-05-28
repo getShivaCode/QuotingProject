@@ -35,7 +35,7 @@ export default function Slide8() {
         </motion.h2>
 
         <motion.p className="slide-subtitle" variants={itemVariants}>
-          Experience the full workflow with our interactive Quoting Assistant powered by Agentforce
+          Experience Tally, the headless Quoting Assistant powered by Agentforce
         </motion.p>
 
         <motion.div className="agent-embed" variants={itemVariants}>
