@@ -1,0 +1,21 @@
+{
+  "required" : [ "quoteId" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "comments" : {
+      "title" : "Comments",
+      "description" : "Comments for the approval request",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "quoteId" : {
+      "title" : "Quote Id",
+      "description" : "The Quote record ID to submit for approval",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

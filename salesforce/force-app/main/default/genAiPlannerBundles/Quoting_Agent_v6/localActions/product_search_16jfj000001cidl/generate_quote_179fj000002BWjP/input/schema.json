@@ -1,0 +1,28 @@
+{
+  "required" : [ "products", "accountId", "quoteName" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "accountId" : {
+      "title" : "Account Id",
+      "description" : "The Salesforce Account ID for this quote",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "products" : {
+      "title" : "Products",
+      "description" : "JSON array of selected products with quantities, e.g. [{sku:CHEM-008,quantity:10}]",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "quoteName" : {
+      "title" : "Quote Name",
+      "description" : "A name for the quote record",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

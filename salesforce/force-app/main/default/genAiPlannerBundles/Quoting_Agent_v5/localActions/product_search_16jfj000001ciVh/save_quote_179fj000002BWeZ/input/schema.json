@@ -1,0 +1,21 @@
+{
+  "required" : [ "quoteName", "quoteData" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "quoteData" : {
+      "title" : "Quote Data",
+      "description" : "The quote JSON data",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "quoteName" : {
+      "title" : "Quote Name",
+      "description" : "Name for the quote record",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

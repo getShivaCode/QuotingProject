@@ -1,0 +1,16 @@
+{
+  "name": "quoting-project",
+  "version": "1.0.0",
+  "description": "Agentforce Intelligent Quoting - Complete Platform",
+  "private": true,
+  "scripts": {
+    "dev": "cd packages/presentation && npm start",
+    "dev:agent": "cd packages/headlessAgentForce && npm start",
+    "build:presentation": "cd packages/presentation && npm run build",
+    "build:agent": "cd packages/headlessAgentForce && npm run build",
+    "install:all": "npm --prefix packages/presentation install && npm --prefix packages/headlessAgentForce install"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

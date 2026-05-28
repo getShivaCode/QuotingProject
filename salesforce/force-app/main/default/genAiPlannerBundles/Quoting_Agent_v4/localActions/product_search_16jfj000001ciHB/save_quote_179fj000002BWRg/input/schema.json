@@ -1,0 +1,35 @@
+{
+  "required" : [ "quoteName", "accountId", "quoteDescription", "grandTotal" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "accountId" : {
+      "title" : "Account Id",
+      "description" : "The Salesforce Account ID",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "grandTotal" : {
+      "title" : "Grand Total",
+      "description" : "The grand total price as a number string e.g. 389.32",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "quoteDescription" : {
+      "title" : "Quote Description",
+      "description" : "Summary of products and quantities",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "quoteName" : {
+      "title" : "Quote Name",
+      "description" : "Name for the quote record",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

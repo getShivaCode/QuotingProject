@@ -1,0 +1,14 @@
+{
+  "required" : [ "products" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "products" : {
+      "title" : "Products",
+      "description" : "JSON array of selected products with quantities, e.g. [{sku:CHEM-008,quantity:10}]",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

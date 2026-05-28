@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<McpServerDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Pricing MCP</masterLabel>
+    <description>External pricing and product catalog MCP server for semantic product search and quote generation</description>
+    <url>https://pricingmcp.onrender.com/mcp</url>
+    <isActive>true</isActive>
+</McpServerDefinition>

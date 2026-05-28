@@ -1,0 +1,143 @@
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight, Moon, Sun, Palette } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Slide1 from './slides/Slide1';
+import Slide2 from './slides/Slide2';
+import Slide3 from './slides/Slide3';
+import Slide4 from './slides/Slide4';
+import Slide5 from './slides/Slide5';
+import Slide6 from './slides/Slide6';
+import Slide7 from './slides/Slide7';
+import Slide8 from './slides/Slide8';
+import '../styles/presentation.css';
+
+const slides = [
+  { id: 1, component: Slide1, title: 'Value Statement' },
+  { id: 2, component: Slide2, title: 'The Challenge' },
+  { id: 3, component: Slide3, title: 'Our Solution' },
+  { id: 4, component: Slide4, title: 'Step 1: Account Selection' },
+  { id: 5, component: Slide5, title: 'Step 2: Product Search' },
+  { id: 6, component: Slide6, title: 'Step 3: Shopping Cart' },
+  { id: 7, component: Slide7, title: 'Step 4: Request Quote' },
+  { id: 8, component: Slide8, title: 'Try It Live' },
+];
+
+export default function Presentation() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  const handleNext = () => {
+    if (currentSlide < slides.length - 1) {
+      setCurrentSlide(currentSlide + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  };
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') handleNext();
+      if (e.key === 'ArrowLeft') handlePrev();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentSlide]);
+
+  const CurrentSlide = slides[currentSlide].component;
+
+  return (
+    <div className={`presentation-container ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
+      {/* Header */}
+      <div className="presentation-header">
+        <div className="salesforce-logo-corner">
+          <img src="https://a.sfdcstatic.com/shared/images/c360-nav/salesforce-with-type-logo.svg" alt="Salesforce" />
+        </div>
+        <div className="header-content">
+          <h1 className="presentation-title">
+            Intelligent Quoting
+            <span className="header-divider">powered by</span>
+            <img className="agentforce-logo-inline" src="https://content.partnerpage.io/eyJidWNrZXQiOiJwYXJ0bmVycGFnZS5wcm9kIiwia2V5IjoibWVkaWEvY29udGFjdF9pbWFnZXMvNWI4ZTAwYjMtNDY5YS00NTQ4LWI1MDgtNDZiZWQyOGRiY2ExL2RlYTVjMGM1LWVmN2QtNDJiNS04YTQwLTQ1ZjM2OGJlNDkxOC5wbmciLCJlZGl0cyI6eyJ0b0Zvcm1hdCI6IndlYnAiLCJyZXNpemUiOnsiZml0IjoiY29udGFpbiIsImJhY2tncm91bmQiOnsiciI6MjU1LCJnIjoyNTUsImIiOjI1NSwiYWxwaGEiOjB9fX19" alt="Agentforce" />
+          </h1>
+        </div>
+        <motion.button
+          className="theme-toggle"
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+        >
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </motion.button>
+      </div>
+
+      {/* Main Slide Area */}
+      <div className="slide-container">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+            className="slide-wrapper"
+          >
+            <CurrentSlide />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Breadcrumbs Navigation */}
+      <div className="breadcrumbs">
+        {slides.map((slide, index) => (
+          <motion.div
+            key={slide.id}
+            className={`breadcrumb ${index === currentSlide ? 'active' : ''} ${index < currentSlide ? 'completed' : ''}`}
+            onClick={() => setCurrentSlide(index)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <div className="breadcrumb-dot"></div>
+            <span className="breadcrumb-label">{slide.title}</span>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="navigation-controls">
+        <motion.button
+          onClick={handlePrev}
+          disabled={currentSlide === 0}
+          className="nav-button"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronLeft size={24} />
+        </motion.button>
+
+        <div className="slide-counter">
+          {currentSlide + 1} / {slides.length}
+        </div>
+
+        <motion.button
+          onClick={handleNext}
+          disabled={currentSlide === slides.length - 1}
+          className="nav-button"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronRight size={24} />
+        </motion.button>
+      </div>
+
+      {/* Keyboard Hint */}
+      <div className="keyboard-hint">
+        Use ← → keys to navigate
+      </div>
+    </div>
+  );
+}

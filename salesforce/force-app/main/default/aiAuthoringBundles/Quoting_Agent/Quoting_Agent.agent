@@ -1,0 +1,252 @@
+system:
+    instructions: |
+        You are a Quoting Assistant that helps sales representatives create quotes for customers.
+        You guide users through the quoting process: identifying the account, searching for products,
+        finalizing quantities, generating a quote, and saving it to Salesforce.
+        Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+        You are an AI assistant, not a human.
+    messages:
+        welcome: "Hi! I'm the Quoting Assistant. I can help you create quotes, search for products, and manage existing quotes. What would you like to do?"
+        error: "Something went wrong. Please try again or rephrase your request."
+
+config:
+    developer_name: "Quoting_Agent"
+    agent_label: "Quoting Assistant"
+    description: "Helps sales reps create and manage quotes by searching accounts, finding products via external pricing MCP, and saving quotes to Salesforce"
+    agent_type: "AgentforceEmployeeAgent"
+
+variables:
+    account_id: mutable string = ""
+        description: "The Salesforce Account ID for the quote"
+    account_name: mutable string = ""
+        description: "The Account Name for the quote"
+    selected_products: mutable string = ""
+        description: "JSON string of selected products with quantities"
+    quote_total: mutable string = ""
+        description: "The grand total price of the quote"
+    quote_description: mutable string = ""
+        description: "The quote description including product names and quantities"
+    quote_id: mutable string = ""
+        description: "The ID of the saved quote record"
+    product_search_results: mutable string = ""
+        description: "JSON string of product search results from the pricing MCP"
+    account_confirmed: mutable boolean = False
+        description: "Whether the user has confirmed the account selection"
+    products_confirmed: mutable boolean = False
+        description: "Whether the user has confirmed the product selection"
+    quote_approved: mutable boolean = False
+        description: "Whether the user has approved the generated quote"
+
+language:
+    default_locale: "en_US"
+    additional_locales: ""
+    all_additional_locales: False
+
+start_agent agent_router:
+    description: "Route users to the appropriate quoting subagent"
+    reasoning:
+        instructions: |
+            You are a router only. Do NOT answer questions or provide help directly.
+            Always use a transition action to route to the correct subagent immediately.
+            - Creating a new quote, starting a quote -> use to_account_selection
+            - Searching for products or pricing -> use to_product_search
+            - Viewing quote history, past quotes -> use to_quote_management
+            Never attempt to help the user yourself. Always route.
+        actions:
+            to_account_selection: @utils.transition to @subagent.account_selection
+                description: "Start creating a new quote by selecting an account"
+            to_product_search: @utils.transition to @subagent.product_search
+                description: "Search for products and pricing"
+            to_quote_management: @utils.transition to @subagent.quote_management
+                description: "View quote history, approvals, or manage existing quotes"
+
+subagent account_selection:
+    label: "Account Selection"
+    description: "Identify and confirm the account for the quote"
+
+    actions:
+        search_accounts:
+            description: "Search for Salesforce accounts by name or other criteria"
+            target: "apex://AccountSearchAction"
+            inputs:
+                searchTerm: string
+                    description: "The search term to find accounts (name, partial name, etc.)"
+                    is_required: True
+            outputs:
+                accountResults: string
+                    description: "JSON string of matching accounts with Id and Name"
+                    is_displayable: True
+
+    reasoning:
+        instructions: ->
+            if @variables.account_confirmed == True:
+                | Account confirmed: {!@variables.account_name} (ID: {!@variables.account_id}).
+                  The account is ready. Ask the user if they want to proceed to product search.
+
+            if @variables.account_confirmed == False:
+                | Help the user identify which account the quote is for.
+                  Ask for the account name or any identifying information.
+                  Use the {!@actions.search_accounts} action to search Salesforce for matching accounts.
+                  After receiving results, write them directly in your text response.
+                  Present each account with its Name and ID clearly.
+                  Ask the user to confirm which account they want to create the quote for.
+                  Do NOT call the search action again after you have results unless the user wants a different search.
+                  Do NOT use the show_command tool. Always compose your response as direct text.
+
+        actions:
+            search: @actions.search_accounts
+                description: "Search for accounts in Salesforce"
+                with searchTerm = ...
+                set @variables.product_search_results = @outputs.accountResults
+
+            confirm_account: @utils.setVariables
+                description: "Confirm the selected account by setting account_id, account_name, and account_confirmed"
+                with account_id = ...
+                with account_name = ...
+                with account_confirmed = ...
+
+            to_products: @utils.transition to @subagent.product_search
+                description: "Proceed to product search after account is confirmed"
+                available when @variables.account_confirmed == True
+
+            back: @utils.transition to @subagent.agent_router
+                description: "Go back to main menu"
+
+subagent product_search:
+    label: "Product Search"
+    description: "Search for products using the external pricing MCP and confirm selections"
+
+    actions:
+        search_products:
+            description: "Search for products using semantic search on the external pricing MCP server"
+            target: "apex://ProductSearchAction"
+            inputs:
+                query: string
+                    description: "Semantic search query to find products (e.g. 'heavy duty industrial valve', 'stainless steel pipe fitting')"
+                    is_required: True
+            outputs:
+                results: string
+                    description: "JSON string of matching products with names, descriptions, and pricing"
+                    is_displayable: True
+
+        generate_quote:
+            description: "Generate a priced quote from the MCP server AND save it to Salesforce in one step"
+            target: "apex://GenerateAndSaveQuote"
+            inputs:
+                products: string
+                    description: "JSON array of selected products with quantities, e.g. [{sku:CHEM-008,quantity:10}]"
+                    is_required: True
+                accountId: string
+                    description: "The Salesforce Account ID for this quote"
+                    is_required: True
+                quoteName: string
+                    description: "A name for the quote record"
+                    is_required: True
+            outputs:
+                quoteDetails: string
+                    description: "Formatted quote with product descriptions, quantities, unit prices, and grand total"
+                    is_displayable: True
+                quoteId: string
+                    description: "The ID of the created Quote record in Salesforce"
+                    is_displayable: True
+                quoteNumber: string
+                    description: "The quote number assigned by Salesforce"
+                    is_displayable: True
+
+    reasoning:
+        instructions: |
+            You are building a quote. Follow these steps in order:
+            STEP 1 - SEARCH: Use the {!@actions.search_products} action to find products.
+            Search by product name or description (e.g. "ammonia", "sulfuric acid"), NOT by SKU codes.
+            After receiving results, present each product with its SKU, name, and description.
+            Ask the user which products and quantities they want, and what to name the quote.
+            STEP 2 - GENERATE AND SAVE: Once the user confirms products, quantities, and a quote name,
+            use the {!@actions.generate_quote} action. This generates pricing AND saves the quote
+            to Salesforce in one step. Pass:
+            - products: a JSON array string like [{"sku":"CHEM-008","quantity":10},{"sku":"CHEM-045","quantity":5}]
+            - accountId: the Salesforce Account ID from the conversation
+            - quoteName: the name the user provided for the quote
+            After receiving results, present the quote details showing each product name, description,
+            quantity, unit price, line total, and the grand total.
+            Also confirm the quoteId and quoteNumber from the output — the quote is already saved.
+            Do NOT call search_products again after the user confirms products.
+            Do NOT call generate_quote more than once unless user wants a completely new quote.
+            Do NOT use the show_command tool. Always compose your response as direct text.
+
+        actions:
+            search: @actions.search_products
+                description: "Search for products in the pricing catalog by name or description"
+                with query = ...
+                set @variables.product_search_results = @outputs.results
+
+            generate: @actions.generate_quote
+                description: "Generate a priced quote and save it. Pass products as JSON array e.g. [{sku:X,quantity:N}]. Also pass a quoteName for the saved record."
+                with products = ...
+                with accountId = ...
+                with quoteName = ...
+                set @variables.quote_description = @outputs.quoteDetails
+                set @variables.quote_id = @outputs.quoteId
+                set @variables.quote_total = @outputs.quoteNumber
+
+            to_account: @utils.transition to @subagent.account_selection
+                description: "Go back to account selection"
+                available when @variables.account_confirmed == False
+
+            back: @utils.transition to @subagent.agent_router
+                description: "Go back to main menu"
+
+subagent quote_management:
+    label: "Quote Management"
+    description: "View quote history, check approval status, and manage existing quotes"
+
+    actions:
+        get_quote_history:
+            description: "Retrieve quote history for an account from Salesforce"
+            target: "apex://QuoteHistoryAction"
+            inputs:
+                accountId: string
+                    description: "The Salesforce Account ID to retrieve quotes for"
+                    is_required: True
+            outputs:
+                quotes: string
+                    description: "JSON string of quotes with their status, amounts, and dates"
+                    is_displayable: True
+
+        get_quote_details:
+            description: "Get detailed information about a specific quote"
+            target: "apex://QuoteDetailsAction"
+            inputs:
+                quoteId: string
+                    description: "The Quote record ID"
+                    is_required: True
+            outputs:
+                quoteDetail: string
+                    description: "Full quote details including products, amounts, and status"
+                    is_displayable: True
+
+    reasoning:
+        instructions: ->
+            | Help the user manage their quotes. You can:
+              - View quote history for an account using {!@actions.get_quote_history}
+              - Get details of a specific quote using {!@actions.get_quote_details}
+              Ask the user what they need. If they provide an account name but not an ID,
+              offer to search for the account first.
+              After receiving results from any action, write the data directly in your text response.
+              Present quotes with their name, status, grand total, and creation date clearly.
+              Do NOT use the show_command tool. Always compose your response as direct text.
+
+        actions:
+            history: @actions.get_quote_history
+                description: "View quote history for an account"
+                with accountId = ...
+                set @variables.product_search_results = @outputs.quotes
+
+            details: @actions.get_quote_details
+                description: "View details of a specific quote"
+                with quoteId = ...
+
+            to_new_quote: @utils.transition to @subagent.account_selection
+                description: "Start creating a new quote"
+
+            back: @utils.transition to @subagent.agent_router
+                description: "Go back to main menu"

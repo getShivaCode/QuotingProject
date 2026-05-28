@@ -1,0 +1,513 @@
+.presentation-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  color: #1a1a1a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  overflow: hidden;
+}
+
+/* Header */
+.presentation-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+}
+
+.presentation-container.dark-mode .presentation-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 8px;
+  right: 20px;
+  background: rgba(0, 217, 255, 0.1);
+  border: 1px solid rgba(0, 217, 255, 0.2);
+  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(0, 217, 255, 0.15);
+  border-color: rgba(0, 217, 255, 0.3);
+}
+
+.presentation-container.dark-mode .theme-toggle {
+  background: rgba(0, 217, 255, 0.15);
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.presentation-container.dark-mode .theme-toggle:hover {
+  background: rgba(0, 217, 255, 0.2);
+  border-color: rgba(0, 217, 255, 0.5);
+}
+
+.salesforce-logo-corner {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.salesforce-logo-corner img {
+  height: 100%;
+  object-fit: contain;
+}
+
+.header-content {
+  text-align: center;
+}
+
+.presentation-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.header-divider {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.agentforce-logo-inline {
+  height: 28px;
+  object-fit: contain;
+}
+
+/* Slide Container */
+.slide-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 20px 60px 20px;
+  position: relative;
+}
+
+.slide-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Breadcrumbs */
+.breadcrumbs {
+  position: fixed;
+  right: 15px;
+  top: 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  z-index: 100;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  padding: 0 12px 0 0;
+}
+
+.breadcrumbs::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 18px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(to bottom, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.3) 100%);
+  pointer-events: none;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-size: 13px;
+  position: relative;
+  z-index: 1;
+}
+
+.breadcrumb:hover .breadcrumb-dot {
+  transform: scale(1.1);
+}
+
+.breadcrumb-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.breadcrumb.active .breadcrumb-dot {
+  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
+  border-color: #00d9ff;
+  box-shadow: 0 0 8px rgba(0, 217, 255, 0.3);
+}
+
+.breadcrumb.completed .breadcrumb-dot {
+  background: rgba(0, 217, 255, 0.3);
+  border-color: rgba(0, 217, 255, 0.5);
+}
+
+.breadcrumb-label {
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.5);
+  transition: color 0.3s ease;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+}
+
+.breadcrumb.active .breadcrumb-label {
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 500;
+}
+
+.breadcrumb.completed .breadcrumb-label {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+/* Navigation Controls */
+.navigation-controls {
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: transparent;
+}
+
+.nav-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.02);
+  color: rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.nav-button:hover:not(:disabled) {
+  background: rgba(0, 217, 255, 0.08);
+  border-color: rgba(0, 217, 255, 0.3);
+  color: rgba(0, 217, 255, 0.7);
+}
+
+.nav-button:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.slide-counter {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* Keyboard Hint */
+.keyboard-hint {
+  position: absolute;
+  bottom: 20px;
+  right: 40px;
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .presentation-header {
+    padding: 14px 15px;
+  }
+
+  .salesforce-logo-corner {
+    left: 15px;
+    height: 20px;
+  }
+
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .presentation-title {
+    font-size: 20px;
+    gap: 6px;
+  }
+
+  .header-divider {
+    font-size: 11px;
+  }
+
+  .agentforce-logo-inline {
+    height: 24px;
+  }
+
+  .breadcrumbs {
+    right: 12px;
+    top: 80px;
+  }
+
+  .breadcrumb {
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .breadcrumb-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .breadcrumb-label {
+    font-size: 9px;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .presentation-header {
+    padding: 12px 12px;
+  }
+
+  .salesforce-logo-corner {
+    left: 12px !important;
+  }
+
+  .theme-toggle {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    transform: none;
+    width: 24px;
+    height: 24px;
+  }
+
+  .presentation-title {
+    font-size: 16px;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .header-divider {
+    display: none;
+  }
+
+  .agentforce-logo-inline {
+    height: 20px;
+  }
+
+  .slide-container {
+    padding: 15px 12px 50px 12px;
+  }
+
+  .breadcrumbs {
+    right: 8px;
+    top: 75px;
+    padding: 0 10px 0 0;
+  }
+
+  .breadcrumbs::before {
+    left: 5px;
+    top: 16px;
+  }
+
+  .breadcrumb {
+    gap: 8px;
+    font-size: 10px;
+    padding: 6px 0;
+  }
+
+  .breadcrumb-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .breadcrumb-label {
+    display: none;
+  }
+
+  .navigation-controls {
+    padding: 8px 12px;
+    gap: 10px;
+  }
+
+  .nav-button {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+  }
+
+  .slide-counter {
+    font-size: 9px;
+  }
+
+  .keyboard-hint {
+    display: none;
+  }
+}
+
+/* Responsive - Small Mobile */
+@media (max-width: 480px) {
+  .presentation-header {
+    padding: 10px 10px;
+  }
+
+  .salesforce-logo-corner {
+    left: 10px !important;
+  }
+
+  .theme-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transform: none;
+    width: 20px;
+    height: 20px;
+  }
+
+  .presentation-title {
+    font-size: 14px;
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .header-divider {
+    display: none;
+  }
+
+  .agentforce-logo-inline {
+    height: 18px;
+  }
+
+  .slide-container {
+    padding: 12px 10px 45px 10px;
+  }
+
+  .breadcrumbs {
+    right: 6px;
+    top: 70px;
+  }
+
+  .breadcrumb {
+    gap: 6px;
+    font-size: 9px;
+    padding: 5px 0;
+  }
+
+  .breadcrumb-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .navigation-controls {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .nav-button {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .slide-counter {
+    font-size: 8px;
+  }
+}
+
+/* Dark Mode */
+.presentation-container.dark-mode {
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+  color: #ffffff;
+}
+
+.presentation-container.dark-mode .presentation-title {
+  color: #ffffff;
+}
+
+.presentation-container.dark-mode .slide-container {
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+}
+
+.presentation-container.dark-mode .breadcrumb-dot {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.presentation-container.dark-mode .breadcrumb-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.presentation-container.dark-mode .breadcrumb.active .breadcrumb-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.presentation-container.dark-mode .nav-button {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.presentation-container.dark-mode .nav-button:hover:not(:disabled) {
+  background: rgba(0, 217, 255, 0.1);
+  border-color: rgba(0, 217, 255, 0.3);
+  color: rgba(0, 217, 255, 0.7);
+}
+
+.presentation-container.dark-mode .slide-counter {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.presentation-container.dark-mode .keyboard-hint {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.presentation-container.dark-mode .header-divider {
+  color: rgba(255, 255, 255, 0.5);
+}
