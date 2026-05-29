@@ -24,13 +24,10 @@ export default function Slide10() {
 2. Install sf-skills for Claude Code:
    github.com/forcedotcom/sf-skills
 
-3. Install the Agentforce scripting skill:
-   mcpmarket.com/tools/skills/agentforce-scripting-for-salesforce
-
-4. Authenticate to your Salesforce org:
+3. Authenticate to your Salesforce org:
    sf org login web --alias demo-org
 
-5. Open Claude Code in your project directory and start prompting...`;
+4. Open Claude Code in your project directory and start building...`;
 
   const agentPrompt = `I want to create an Agentforce agent. Use Agent Script and not the older
 Agentforce Builder technique. Use sf-skills and the sf-ai-agentforce skills.
@@ -198,7 +195,7 @@ placeholder in the last slide for now.`;
           How It All Started
         </motion.h2>
         <motion.p className="slide-subtitle" variants={itemVariants}>
-          Two prompts. One afternoon. A fully functional quoting agent.
+          Two prompts, Three afternoons got me Tally, a fully functional quoting agent 🕵. 
         </motion.p>
 
         <motion.div className="prompts-layout" variants={containerVariants}>

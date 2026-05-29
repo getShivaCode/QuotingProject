@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const { execSync } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 const app = express();
 app.use(cors());
@@ -10,6 +11,8 @@ app.use(express.json());
 const PROJECT_DIR = path.resolve(__dirname, '../..');
 const ORG_ALIAS = 'demo-org';
 const AGENT_NAME = 'Quoting_Agent';
+const BUILD_DIR = path.join(__dirname, 'build');
+const IS_PRODUCTION = process.env.NODE_ENV === 'production' || fs.existsSync(BUILD_DIR);
 
 function runSfCommand(command) {
   try {
@@ -69,8 +72,19 @@ app.delete('/api/agent/session/:sessionId', (req, res) => {
   }
 });
 
-const PORT = 3001;
+// Serve static React files in production
+if (IS_PRODUCTION) {
+  app.use(express.static(BUILD_DIR));
+
+  // SPA fallback: serve index.html for unmatched routes
+  app.get(/^(?!\/api\/)/, (req, res) => {
+    res.sendFile(path.join(BUILD_DIR, 'index.html'));
+  });
+}
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-  console.log(`Agent proxy server running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
   console.log(`Using org: ${ORG_ALIAS}, agent: ${AGENT_NAME}`);
+  console.log(`Environment: ${IS_PRODUCTION ? 'PRODUCTION (serving static files)' : 'DEVELOPMENT'}`);
 });

@@ -1,12 +1,34 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, LogOut, Code, RotateCw } from 'lucide-react';
+import { Send, MessageCircle, LogOut, Code, RotateCw, Mic, MicOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { startSession, sendMessage as sendAgentMessage, endSession } from '../services/agentApi';
+import useSpeechRecognition from '../hooks/useSpeechRecognition';
 import AccountCard from './cards/AccountCard';
 import ProductCard from './cards/ProductCard';
 import CartCard from './cards/CartCard';
 import QuoteCard from './cards/QuoteCard';
 import '../styles/agent.css';
+
+const THINKING_MESSAGES = [
+  'Exercising those neurons...',
+  'Using them tokens...',
+  'Making the magic happen...',
+  'Channeling my inner ChatGPT...',
+  'Hallucinating the response...',
+  'Spinning up the LLM...',
+  'Asking the oracle...',
+  'Consulting the digital tea leaves...',
+  'Decoding the matrix...',
+  'Summoning the quoting gods...',
+  'Brewing some coffee...',
+  'Reticulating splines...',
+  'Buffering brain cells...',
+  'Reading the quoting runes...',
+  'One sec, consulting my rubber duck...',
+  'Tokenizing reality...',
+  'Searching the vaults...',
+  'Connecting the dots...',
+];
 
 interface Message {
   id: string;
@@ -29,6 +51,11 @@ export default function HeadlessAgentForce() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<any>(null);
   const [isCreatingQuote, setIsCreatingQuote] = useState(false);
+  const [isSessionReady, setIsSessionReady] = useState(false);
+  const [thinkingMessage, setThinkingMessage] = useState('');
+
+  const { transcript, interimTranscript, isListening, isSupported: isSpeechSupported, error: speechError, startListening, stopListening } = useSpeechRecognition();
+  const [showSpeechError, setShowSpeechError] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -38,22 +65,35 @@ export default function HeadlessAgentForce() {
     scrollToBottom();
   }, [messages, isLoading]);
 
+  useEffect(() => {
+    if (transcript && !isListening) {
+      setInputValue(transcript);
+      handleSendMessage(transcript);
+    }
+  }, [transcript, isListening]);
+
+  useEffect(() => {
+    if (speechError) {
+      setShowSpeechError(true);
+      setTimeout(() => setShowSpeechError(false), 3000);
+    }
+  }, [speechError]);
+
   const handleLogin = async () => {
     setAuthenticated(true);
     setIsConnecting(true);
+    setIsSessionReady(false);
     // Initialize session when entering live mode
     try {
       const session = await startSession();
       setSessionId(session.sessionId);
-      // Add welcome message when entering live mode
-      setMessages([
-        {
-          id: '1',
-          role: 'agent',
-          content: "Hi! I'm Tally the Quoting Assistant. How can I help you today?",
-          timestamp: new Date(),
-        },
-      ]);
+      setMessages([]);
+
+      // Send output_format command with a valid request to set JSON mode
+      // Response is ignored, only used to initialize format
+      await sendAgentMessage(session.sessionId, 'output_format: json show me accounts');
+      setIsFirstMessage(false);
+      setIsSessionReady(true);
     } catch (e) {
       console.error('Failed to start session:', e);
     } finally {
@@ -83,22 +123,19 @@ export default function HeadlessAgentForce() {
     }
     // Start fresh session
     setIsConnecting(true);
+    setIsSessionReady(false);
     try {
       const session = await startSession();
       setSessionId(session.sessionId);
-      setMessages([
-        {
-          id: '1',
-          role: 'agent',
-          content: "Hi! I'm Tally, the Quoting Assistant. How can I help you today?",
-          timestamp: new Date(),
-        },
-      ]);
+      setMessages([]);
       setShowJson(false);
       setLiveResponseData(null);
-      setIsFirstMessage(true);
       setSelectedAccount(null);
       setIsCreatingQuote(false);
+
+      // Send output_format command with a valid request to set JSON mode
+      await sendAgentMessage(session.sessionId, 'output_format: json show me accounts');
+      setIsSessionReady(true);
     } catch (e) {
       console.error('Failed to start new session:', e);
     } finally {
@@ -123,14 +160,10 @@ export default function HeadlessAgentForce() {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
+    setThinkingMessage(THINKING_MESSAGES[Math.floor(Math.random() * THINKING_MESSAGES.length)]);
 
     try {
-      const utterance = isFirstMessage
-        ? `output_format: json. ${message}`
-        : message;
-      setIsFirstMessage(false);
-
-      const response = await sendAgentMessage(activeSessionId!, utterance);
+      const response = await sendAgentMessage(activeSessionId!, message);
       setLiveResponseData(response);
 
       const agentMsg: Message = {
@@ -153,9 +186,10 @@ export default function HeadlessAgentForce() {
     }
   };
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
-    handleLiveMessage(inputValue);
+  const handleSendMessage = (messageOverride?: string) => {
+    const messageToSend = messageOverride || inputValue;
+    if (!messageToSend.trim()) return;
+    handleLiveMessage(messageToSend);
   };
 
 
@@ -437,10 +471,15 @@ export default function HeadlessAgentForce() {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="message-bubble">
-                <div className="typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span style={{ fontSize: '13px', color: '#666', fontStyle: 'italic' }}>
+                    {thinkingMessage}
+                  </span>
                 </div>
               </div>
             </motion.div>
@@ -451,25 +490,49 @@ export default function HeadlessAgentForce() {
         <div className="agent-input">
           <input
             type="text"
-            value={inputValue}
+            value={isListening ? (interimTranscript || inputValue) : inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !isLoading) { e.preventDefault(); handleSendMessage(); } }}
-            placeholder={authenticated && sessionId ? "Type your message..." : "Click 'Try It Live' to start"}
-            disabled={isLoading || !authenticated || !sessionId}
+            onKeyDown={(e) => { if (e.key === 'Enter' && !isLoading && !isListening) { e.preventDefault(); handleSendMessage(); } }}
+            placeholder={authenticated && sessionId ? (isListening ? "Listening..." : "Type or click mic...") : "Click 'Try It Live' to start"}
+            disabled={isLoading || !authenticated || !sessionId || isListening || !isSessionReady}
             className="input-field"
-            style={isLoading ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+            style={isLoading || isListening ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
           />
+          {isSpeechSupported && (
+            <motion.button
+              onClick={() => isListening ? stopListening() : startListening()}
+              disabled={isLoading || !authenticated || !sessionId || !isSessionReady}
+              className={`microphone-button ${isListening ? 'listening' : ''}`}
+              whileHover={!isLoading && !isListening ? { scale: 1.05 } : {}}
+              whileTap={!isLoading ? { scale: 0.95 } : {}}
+              style={isLoading ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+              title={isListening ? "Stop listening" : "Click to speak"}
+            >
+              {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+            </motion.button>
+          )}
           <motion.button
-            onClick={handleSendMessage}
-            disabled={!inputValue.trim() || isLoading || !authenticated || !sessionId}
+            onClick={() => handleSendMessage()}
+            disabled={!inputValue.trim() || isLoading || !authenticated || !sessionId || isListening || !isSessionReady}
             className="send-button"
-            whileHover={!isLoading ? { scale: 1.05 } : {}}
+            whileHover={!isLoading && !isListening ? { scale: 1.05 } : {}}
             whileTap={!isLoading ? { scale: 0.95 } : {}}
-            style={isLoading ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+            style={isLoading || isListening ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
           >
             <Send size={18} />
           </motion.button>
         </div>
+        {showSpeechError && speechError && (
+          <div style={{
+            color: '#ff6b6b',
+            fontSize: '12px',
+            padding: '8px 12px',
+            marginTop: '8px',
+            textAlign: 'center',
+          }}>
+            {speechError === 'network' ? 'Network error. Please check your connection.' : `Error: ${speechError}`}
+          </div>
+        )}
       </div>
 
       <div className="agent-right">

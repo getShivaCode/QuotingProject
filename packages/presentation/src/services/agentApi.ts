@@ -33,12 +33,17 @@ export async function sendMessage(sessionId: string, message: string): Promise<A
   }
   const data = await response.json();
 
+  console.log('Agent response:', data);
+  console.log('Agent message:', data.agentMessage);
+
   // Try to parse the agent's message as JSON (when output_format is json)
   try {
     const parsed = JSON.parse(data.agentMessage);
+    console.log('Parsed JSON:', parsed);
     return parsed as AgentMessage;
   } catch {
     // Text mode - wrap in our standard format
+    console.log('Could not parse as JSON, wrapping as text');
     return {
       type: 'text',
       message: data.agentMessage,
