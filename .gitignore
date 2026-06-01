@@ -22,6 +22,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Logs
+*.log
+packages/presentation/logs/
+
 # IDE
 .vscode/
 .idea/
