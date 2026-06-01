@@ -1,0 +1,320 @@
+[2026-06-01T15:33:12.544Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T15:34:05.962Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T15:34:52.142Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T15:35:42.793Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T15:37:54.676Z] [INFO] POST /api/agent/session
+[2026-06-01T15:39:08.810Z] [INFO] POST /api/agent/session
+[2026-06-01T15:40:16.980Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T15:40:31.249Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T15:40:57.994Z] [INFO] POST /api/agent/session
+[2026-06-01T15:41:02.329Z] [INFO] POST /api/agent/session - 200 (4334ms) {"body":{"sessionId":"9233dfc2-3319-49ff-9aa3-54f671231fd8"}}
+[2026-06-01T15:41:11.490Z] [INFO] POST /api/agent/message {"body":{"sessionId":"9233dfc2-3319-49ff-9aa3-54f671231fd8","messageLength":16}}
+[2026-06-01T15:41:17.819Z] [INFO] POST /api/agent/message - 200 (6329ms) {"body":{"sessionId":"9233dfc2-3319-49ff-9aa3-54f671231fd8","responseLength":246}}
+[2026-06-01T15:41:45.160Z] [INFO] DELETE /api/agent/session/:sessionId {"body":{"sessionId":"9233dfc2-3319-49ff-9aa3-54f671231fd8"}}
+[2026-06-01T15:41:46.470Z] [INFO] DELETE /api/agent/session/:sessionId - 200 (1310ms) {"body":{"sessionId":"9233dfc2-3319-49ff-9aa3-54f671231fd8"}}
+[2026-06-01T15:42:04.062Z] [INFO] POST /api/agent/session
+[2026-06-01T15:42:08.404Z] [INFO] POST /api/agent/session - 200 (4342ms) {"body":{"sessionId":"eaf34b59-0f3a-4256-bd60-8d146375a32b"}}
+[2026-06-01T15:42:08.423Z] [INFO] POST /api/agent/message {"body":{"sessionId":"eaf34b59-0f3a-4256-bd60-8d146375a32b","messageLength":16}}
+[2026-06-01T15:42:14.799Z] [INFO] POST /api/agent/message - 200 (6376ms) {"body":{"sessionId":"eaf34b59-0f3a-4256-bd60-8d146375a32b","responseLength":295}}
+[2026-06-01T15:43:05.818Z] [INFO] POST /api/agent/session
+[2026-06-01T15:43:10.214Z] [INFO] POST /api/agent/session - 200 (4396ms) {"body":{"sessionId":"143f2574-018a-46fc-91f1-d45fc5042a23"}}
+[2026-06-01T15:43:10.226Z] [INFO] POST /api/agent/message {"body":{"sessionId":"143f2574-018a-46fc-91f1-d45fc5042a23","messageLength":36}}
+[2026-06-01T15:43:16.630Z] [INFO] POST /api/agent/message - 200 (6403ms) {"body":{"sessionId":"143f2574-018a-46fc-91f1-d45fc5042a23","responseLength":190}}
+[2026-06-01T15:44:51.681Z] [INFO] POST /api/agent/message {"body":{"sessionId":"143f2574-018a-46fc-91f1-d45fc5042a23","messageLength":21}}
+[2026-06-01T15:45:09.100Z] [INFO] POST /api/agent/message - 200 (17419ms) {"body":{"sessionId":"143f2574-018a-46fc-91f1-d45fc5042a23","responseLength":768}}
+[2026-06-01T15:45:36.486Z] [INFO] POST /api/agent/message {"body":{"sessionId":"143f2574-018a-46fc-91f1-d45fc5042a23","messageLength":34}}
+[2026-06-01T15:45:42.988Z] [INFO] POST /api/agent/message - 200 (6502ms) {"body":{"sessionId":"143f2574-018a-46fc-91f1-d45fc5042a23","responseLength":226}}
+[2026-06-01T15:53:25.250Z] [INFO] POST /api/agent/session
+[2026-06-01T15:53:29.755Z] [INFO] POST /api/agent/session - 200 (4505ms) {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24"}}
+[2026-06-01T15:53:29.764Z] [INFO] POST /api/agent/message {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24","messageLength":36}}
+[2026-06-01T15:53:35.228Z] [INFO] POST /api/agent/message - 200 (5464ms) {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24","responseLength":163}}
+[2026-06-01T15:54:05.150Z] [INFO] POST /api/agent/message {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24","messageLength":21}}
+[2026-06-01T15:54:11.629Z] [INFO] POST /api/agent/message - 200 (6479ms) {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24","responseLength":768}}
+[2026-06-01T15:54:16.180Z] [INFO] POST /api/agent/message {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24","messageLength":34}}
+[2026-06-01T15:54:22.672Z] [INFO] POST /api/agent/message - 200 (6492ms) {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24","responseLength":272}}
+[2026-06-01T15:54:39.241Z] [INFO] POST /api/agent/message {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24","messageLength":9}}
+[2026-06-01T15:55:14.745Z] [INFO] POST /api/agent/message - 200 (35504ms) {"body":{"sessionId":"beae0cc1-22bd-4498-b3f8-f268d7284c24","responseLength":163}}
+[2026-06-01T15:57:44.491Z] [INFO] POST /api/agent/session
+[2026-06-01T15:57:50.828Z] [INFO] POST /api/agent/session - 200 (6337ms) {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67"}}
+[2026-06-01T15:57:52.869Z] [INFO] POST /api/agent/message {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","messageLength":46}}
+[2026-06-01T15:57:57.247Z] [INFO] POST /api/agent/message - 200 (4378ms) {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","responseLength":323}}
+[2026-06-01T15:57:57.280Z] [INFO] POST /api/agent/message {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","messageLength":20}}
+[2026-06-01T15:58:02.652Z] [INFO] POST /api/agent/message - 200 (5372ms) {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","responseLength":236}}
+[2026-06-01T15:58:02.684Z] [INFO] POST /api/agent/message {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","messageLength":15}}
+[2026-06-01T15:58:14.048Z] [INFO] POST /api/agent/message - 200 (11364ms) {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","responseLength":1238}}
+[2026-06-01T15:58:14.079Z] [INFO] POST /api/agent/message {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","messageLength":19}}
+[2026-06-01T15:58:23.442Z] [INFO] POST /api/agent/message - 200 (9363ms) {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","responseLength":369}}
+[2026-06-01T15:58:23.472Z] [INFO] POST /api/agent/message {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","messageLength":32}}
+[2026-06-01T15:58:31.820Z] [INFO] POST /api/agent/message - 200 (8348ms) {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67","responseLength":212}}
+[2026-06-01T15:58:31.848Z] [INFO] DELETE /api/agent/session/:sessionId {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67"}}
+[2026-06-01T15:58:33.185Z] [INFO] DELETE /api/agent/session/:sessionId - 200 (1337ms) {"body":{"sessionId":"1e49dfe9-e4b7-485c-8359-99bd58ffce67"}}
+[2026-06-01T15:59:20.510Z] [INFO] POST /api/agent/session
+[2026-06-01T15:59:25.998Z] [INFO] POST /api/agent/session - 200 (5488ms) {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7"}}
+[2026-06-01T15:59:26.009Z] [INFO] POST /api/agent/message {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","messageLength":36}}
+[2026-06-01T15:59:40.472Z] [INFO] POST /api/agent/message - 200 (14463ms) {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","responseLength":317}}
+[2026-06-01T16:00:50.985Z] [INFO] POST /api/agent/message {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","messageLength":10}}
+[2026-06-01T16:00:57.677Z] [INFO] POST /api/agent/message - 200 (6692ms) {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","responseLength":768}}
+[2026-06-01T16:00:58.786Z] [INFO] POST /api/agent/message {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","messageLength":36}}
+[2026-06-01T16:01:05.227Z] [INFO] POST /api/agent/message - 200 (6440ms) {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","responseLength":270}}
+[2026-06-01T16:01:18.216Z] [INFO] POST /api/agent/message {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","messageLength":17}}
+[2026-06-01T16:01:29.703Z] [INFO] POST /api/agent/message - 200 (11487ms) {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","responseLength":365}}
+[2026-06-01T16:01:32.054Z] [INFO] POST /api/agent/message {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","messageLength":27}}
+[2026-06-01T16:01:37.580Z] [INFO] POST /api/agent/message - 200 (5526ms) {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","responseLength":366}}
+[2026-06-01T16:02:32.395Z] [INFO] POST /api/agent/message {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","messageLength":20}}
+[2026-06-01T16:02:45.878Z] [INFO] POST /api/agent/message - 200 (13484ms) {"body":{"sessionId":"b7af6a5f-4fbf-4d83-be8d-adfcafb55ed7","responseLength":438}}
+[2026-06-01T16:07:09.229Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:07:31.121Z] [INFO] POST /api/agent/session
+[2026-06-01T16:07:53.546Z] [INFO] POST /api/agent/session - 200 (22425ms) {"body":{"sessionId":"4d602360-b6ef-4d8a-b5d0-2c01e123dbf3"}}
+[2026-06-01T16:07:53.561Z] [INFO] POST /api/agent/message {"body":{"sessionId":"4d602360-b6ef-4d8a-b5d0-2c01e123dbf3","messageLength":36}}
+[2026-06-01T16:07:59.931Z] [INFO] POST /api/agent/message - 200 (6370ms) {"body":{"sessionId":"4d602360-b6ef-4d8a-b5d0-2c01e123dbf3","responseLength":152}}
+[2026-06-01T16:10:45.253Z] [INFO] POST /api/agent/session
+[2026-06-01T16:10:49.644Z] [INFO] POST /api/agent/session - 200 (4391ms) {"body":{"sessionId":"79f8fffd-345e-4b84-a784-bf6e346d97cc"}}
+[2026-06-01T16:10:49.656Z] [INFO] POST /api/agent/message {"body":{"sessionId":"79f8fffd-345e-4b84-a784-bf6e346d97cc","messageLength":36}}
+[2026-06-01T16:10:56.022Z] [INFO] POST /api/agent/message - 200 (6366ms) {"body":{"sessionId":"79f8fffd-345e-4b84-a784-bf6e346d97cc","responseLength":161}}
+[2026-06-01T16:12:14.744Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:12:29.947Z] [INFO] POST /api/agent/session
+[2026-06-01T16:12:34.322Z] [INFO] POST /api/agent/session - 200 (4375ms) {"body":{"sessionId":"0db64080-bd43-4a86-b136-41e5705db582"}}
+[2026-06-01T16:12:36.372Z] [INFO] POST /api/agent/message {"body":{"sessionId":"0db64080-bd43-4a86-b136-41e5705db582","messageLength":36}}
+[2026-06-01T16:12:41.763Z] [INFO] POST /api/agent/message - 200 (5392ms) {"body":{"sessionId":"0db64080-bd43-4a86-b136-41e5705db582","responseLength":152}}
+[2026-06-01T16:13:03.007Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:13:23.338Z] [INFO] POST /api/agent/session
+[2026-06-01T16:13:27.701Z] [INFO] POST /api/agent/session - 200 (4363ms) {"body":{"sessionId":"03bfc560-6435-434d-ba79-7dbf44a0c194"}}
+[2026-06-01T16:13:29.750Z] [INFO] POST /api/agent/message {"body":{"sessionId":"03bfc560-6435-434d-ba79-7dbf44a0c194","messageLength":36}}
+[2026-06-01T16:13:35.132Z] [INFO] POST /api/agent/message - 200 (5382ms) {"body":{"sessionId":"03bfc560-6435-434d-ba79-7dbf44a0c194","responseLength":152}}
+[2026-06-01T16:14:08.450Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:14:27.484Z] [INFO] POST /api/agent/session
+[2026-06-01T16:14:31.853Z] [INFO] POST /api/agent/session - 200 (4369ms) {"body":{"sessionId":"37ec3e03-395b-4eeb-a618-2ac4b870050c"}}
+[2026-06-01T16:14:33.897Z] [INFO] POST /api/agent/message {"body":{"sessionId":"37ec3e03-395b-4eeb-a618-2ac4b870050c","messageLength":36}}
+[2026-06-01T16:14:39.273Z] [INFO] POST /api/agent/message - 200 (5376ms) {"body":{"sessionId":"37ec3e03-395b-4eeb-a618-2ac4b870050c","responseLength":167}}
+[2026-06-01T16:15:55.386Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:16:04.751Z] [INFO] POST /api/agent/session
+[2026-06-01T16:16:09.164Z] [INFO] POST /api/agent/session - 200 (4413ms) {"body":{"sessionId":"4ce75582-0594-4b60-a52f-70763912d66b"}}
+[2026-06-01T16:16:11.217Z] [INFO] POST /api/agent/message {"body":{"sessionId":"4ce75582-0594-4b60-a52f-70763912d66b","messageLength":36}}
+[2026-06-01T16:16:18.656Z] [INFO] POST /api/agent/message - 200 (7439ms) {"body":{"sessionId":"4ce75582-0594-4b60-a52f-70763912d66b","responseLength":161}}
+[2026-06-01T16:17:29.962Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:17:39.254Z] [INFO] POST /api/agent/session
+[2026-06-01T16:17:44.654Z] [INFO] POST /api/agent/session - 200 (5400ms) {"body":{"sessionId":"91624513-878c-4945-87a8-24eecc26f345"}}
+[2026-06-01T16:17:46.699Z] [INFO] POST /api/agent/message {"body":{"sessionId":"91624513-878c-4945-87a8-24eecc26f345","messageLength":36}}
+[2026-06-01T16:17:54.093Z] [INFO] POST /api/agent/message - 200 (7394ms) {"body":{"sessionId":"91624513-878c-4945-87a8-24eecc26f345","responseLength":152}}
+[2026-06-01T16:18:37.220Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:18:46.596Z] [INFO] POST /api/agent/session
+[2026-06-01T16:18:51.165Z] [INFO] POST /api/agent/session - 200 (4569ms) {"body":{"sessionId":"3d171052-214f-4d37-989c-2a75388de423"}}
+[2026-06-01T16:18:53.222Z] [INFO] POST /api/agent/message {"body":{"sessionId":"3d171052-214f-4d37-989c-2a75388de423","messageLength":25}}
+[2026-06-01T16:18:57.643Z] [INFO] POST /api/agent/message - 200 (4421ms) {"body":{"sessionId":"3d171052-214f-4d37-989c-2a75388de423","responseLength":201}}
+[2026-06-01T16:19:09.404Z] [INFO] POST /api/agent/session
+[2026-06-01T16:19:13.749Z] [INFO] POST /api/agent/session - 200 (4345ms) {"body":{"sessionId":"dea7ebb9-7691-445c-98b8-24a009590e1a"}}
+[2026-06-01T16:19:15.805Z] [INFO] POST /api/agent/message {"body":{"sessionId":"dea7ebb9-7691-445c-98b8-24a009590e1a","messageLength":25}}
+[2026-06-01T16:19:20.217Z] [INFO] POST /api/agent/message - 200 (4413ms) {"body":{"sessionId":"dea7ebb9-7691-445c-98b8-24a009590e1a","responseLength":167}}
+[2026-06-01T16:19:48.529Z] [INFO] POST /api/agent/session
+[2026-06-01T16:19:52.866Z] [INFO] POST /api/agent/session - 200 (4337ms) {"body":{"sessionId":"145d50b3-be3c-43bc-b611-c11447b9e79c"}}
+[2026-06-01T16:19:53.910Z] [INFO] POST /api/agent/message {"body":{"sessionId":"145d50b3-be3c-43bc-b611-c11447b9e79c","messageLength":25}}
+[2026-06-01T16:19:58.288Z] [INFO] POST /api/agent/message - 200 (4378ms) {"body":{"sessionId":"145d50b3-be3c-43bc-b611-c11447b9e79c","responseLength":173}}
+[2026-06-01T16:20:27.980Z] [INFO] POST /api/agent/session
+[2026-06-01T16:20:32.318Z] [INFO] POST /api/agent/session - 200 (4338ms) {"body":{"sessionId":"a7d1f0bf-1fe0-486a-9e62-87991ba43149"}}
+[2026-06-01T16:20:33.355Z] [INFO] POST /api/agent/message {"body":{"sessionId":"a7d1f0bf-1fe0-486a-9e62-87991ba43149","messageLength":36}}
+[2026-06-01T16:20:39.743Z] [INFO] POST /api/agent/message - 200 (6389ms) {"body":{"sessionId":"a7d1f0bf-1fe0-486a-9e62-87991ba43149","responseLength":229}}
+[2026-06-01T16:21:22.818Z] [INFO] POST /api/agent/session
+[2026-06-01T16:21:28.303Z] [INFO] POST /api/agent/session - 200 (5485ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d"}}
+[2026-06-01T16:21:28.315Z] [INFO] POST /api/agent/message {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","messageLength":36}}
+[2026-06-01T16:21:34.775Z] [INFO] POST /api/agent/message - 200 (6460ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","responseLength":188}}
+[2026-06-01T16:21:50.624Z] [INFO] POST /api/agent/message {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","messageLength":21}}
+[2026-06-01T16:22:00.089Z] [INFO] POST /api/agent/message - 200 (9465ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","responseLength":1172}}
+[2026-06-01T16:22:12.898Z] [INFO] POST /api/agent/message {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","messageLength":34}}
+[2026-06-01T16:22:19.317Z] [INFO] POST /api/agent/message - 200 (6419ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","responseLength":299}}
+[2026-06-01T16:22:36.178Z] [INFO] POST /api/agent/message {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","messageLength":38}}
+[2026-06-01T16:22:44.654Z] [INFO] POST /api/agent/message - 200 (8477ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","responseLength":567}}
+[2026-06-01T16:22:56.172Z] [INFO] POST /api/agent/message {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","messageLength":24}}
+[2026-06-01T16:23:05.669Z] [INFO] POST /api/agent/message - 200 (9497ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","responseLength":357}}
+[2026-06-01T16:23:15.138Z] [INFO] POST /api/agent/message {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","messageLength":15}}
+[2026-06-01T16:23:29.576Z] [INFO] POST /api/agent/message - 200 (14438ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","responseLength":509}}
+[2026-06-01T16:23:39.177Z] [INFO] POST /api/agent/message {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","messageLength":26}}
+[2026-06-01T16:23:46.687Z] [INFO] POST /api/agent/message - 200 (7510ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","responseLength":513}}
+[2026-06-01T16:24:06.410Z] [INFO] POST /api/agent/message {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","messageLength":37}}
+[2026-06-01T16:24:27.888Z] [INFO] POST /api/agent/message - 200 (21479ms) {"body":{"sessionId":"cd908d8d-028e-4646-9935-ede1ecaf041d","responseLength":511}}
+[2026-06-01T16:26:54.615Z] [INFO] POST /api/agent/session
+[2026-06-01T16:27:00.258Z] [INFO] POST /api/agent/session - 200 (5643ms) {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34"}}
+[2026-06-01T16:27:00.269Z] [INFO] POST /api/agent/message {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","messageLength":36}}
+[2026-06-01T16:27:05.708Z] [INFO] POST /api/agent/message - 200 (5438ms) {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","responseLength":181}}
+[2026-06-01T16:27:30.225Z] [INFO] POST /api/agent/message {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","messageLength":19}}
+[2026-06-01T16:27:37.707Z] [INFO] POST /api/agent/message - 200 (7482ms) {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","responseLength":1151}}
+[2026-06-01T16:27:51.905Z] [INFO] POST /api/agent/message {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","messageLength":34}}
+[2026-06-01T16:27:58.414Z] [INFO] POST /api/agent/message - 200 (6509ms) {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","responseLength":372}}
+[2026-06-01T16:28:05.761Z] [INFO] POST /api/agent/message {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","messageLength":41}}
+[2026-06-01T16:28:12.250Z] [INFO] POST /api/agent/message - 200 (6489ms) {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","responseLength":310}}
+[2026-06-01T16:28:26.349Z] [INFO] POST /api/agent/message {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","messageLength":53}}
+[2026-06-01T16:28:41.856Z] [INFO] POST /api/agent/message - 200 (15507ms) {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","responseLength":510}}
+[2026-06-01T16:29:00.864Z] [INFO] POST /api/agent/message {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","messageLength":42}}
+[2026-06-01T16:29:10.361Z] [INFO] POST /api/agent/message - 200 (9497ms) {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","responseLength":659}}
+[2026-06-01T16:29:16.110Z] [INFO] POST /api/agent/message {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","messageLength":27}}
+[2026-06-01T16:29:21.609Z] [INFO] POST /api/agent/message - 200 (5499ms) {"body":{"sessionId":"311596cc-d108-4022-9e86-afbda55d6e34","responseLength":337}}
+[2026-06-01T16:29:39.512Z] [INFO] POST /api/agent/session
+[2026-06-01T16:29:43.999Z] [INFO] POST /api/agent/session - 200 (4487ms) {"body":{"sessionId":"23f98c15-4454-4d8b-8b05-bb6d918d5583"}}
+[2026-06-01T16:29:44.009Z] [INFO] POST /api/agent/message {"body":{"sessionId":"23f98c15-4454-4d8b-8b05-bb6d918d5583","messageLength":36}}
+[2026-06-01T16:29:50.467Z] [INFO] POST /api/agent/message - 200 (6458ms) {"body":{"sessionId":"23f98c15-4454-4d8b-8b05-bb6d918d5583","responseLength":183}}
+[2026-06-01T16:31:30.963Z] [INFO] POST /api/agent/session
+[2026-06-01T16:31:35.591Z] [INFO] POST /api/agent/session - 200 (4627ms) {"body":{"sessionId":"06df7901-6812-430d-81dc-71ad8e80699c"}}
+[2026-06-01T16:31:35.599Z] [INFO] POST /api/agent/message {"body":{"sessionId":"06df7901-6812-430d-81dc-71ad8e80699c","messageLength":36}}
+[2026-06-01T16:31:40.060Z] [INFO] POST /api/agent/message - 200 (4461ms) {"body":{"sessionId":"06df7901-6812-430d-81dc-71ad8e80699c","responseLength":197}}
+[2026-06-01T16:31:50.348Z] [INFO] POST /api/agent/message {"body":{"sessionId":"06df7901-6812-430d-81dc-71ad8e80699c","messageLength":20}}
+[2026-06-01T16:31:57.858Z] [INFO] POST /api/agent/message - 200 (7510ms) {"body":{"sessionId":"06df7901-6812-430d-81dc-71ad8e80699c","responseLength":1158}}
+[2026-06-01T16:32:20.062Z] [INFO] POST /api/agent/message {"body":{"sessionId":"06df7901-6812-430d-81dc-71ad8e80699c","messageLength":34}}
+[2026-06-01T16:32:26.471Z] [INFO] POST /api/agent/message - 200 (6409ms) {"body":{"sessionId":"06df7901-6812-430d-81dc-71ad8e80699c","responseLength":306}}
+[2026-06-01T16:32:49.479Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:32:58.760Z] [INFO] POST /api/agent/session
+[2026-06-01T16:33:03.195Z] [INFO] POST /api/agent/session - 200 (4434ms) {"body":{"sessionId":"17a021d1-3b21-4d0b-817b-e411e2ae1ebb"}}
+[2026-06-01T16:33:05.251Z] [INFO] POST /api/agent/message {"body":{"sessionId":"17a021d1-3b21-4d0b-817b-e411e2ae1ebb","messageLength":38}}
+[2026-06-01T16:33:11.683Z] [INFO] POST /api/agent/message - 200 (6432ms) {"body":{"sessionId":"17a021d1-3b21-4d0b-817b-e411e2ae1ebb","responseLength":390}}
+[2026-06-01T16:34:50.337Z] [INFO] POST /api/agent/session
+[2026-06-01T16:34:54.840Z] [INFO] POST /api/agent/session - 200 (4503ms) {"body":{"sessionId":"5e8cb979-906c-4415-9a2c-d4520776ca35"}}
+[2026-06-01T16:34:56.884Z] [INFO] POST /api/agent/message {"body":{"sessionId":"5e8cb979-906c-4415-9a2c-d4520776ca35","messageLength":38}}
+[2026-06-01T16:35:03.254Z] [INFO] POST /api/agent/message - 200 (6369ms) {"body":{"sessionId":"5e8cb979-906c-4415-9a2c-d4520776ca35","responseLength":376}}
+[2026-06-01T16:35:41.602Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:35:50.891Z] [INFO] POST /api/agent/session
+[2026-06-01T16:35:56.291Z] [INFO] POST /api/agent/session - 200 (5399ms) {"body":{"sessionId":"6eddc9d6-589a-4716-b928-f2a228ad5e86"}}
+[2026-06-01T16:35:56.878Z] [INFO] POST /api/agent/session
+[2026-06-01T16:36:01.304Z] [INFO] POST /api/agent/session - 200 (4427ms) {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4"}}
+[2026-06-01T16:36:01.308Z] [INFO] POST /api/agent/message {"body":{"sessionId":"6eddc9d6-589a-4716-b928-f2a228ad5e86","messageLength":38}}
+[2026-06-01T16:36:07.681Z] [INFO] POST /api/agent/message - 200 (6373ms) {"body":{"sessionId":"6eddc9d6-589a-4716-b928-f2a228ad5e86","responseLength":265}}
+[2026-06-01T16:36:07.691Z] [INFO] POST /api/agent/message {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","messageLength":36}}
+[2026-06-01T16:36:13.070Z] [INFO] POST /api/agent/message - 200 (5379ms) {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","responseLength":142}}
+[2026-06-01T16:36:20.543Z] [INFO] POST /api/agent/message {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","messageLength":19}}
+[2026-06-01T16:36:28.036Z] [INFO] POST /api/agent/message - 200 (7497ms) {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","responseLength":767}}
+[2026-06-01T16:36:32.689Z] [INFO] POST /api/agent/message {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","messageLength":36}}
+[2026-06-01T16:36:38.165Z] [INFO] POST /api/agent/message - 200 (5476ms) {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","responseLength":266}}
+[2026-06-01T16:41:02.068Z] [INFO] POST /api/agent/message {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","messageLength":24}}
+[2026-06-01T16:41:14.565Z] [INFO] POST /api/agent/message - 200 (12498ms) {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","responseLength":431}}
+[2026-06-01T16:41:25.833Z] [INFO] POST /api/agent/message {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","messageLength":27}}
+[2026-06-01T16:41:31.266Z] [INFO] POST /api/agent/message - 200 (5433ms) {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","responseLength":373}}
+[2026-06-01T16:41:46.172Z] [INFO] POST /api/agent/message {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","messageLength":16}}
+[2026-06-01T16:41:56.659Z] [INFO] POST /api/agent/message - 200 (10486ms) {"body":{"sessionId":"4be448c4-b5de-4a1a-90c0-53063ef2eec4","responseLength":483}}
+[2026-06-01T16:43:29.797Z] [INFO] POST /api/agent/session
+[2026-06-01T16:43:34.280Z] [INFO] POST /api/agent/session - 200 (4483ms) {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343"}}
+[2026-06-01T16:43:34.290Z] [INFO] POST /api/agent/message {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","messageLength":36}}
+[2026-06-01T16:43:39.737Z] [INFO] POST /api/agent/message - 200 (5447ms) {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","responseLength":158}}
+[2026-06-01T16:43:46.325Z] [INFO] POST /api/agent/message {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","messageLength":19}}
+[2026-06-01T16:43:52.833Z] [INFO] POST /api/agent/message - 200 (6509ms) {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","responseLength":768}}
+[2026-06-01T16:43:54.020Z] [INFO] POST /api/agent/message {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","messageLength":34}}
+[2026-06-01T16:43:59.511Z] [INFO] POST /api/agent/message - 200 (5491ms) {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","responseLength":260}}
+[2026-06-01T16:44:08.714Z] [INFO] POST /api/agent/message {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","messageLength":25}}
+[2026-06-01T16:44:20.216Z] [INFO] POST /api/agent/message - 200 (11502ms) {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","responseLength":359}}
+[2026-06-01T16:44:29.021Z] [INFO] POST /api/agent/message {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","messageLength":18}}
+[2026-06-01T16:44:42.565Z] [INFO] POST /api/agent/message - 200 (13543ms) {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","responseLength":500}}
+[2026-06-01T16:44:53.219Z] [INFO] POST /api/agent/message {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","messageLength":28}}
+[2026-06-01T16:45:07.723Z] [INFO] POST /api/agent/message - 200 (14504ms) {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","responseLength":638}}
+[2026-06-01T16:45:24.767Z] [INFO] POST /api/agent/message {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","messageLength":34}}
+[2026-06-01T16:45:31.237Z] [INFO] POST /api/agent/message - 200 (6470ms) {"body":{"sessionId":"d6fd0154-4d5c-40e2-be40-834c28ef0343","responseLength":255}}
+[2026-06-01T16:46:05.107Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:46:16.407Z] [INFO] POST /api/agent/session
+[2026-06-01T16:46:20.917Z] [INFO] POST /api/agent/session - 200 (4510ms) {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904"}}
+[2026-06-01T16:46:21.976Z] [INFO] POST /api/agent/message {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","messageLength":36}}
+[2026-06-01T16:46:27.372Z] [INFO] POST /api/agent/message - 200 (5396ms) {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","responseLength":142}}
+[2026-06-01T16:46:29.415Z] [INFO] POST /api/agent/message {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","messageLength":18}}
+[2026-06-01T16:46:36.837Z] [INFO] POST /api/agent/message - 200 (7423ms) {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","responseLength":265}}
+[2026-06-01T16:46:38.889Z] [INFO] POST /api/agent/message {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","messageLength":20}}
+[2026-06-01T16:46:44.316Z] [INFO] POST /api/agent/message - 200 (5427ms) {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","responseLength":281}}
+[2026-06-01T16:46:46.370Z] [INFO] POST /api/agent/message {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","messageLength":15}}
+[2026-06-01T16:46:54.767Z] [INFO] POST /api/agent/message - 200 (8397ms) {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","responseLength":1200}}
+[2026-06-01T16:46:56.819Z] [INFO] POST /api/agent/message {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","messageLength":11}}
+[2026-06-01T16:47:06.265Z] [INFO] POST /api/agent/message - 200 (9446ms) {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","responseLength":382}}
+[2026-06-01T16:47:08.319Z] [INFO] POST /api/agent/message {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","messageLength":32}}
+[2026-06-01T16:47:18.764Z] [INFO] POST /api/agent/message - 200 (10445ms) {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","responseLength":407}}
+[2026-06-01T16:47:20.830Z] [INFO] POST /api/agent/message {"body":{"sessionId":"473c2cfa-52ca-4c53-b070-9d7bbe2d6904","messageLength":0}}
+[2026-06-01T16:48:29.855Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:48:38.136Z] [INFO] POST /api/agent/session
+[2026-06-01T16:48:43.628Z] [INFO] POST /api/agent/session - 200 (5492ms) {"body":{"sessionId":"d612e512-9754-4835-971a-6b428a9fde37"}}
+[2026-06-01T16:48:43.633Z] [INFO] POST /api/agent/session
+[2026-06-01T16:48:48.060Z] [INFO] POST /api/agent/session - 200 (4427ms) {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723"}}
+[2026-06-01T16:48:48.068Z] [INFO] POST /api/agent/message {"body":{"sessionId":"d612e512-9754-4835-971a-6b428a9fde37","messageLength":36}}
+[2026-06-01T16:48:52.449Z] [INFO] POST /api/agent/message - 200 (4381ms) {"body":{"sessionId":"d612e512-9754-4835-971a-6b428a9fde37","responseLength":142}}
+[2026-06-01T16:48:52.452Z] [INFO] POST /api/agent/message {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","messageLength":36}}
+[2026-06-01T16:48:56.860Z] [INFO] POST /api/agent/message - 200 (4408ms) {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","responseLength":142}}
+[2026-06-01T16:48:57.891Z] [INFO] POST /api/agent/message {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","messageLength":10}}
+[2026-06-01T16:49:06.258Z] [INFO] POST /api/agent/message - 200 (8367ms) {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","responseLength":768}}
+[2026-06-01T16:49:07.315Z] [INFO] POST /api/agent/message {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","messageLength":8}}
+[2026-06-01T16:49:13.742Z] [INFO] POST /api/agent/message - 200 (6427ms) {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","responseLength":268}}
+[2026-06-01T16:49:15.795Z] [INFO] POST /api/agent/message {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","messageLength":15}}
+[2026-06-01T16:49:24.228Z] [INFO] POST /api/agent/message - 200 (8432ms) {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","responseLength":1200}}
+[2026-06-01T16:49:26.275Z] [INFO] POST /api/agent/message {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","messageLength":11}}
+[2026-06-01T16:49:36.707Z] [INFO] POST /api/agent/message - 200 (10431ms) {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","responseLength":369}}
+[2026-06-01T16:49:38.756Z] [INFO] POST /api/agent/message {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","messageLength":17}}
+[2026-06-01T16:49:52.215Z] [INFO] POST /api/agent/message - 200 (13459ms) {"body":{"sessionId":"9109454c-0226-426a-aebc-84c64f6ed723","responseLength":410}}
+[2026-06-01T16:50:50.646Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T16:51:01.904Z] [INFO] POST /api/agent/session
+[2026-06-01T16:51:06.300Z] [INFO] POST /api/agent/session - 200 (4395ms) {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d"}}
+[2026-06-01T16:51:07.351Z] [INFO] POST /api/agent/message {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","messageLength":36}}
+[2026-06-01T16:51:11.710Z] [INFO] POST /api/agent/message - 200 (4358ms) {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","responseLength":142}}
+[2026-06-01T16:51:12.766Z] [INFO] POST /api/agent/message {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","messageLength":10}}
+[2026-06-01T16:51:19.187Z] [INFO] POST /api/agent/message - 200 (6420ms) {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","responseLength":768}}
+[2026-06-01T16:51:20.222Z] [INFO] POST /api/agent/message {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","messageLength":8}}
+[2026-06-01T16:51:26.659Z] [INFO] POST /api/agent/message - 200 (6437ms) {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","responseLength":268}}
+[2026-06-01T16:51:28.713Z] [INFO] POST /api/agent/message {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","messageLength":15}}
+[2026-06-01T16:51:37.157Z] [INFO] POST /api/agent/message - 200 (8444ms) {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","responseLength":1208}}
+[2026-06-01T16:51:39.214Z] [INFO] POST /api/agent/message {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","messageLength":11}}
+[2026-06-01T16:52:02.668Z] [INFO] POST /api/agent/message - 200 (23454ms) {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","responseLength":365}}
+[2026-06-01T16:52:04.722Z] [INFO] POST /api/agent/message {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","messageLength":17}}
+[2026-06-01T16:52:16.149Z] [INFO] POST /api/agent/message - 200 (11427ms) {"body":{"sessionId":"2661891a-9ef6-4561-9db2-a1b14879dc9d","responseLength":538}}
+[2026-06-01T18:31:51.928Z] [INFO] POST /api/agent/session
+[2026-06-01T18:32:19.535Z] [INFO] POST /api/agent/session - 200 (27606ms) {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427"}}
+[2026-06-01T18:32:20.583Z] [INFO] POST /api/agent/message {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","messageLength":36}}
+[2026-06-01T18:32:25.973Z] [INFO] POST /api/agent/message - 200 (5390ms) {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","responseLength":142}}
+[2026-06-01T18:32:27.014Z] [INFO] POST /api/agent/message {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","messageLength":18}}
+[2026-06-01T18:32:33.401Z] [INFO] POST /api/agent/message - 200 (6387ms) {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","responseLength":256}}
+[2026-06-01T18:32:34.461Z] [INFO] POST /api/agent/message {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","messageLength":8}}
+[2026-06-01T18:32:39.860Z] [INFO] POST /api/agent/message - 200 (5400ms) {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","responseLength":257}}
+[2026-06-01T18:32:41.910Z] [INFO] POST /api/agent/message {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","messageLength":25}}
+[2026-06-01T18:33:17.311Z] [INFO] POST /api/agent/message - 200 (35401ms) {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","responseLength":1205}}
+[2026-06-01T18:33:19.368Z] [INFO] POST /api/agent/message {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","messageLength":20}}
+[2026-06-01T18:33:28.765Z] [INFO] POST /api/agent/message - 200 (9397ms) {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","responseLength":391}}
+[2026-06-01T18:33:30.822Z] [INFO] POST /api/agent/message {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","messageLength":32}}
+[2026-06-01T18:33:48.219Z] [INFO] POST /api/agent/message - 200 (17397ms) {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","responseLength":519}}
+[2026-06-01T18:33:50.272Z] [INFO] POST /api/agent/message {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","messageLength":4}}
+[2026-06-01T18:33:55.666Z] [INFO] POST /api/agent/message - 200 (5394ms) {"body":{"sessionId":"24f20836-4d9a-46b0-a528-8e95caa28427","responseLength":138}}
+[2026-06-01T18:45:59.989Z] [INFO] Salesforce API client initialized {"instanceUrl":"https://trailsignup-816972be03897e.my.salesforce.com","apiVersion":"v61.0","agentName":"Quoting_Agent"}
+[2026-06-01T18:45:59.991Z] [INFO] Server running on http://localhost:3001 {"apiMode":"Salesforce REST API","agentName":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T18:46:14.481Z] [INFO] POST /api/agent/session
+[2026-06-01T18:49:21.588Z] [INFO] Salesforce API client initialized {"instanceUrl":"https://trailsignup-816972be03897e.my.salesforce.com","apiVersion":"v61.0","agentName":"Quoting_Agent"}
+[2026-06-01T18:49:21.589Z] [INFO] Server running on http://localhost:3001 {"apiMode":"Salesforce REST API","agentName":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T19:26:48.003Z] [INFO] POST /api/agent/session
+[2026-06-01T19:27:11.144Z] [INFO] Salesforce API client initialized {"instanceUrl":"https://trailsignup-816972be03897e.my.salesforce.com","apiVersion":"v61.0","agentName":"Quoting_Agent"}
+[2026-06-01T19:27:11.146Z] [INFO] Server running on http://localhost:3001 {"apiMode":"Salesforce REST API","agentName":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T19:27:15.871Z] [INFO] POST /api/agent/session
+[2026-06-01T19:30:03.323Z] [INFO] Salesforce API client initialized {"instanceUrl":"https://trailsignup-816972be03897e.my.salesforce.com","apiVersion":"v61.0","agentName":"Quoting_Agent"}
+[2026-06-01T19:30:03.324Z] [INFO] Server running on http://localhost:3001 {"apiMode":"Salesforce REST API","agentName":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T19:30:08.080Z] [INFO] POST /api/agent/session
+[2026-06-01T19:32:16.281Z] [INFO] Server running on http://localhost:3001 {"org":"demo-org","agent":"Quoting_Agent","environment":"DEVELOPMENT"}
+[2026-06-01T19:32:21.070Z] [INFO] POST /api/agent/session
+[2026-06-01T19:32:25.472Z] [INFO] POST /api/agent/session - 200 (4402ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2"}}
+[2026-06-01T19:32:25.497Z] [INFO] POST /api/agent/message {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","messageLength":36}}
+[2026-06-01T19:32:29.899Z] [INFO] POST /api/agent/message - 200 (4402ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","responseLength":142}}
+[2026-06-01T19:32:30.946Z] [INFO] POST /api/agent/message {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","messageLength":18}}
+[2026-06-01T19:32:36.327Z] [INFO] POST /api/agent/message - 200 (5380ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","responseLength":255}}
+[2026-06-01T19:32:37.387Z] [INFO] POST /api/agent/message {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","messageLength":8}}
+[2026-06-01T19:32:42.798Z] [INFO] POST /api/agent/message - 200 (5410ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","responseLength":266}}
+[2026-06-01T19:32:44.857Z] [INFO] POST /api/agent/message {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","messageLength":25}}
+[2026-06-01T19:32:54.252Z] [INFO] POST /api/agent/message - 200 (9395ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","responseLength":1205}}
+[2026-06-01T19:32:56.315Z] [INFO] POST /api/agent/message {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","messageLength":20}}
+[2026-06-01T19:33:04.727Z] [INFO] POST /api/agent/message - 200 (8412ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","responseLength":377}}
+[2026-06-01T19:33:06.786Z] [INFO] POST /api/agent/message {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","messageLength":32}}
+[2026-06-01T19:33:21.254Z] [INFO] POST /api/agent/message - 200 (14468ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","responseLength":523}}
+[2026-06-01T19:33:23.332Z] [INFO] POST /api/agent/message {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","messageLength":4}}
+[2026-06-01T19:33:27.761Z] [INFO] POST /api/agent/message - 200 (4429ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2","responseLength":142}}
+[2026-06-01T19:33:27.792Z] [INFO] DELETE /api/agent/session/:sessionId {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2"}}
+[2026-06-01T19:33:29.176Z] [INFO] DELETE /api/agent/session/:sessionId - 200 (1384ms) {"body":{"sessionId":"5af5d2e1-7684-48e2-8e01-3665354183b2"}}
+[2026-06-01T19:33:44.650Z] [INFO] POST /api/agent/session
+[2026-06-01T19:33:49.078Z] [INFO] POST /api/agent/session - 200 (4428ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b"}}
+[2026-06-01T19:33:49.108Z] [INFO] POST /api/agent/message {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","messageLength":36}}
+[2026-06-01T19:33:54.540Z] [INFO] POST /api/agent/message - 200 (5432ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","responseLength":142}}
+[2026-06-01T19:33:55.610Z] [INFO] POST /api/agent/message {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","messageLength":18}}
+[2026-06-01T19:34:08.057Z] [INFO] POST /api/agent/message - 200 (12447ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","responseLength":256}}
+[2026-06-01T19:34:09.127Z] [INFO] POST /api/agent/message {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","messageLength":8}}
+[2026-06-01T19:34:14.576Z] [INFO] POST /api/agent/message - 200 (5449ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","responseLength":256}}
+[2026-06-01T19:34:16.641Z] [INFO] POST /api/agent/message {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","messageLength":25}}
+[2026-06-01T19:34:25.079Z] [INFO] POST /api/agent/message - 200 (8437ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","responseLength":1213}}
+[2026-06-01T19:34:27.137Z] [INFO] POST /api/agent/message {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","messageLength":20}}
+[2026-06-01T19:34:36.602Z] [INFO] POST /api/agent/message - 200 (9465ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","responseLength":403}}
+[2026-06-01T19:34:38.668Z] [INFO] POST /api/agent/message {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","messageLength":32}}
+[2026-06-01T19:34:49.122Z] [INFO] POST /api/agent/message - 200 (10455ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","responseLength":493}}
+[2026-06-01T19:34:51.200Z] [INFO] POST /api/agent/message {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","messageLength":4}}
+[2026-06-01T19:34:55.641Z] [INFO] POST /api/agent/message - 200 (4442ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b","responseLength":142}}
+[2026-06-01T19:34:55.688Z] [INFO] DELETE /api/agent/session/:sessionId {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b"}}
+[2026-06-01T19:34:57.082Z] [INFO] DELETE /api/agent/session/:sessionId - 200 (1394ms) {"body":{"sessionId":"dc5ff3dd-fb16-442b-bc8d-546f0d916b7b"}}

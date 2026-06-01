@@ -129,12 +129,15 @@ echo "📋 Step 7: Verify Fresh State"
 RESULT=$(curl -s -X POST "$API_URL/api/agent/message" \
   -H "Content-Type: application/json" \
   -d "{\"sessionId\":\"$SESSION\",\"message\":\"test\"}")
-MSG=$(echo "$RESULT" | jq -r '.agentMessage')
-if [[ "$MSG" == *"quoting or account selection"* ]]; then
-  echo "   ✅ PASS"
+TYPE=$(echo "$RESULT" | jq -r '.agentMessage | fromjson | .type')
+MSG=$(echo "$RESULT" | jq -r '.agentMessage | fromjson | .message')
+# After quote creation, agent should be back in account_search state (fresh state)
+if [ "$TYPE" = "account_search" ]; then
+  echo "   ✅ PASS (fresh state: $TYPE)"
   ((PASS++))
 else
-  echo "   ❌ FAIL - Message: $MSG"
+  echo "   ❌ FAIL - Expected account_search but got: $TYPE"
+  echo "   Message: $MSG"
   ((FAIL++))
 fi
 echo ""

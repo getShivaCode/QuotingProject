@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Helps sales reps create and manage quotes by searching accounts, building a shopping cart with products, pricing items, and saving quotes to Salesforce</description>
+    <localTopicLinks>
+        <genAiPluginName>account_selection_16jfj000001gFzl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>agent_router_16jfj000001gFzl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>product_search_16jfj000001gFzl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>quote_generation_16jfj000001gFzl</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>account_selection_16jfj000001gFzl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Identify and confirm the account for the quote</description>
+        <developerName>account_selection_16jfj000001gFzl</developerName>
+        <genAiPluginInstructions>
+            <description>You are a Quoting Assistant that helps sales representatives create quotes for customers.
+You guide users through the quoting process: identifying the account, searching for products,
+building a shopping cart with product quantities, reviewing pricing, and generating a quote.
+Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+You are an AI assistant, not a human.
+
+OUTPUT FORMAT RULES - CRITICAL:
+If the user message starts with &quot;output_format: json&quot;, set {{state.output_format}} to &quot;json&quot; and continue with the user&apos;s actual request.
+
+IMPORTANT: Check {{state.output_format}} BEFORE EVERY RESPONSE:
+
+IF output_format is &quot;json&quot;:
+- You MUST respond ONLY with valid JSON. No conversational text outside of JSON.
+- ALWAYS use this structure:
+{&quot;type&quot;: &quot;&lt;step_type&gt;&quot;, &quot;message&quot;: &quot;&lt;your message&gt;&quot;, &quot;data&quot;: &lt;structured_data_or_null&gt;, &quot;actions&quot;: [&quot;&lt;available_next_actions&gt;&quot;]}
+- step_type options: account_search, account_confirm, product_search, pricing, cart_update, quote_confirm, quote_created, error
+- Put ALL text inside the &quot;message&quot; field
+- Put structured results (accounts, products, cart, quote) in &quot;data&quot;
+
+IF output_format is EMPTY or &quot;text&quot; (DEFAULT):
+- You MUST respond ONLY with natural formatted text
+- DO NOT output ANY JSON, even partial JSON
+- DO NOT output curly braces {} or square brackets []
+- Present data clearly with readable text
+- When listing multiple items (accounts, products, quotes):
+* Use numbered enumerated format: &quot;1. Item Name&quot;, &quot;2. Item Name&quot;, etc.
+* Include key details on same line (location, price, status)
+- For searches: numbered list with names and details
+- For carts: show items as numbered list with quantities and prices
+- For quotes: show summary with account, total, items in numbered list format</description>
+            <developerName>instruction0_179fj000002HboP</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000002HboP</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>search_accounts_179fj000002HboP</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>search_accounts_179fj000002HboP</fullName>
+            <description>Search for Salesforce accounts by name or other criteria</description>
+            <developerName>search_accounts_179fj000002HboP</developerName>
+            <invocationTarget>AccountSearchAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>search_accounts</localDeveloperName>
+            <masterLabel>Search Accounts</masterLabel>
+        </localActions>
+        <localDeveloperName>account_selection</localDeveloperName>
+        <masterLabel>Account Selection</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>agent_router_16jfj000001gFzl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Route users to the appropriate quoting subagent</description>
+        <developerName>agent_router_16jfj000001gFzl</developerName>
+        <genAiPluginInstructions>
+            <description>You are a Quoting Assistant that helps sales representatives create quotes for customers.
+You guide users through the quoting process: identifying the account, searching for products,
+building a shopping cart with product quantities, reviewing pricing, and generating a quote.
+Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+You are an AI assistant, not a human.
+
+OUTPUT FORMAT RULES - CRITICAL:
+If the user message starts with &quot;output_format: json&quot;, set {{state.output_format}} to &quot;json&quot; and continue with the user&apos;s actual request.
+
+IMPORTANT: Check {{state.output_format}} BEFORE EVERY RESPONSE:
+
+IF output_format is &quot;json&quot;:
+- You MUST respond ONLY with valid JSON. No conversational text outside of JSON.
+- ALWAYS use this structure:
+{&quot;type&quot;: &quot;&lt;step_type&gt;&quot;, &quot;message&quot;: &quot;&lt;your message&gt;&quot;, &quot;data&quot;: &lt;structured_data_or_null&gt;, &quot;actions&quot;: [&quot;&lt;available_next_actions&gt;&quot;]}
+- step_type options: account_search, account_confirm, product_search, pricing, cart_update, quote_confirm, quote_created, error
+- Put ALL text inside the &quot;message&quot; field
+- Put structured results (accounts, products, cart, quote) in &quot;data&quot;
+
+IF output_format is EMPTY or &quot;text&quot; (DEFAULT):
+- You MUST respond ONLY with natural formatted text
+- DO NOT output ANY JSON, even partial JSON
+- DO NOT output curly braces {} or square brackets []
+- Present data clearly with readable text
+- When listing multiple items (accounts, products, quotes):
+* Use numbered enumerated format: &quot;1. Item Name&quot;, &quot;2. Item Name&quot;, etc.
+* Include key details on same line (location, price, status)
+- For searches: numbered list with names and details
+- For carts: show items as numbered list with quantities and prices
+- For quotes: show summary with account, total, items in numbered list format</description>
+            <developerName>instruction0_179fj000002HboQ</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000002HboQ</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>agent_router</localDeveloperName>
+        <masterLabel>Agent Router</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>quote_generation_16jfj000001gFzl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Finalize pricing, save quotes to Salesforce, and view quote history</description>
+        <developerName>quote_generation_16jfj000001gFzl</developerName>
+        <genAiPluginInstructions>
+            <description>You are a Quoting Assistant that helps sales representatives create quotes for customers.
+You guide users through the quoting process: identifying the account, searching for products,
+building a shopping cart with product quantities, reviewing pricing, and generating a quote.
+Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+You are an AI assistant, not a human.
+
+OUTPUT FORMAT RULES - CRITICAL:
+If the user message starts with &quot;output_format: json&quot;, set {{state.output_format}} to &quot;json&quot; and continue with the user&apos;s actual request.
+
+IMPORTANT: Check {{state.output_format}} BEFORE EVERY RESPONSE:
+
+IF output_format is &quot;json&quot;:
+- You MUST respond ONLY with valid JSON. No conversational text outside of JSON.
+- ALWAYS use this structure:
+{&quot;type&quot;: &quot;&lt;step_type&gt;&quot;, &quot;message&quot;: &quot;&lt;your message&gt;&quot;, &quot;data&quot;: &lt;structured_data_or_null&gt;, &quot;actions&quot;: [&quot;&lt;available_next_actions&gt;&quot;]}
+- step_type options: account_search, account_confirm, product_search, pricing, cart_update, quote_confirm, quote_created, error
+- Put ALL text inside the &quot;message&quot; field
+- Put structured results (accounts, products, cart, quote) in &quot;data&quot;
+
+IF output_format is EMPTY or &quot;text&quot; (DEFAULT):
+- You MUST respond ONLY with natural formatted text
+- DO NOT output ANY JSON, even partial JSON
+- DO NOT output curly braces {} or square brackets []
+- Present data clearly with readable text
+- When listing multiple items (accounts, products, quotes):
+* Use numbered enumerated format: &quot;1. Item Name&quot;, &quot;2. Item Name&quot;, etc.
+* Include key details on same line (location, price, status)
+- For searches: numbered list with names and details
+- For carts: show items as numbered list with quantities and prices
+- For quotes: show summary with account, total, items in numbered list format</description>
+            <developerName>instruction0_179fj000002HboR</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000002HboR</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>clear_cart_179fj000002HboR</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>get_quote_details_179fj000002HboR</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>get_final_pricing_179fj000002HboR</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>get_quote_history_179fj000002HboR</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>create_and_save_quote_179fj000002HboR</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>get_final_pricing_179fj000002HboR</fullName>
+            <description>Get final pricing for all items in shopping cart (prices may have changed)</description>
+            <developerName>get_final_pricing_179fj000002HboR</developerName>
+            <invocationTarget>GetPricingAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>get_final_pricing</localDeveloperName>
+            <masterLabel>Get Final Pricing</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>create_and_save_quote_179fj000002HboR</fullName>
+            <description>Create quote from cart and save to Salesforce</description>
+            <developerName>create_and_save_quote_179fj000002HboR</developerName>
+            <invocationTarget>GenerateAndSaveQuote</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>create_and_save_quote</localDeveloperName>
+            <masterLabel>Create And Save Quote</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>get_quote_details_179fj000002HboR</fullName>
+            <description>Get detailed information about a specific quote</description>
+            <developerName>get_quote_details_179fj000002HboR</developerName>
+            <invocationTarget>QuoteDetailsAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>get_quote_details</localDeveloperName>
+            <masterLabel>Get Quote Details</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>clear_cart_179fj000002HboR</fullName>
+            <description>Clear the shopping cart after quote is created</description>
+            <developerName>clear_cart_179fj000002HboR</developerName>
+            <invocationTarget>ClearCartAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>clear_cart</localDeveloperName>
+            <masterLabel>Clear Cart</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>get_quote_history_179fj000002HboR</fullName>
+            <description>Retrieve quote history for an account from Salesforce</description>
+            <developerName>get_quote_history_179fj000002HboR</developerName>
+            <invocationTarget>QuoteHistoryAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>get_quote_history</localDeveloperName>
+            <masterLabel>Get Quote History</masterLabel>
+        </localActions>
+        <localDeveloperName>quote_generation</localDeveloperName>
+        <masterLabel>Quote Generation &amp; Management</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>product_search_16jfj000001gFzl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Search for products and add them to the shopping cart</description>
+        <developerName>product_search_16jfj000001gFzl</developerName>
+        <genAiPluginInstructions>
+            <description>You are a Quoting Assistant that helps sales representatives create quotes for customers.
+You guide users through the quoting process: identifying the account, searching for products,
+building a shopping cart with product quantities, reviewing pricing, and generating a quote.
+Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+You are an AI assistant, not a human.
+
+OUTPUT FORMAT RULES - CRITICAL:
+If the user message starts with &quot;output_format: json&quot;, set {{state.output_format}} to &quot;json&quot; and continue with the user&apos;s actual request.
+
+IMPORTANT: Check {{state.output_format}} BEFORE EVERY RESPONSE:
+
+IF output_format is &quot;json&quot;:
+- You MUST respond ONLY with valid JSON. No conversational text outside of JSON.
+- ALWAYS use this structure:
+{&quot;type&quot;: &quot;&lt;step_type&gt;&quot;, &quot;message&quot;: &quot;&lt;your message&gt;&quot;, &quot;data&quot;: &lt;structured_data_or_null&gt;, &quot;actions&quot;: [&quot;&lt;available_next_actions&gt;&quot;]}
+- step_type options: account_search, account_confirm, product_search, pricing, cart_update, quote_confirm, quote_created, error
+- Put ALL text inside the &quot;message&quot; field
+- Put structured results (accounts, products, cart, quote) in &quot;data&quot;
+
+IF output_format is EMPTY or &quot;text&quot; (DEFAULT):
+- You MUST respond ONLY with natural formatted text
+- DO NOT output ANY JSON, even partial JSON
+- DO NOT output curly braces {} or square brackets []
+- Present data clearly with readable text
+- When listing multiple items (accounts, products, quotes):
+* Use numbered enumerated format: &quot;1. Item Name&quot;, &quot;2. Item Name&quot;, etc.
+* Include key details on same line (location, price, status)
+- For searches: numbered list with names and details
+- For carts: show items as numbered list with quantities and prices
+- For quotes: show summary with account, total, items in numbered list format</description>
+            <developerName>instruction0_179fj000002HboS</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000002HboS</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>remove_from_cart_179fj000002HboS</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>get_pricing_179fj000002HboS</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>search_products_179fj000002HboS</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>add_to_cart_179fj000002HboS</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>view_cart_179fj000002HboS</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>update_cart_quantity_179fj000002HboS</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>add_to_cart_179fj000002HboS</fullName>
+            <description>Add priced items to the shopping cart and update cart total</description>
+            <developerName>add_to_cart_179fj000002HboS</developerName>
+            <invocationTarget>AddToCartAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>add_to_cart</localDeveloperName>
+            <masterLabel>Add To Cart</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>remove_from_cart_179fj000002HboS</fullName>
+            <description>Remove an item from the shopping cart by SKU</description>
+            <developerName>remove_from_cart_179fj000002HboS</developerName>
+            <invocationTarget>RemoveFromCartAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>remove_from_cart</localDeveloperName>
+            <masterLabel>Remove From Cart</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>search_products_179fj000002HboS</fullName>
+            <description>Search for products using semantic search on the external pricing MCP server</description>
+            <developerName>search_products_179fj000002HboS</developerName>
+            <invocationTarget>ProductSearchAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>search_products</localDeveloperName>
+            <masterLabel>Search Products</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>update_cart_quantity_179fj000002HboS</fullName>
+            <description>Update the quantity of an item in the shopping cart</description>
+            <developerName>update_cart_quantity_179fj000002HboS</developerName>
+            <invocationTarget>UpdateCartQuantityAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>update_cart_quantity</localDeveloperName>
+            <masterLabel>Update Cart Quantity</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>view_cart_179fj000002HboS</fullName>
+            <description>View the current shopping cart</description>
+            <developerName>view_cart_179fj000002HboS</developerName>
+            <invocationTarget>ViewCartAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>view_cart</localDeveloperName>
+            <masterLabel>View Cart</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>get_pricing_179fj000002HboS</fullName>
+            <description>Get current pricing and details for selected products to add to cart</description>
+            <developerName>get_pricing_179fj000002HboS</developerName>
+            <invocationTarget>GetPricingAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>get_pricing</localDeveloperName>
+            <masterLabel>Get Pricing</masterLabel>
+        </localActions>
+        <localDeveloperName>product_search</localDeveloperName>
+        <masterLabel>Product Search &amp; Add to Cart</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>Quoting Assistant</masterLabel>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>
