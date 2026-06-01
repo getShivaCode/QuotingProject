@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Moon, Sun, Palette } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Slide1 from './slides/Slide1';
 import Slide2 from './slides/Slide2';
@@ -33,17 +33,23 @@ export default function Presentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(true);
 
-  const handleNext = () => {
-    if (currentSlide < slides.length - 1) {
-      setCurrentSlide(currentSlide + 1);
-    }
-  };
+  const handleNext = React.useCallback(() => {
+    setCurrentSlide((prev) => {
+      if (prev < slides.length - 1) {
+        return prev + 1;
+      }
+      return prev;
+    });
+  }, []);
 
-  const handlePrev = () => {
-    if (currentSlide > 0) {
-      setCurrentSlide(currentSlide - 1);
-    }
-  };
+  const handlePrev = React.useCallback(() => {
+    setCurrentSlide((prev) => {
+      if (prev > 0) {
+        return prev - 1;
+      }
+      return prev;
+    });
+  }, []);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -63,7 +69,7 @@ export default function Presentation() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlide]);
+  }, [currentSlide, handleNext, handlePrev]);
 
   const CurrentSlide = allSlides[currentSlide].component;
 

@@ -27,6 +27,7 @@ const useSpeechRecognition = (): UseSpeechRecognitionResult => {
   const [error, setError] = useState<string | null>(null);
   const recognitionRef = useRef<InstanceType<SpeechRecognitionType> | null>(null);
   const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const speechDetectedRef = useRef(false);
 
   const isSupported =
     typeof window !== 'undefined' &&
@@ -48,6 +49,7 @@ const useSpeechRecognition = (): UseSpeechRecognitionResult => {
       setError(null);
       setTranscript('');
       setInterimTranscript('');
+      speechDetectedRef.current = false;
     };
 
     recognition.onresult = (event: any) => {
@@ -64,13 +66,26 @@ const useSpeechRecognition = (): UseSpeechRecognitionResult => {
         }
       }
 
+      // Mark that speech has been detected
+      if (interim || final) {
+        speechDetectedRef.current = true;
+      }
+
       if (final) {
         setTranscript((prev) => prev + final);
-        // Reset silence timer when we get a final result
-        resetSilenceTimer(recognition);
       }
 
       setInterimTranscript(interim);
+
+      // Reset silence timer - use 2 second timeout if speech detected, 3 seconds if waiting for speech
+      const silenceTimeout = speechDetectedRef.current ? 2000 : 3000;
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+      }
+      silenceTimeoutRef.current = setTimeout(() => {
+        recognition.stop();
+        setIsListening(false);
+      }, silenceTimeout);
     };
 
     recognition.onerror = (event: any) => {
@@ -92,6 +107,7 @@ const useSpeechRecognition = (): UseSpeechRecognitionResult => {
         clearTimeout(silenceTimeoutRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSupported]);
 
   const resetSilenceTimer = useCallback(

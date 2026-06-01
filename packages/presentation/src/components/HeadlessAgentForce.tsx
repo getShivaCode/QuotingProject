@@ -46,7 +46,6 @@ export default function HeadlessAgentForce() {
   const [authenticated, setAuthenticated] = useState(false);
   const [showJson, setShowJson] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [isFirstMessage, setIsFirstMessage] = useState(true);
   const [liveResponseData, setLiveResponseData] = useState<any>(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<any>(null);
@@ -70,6 +69,7 @@ export default function HeadlessAgentForce() {
       setInputValue(transcript);
       handleSendMessage(transcript);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transcript, isListening]);
 
   useEffect(() => {
@@ -89,10 +89,21 @@ export default function HeadlessAgentForce() {
       setSessionId(session.sessionId);
       setMessages([]);
 
-      // Send output_format command with a valid request to set JSON mode
-      // Response is ignored, only used to initialize format
-      await sendAgentMessage(session.sessionId, 'output_format: json show me accounts');
-      setIsFirstMessage(false);
+      // Send initialization message to set JSON output mode and wait for agent to be ready
+      try {
+        await sendAgentMessage(session.sessionId, 'output_format: json show me accounts');
+      } catch {
+        // Ignore errors from initialization message
+      }
+
+      // Display Tally's greeting after agent is ready
+      const greetingMsg: Message = {
+        id: Date.now().toString(),
+        role: 'agent',
+        content: "Hi! I'm Tally, your Quoting Assistant. I'm here to help you create quotes for your customers. Let's start by identifying the account you want to quote for. What's the account name, or any details you can provide to help me find it?",
+        timestamp: new Date(),
+      };
+      setMessages([greetingMsg]);
       setIsSessionReady(true);
     } catch (e) {
       console.error('Failed to start session:', e);
@@ -108,7 +119,6 @@ export default function HeadlessAgentForce() {
     setAuthenticated(false);
     setShowJson(false);
     setSessionId(null);
-    setIsFirstMessage(true);
     setLiveResponseData(null);
     setMessages([]);
     setIsConnecting(false);

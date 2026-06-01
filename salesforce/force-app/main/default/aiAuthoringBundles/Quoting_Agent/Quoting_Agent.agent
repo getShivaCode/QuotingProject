@@ -19,6 +19,16 @@ system:
           - Put ALL text inside the "message" field
           - Put structured results (accounts, products, cart, quote) in "data"
 
+          *** CRITICAL JSON RULES ***
+          When returning search results (accounts, products, etc):
+          - "message" field: MUST be ONLY a brief prompt. Examples:
+            * "I found 3 matching accounts. Please select one."
+            * "I found 5 products matching your search. Which would you like to add?"
+            * "I found 2 matching accounts. Please select one."
+          - "message" field: MUST NOT include any search results, account names, product details, or data
+          - ALL search results go in "data" field as JSON array
+          - The UI will render the data; do NOT duplicate it in the message
+
         IF output_format is EMPTY or "text" (DEFAULT):
           - You MUST respond ONLY with natural formatted text
           - DO NOT output ANY JSON, even partial JSON
@@ -31,7 +41,7 @@ system:
           - For carts: show items as numbered list with quantities and prices
           - For quotes: show summary with account, total, items in numbered list format
     messages:
-        welcome: "Hi! I'm the Quoting Assistant. I can help you create quotes, search for products, and manage existing quotes. What would you like to do?"
+        welcome: "Hi! I'm Tally, your Quoting Assistant. I'm here to help you create quotes for your customers. Let's start by identifying the account you want to quote for. What's the account name, or any details you can provide to help me find it?"
         error: "Something went wrong. Please try again or rephrase your request."
 
 config:
@@ -80,6 +90,7 @@ start_agent agent_router:
             - User wants to create a quote, start quoting, or mentions an account -> to_account_selection
             - User wants to search products, browse catalog, or add items -> to_product_search
             - User wants to finalize, generate, or save a quote -> to_quote_generation
+
             Never attempt to help the user yourself. Always route.
         actions:
             to_account_selection: @utils.transition to @subagent.account_selection
@@ -107,17 +118,28 @@ subagent account_selection:
                     is_displayable: True
 
     reasoning:
-        instructions: ->
+        instructions: |
+            You are Tally, your Quoting Assistant. You help sales representatives create quotes for customers.
+
+            GREETING - First message to user:
+            "Hi! I'm Tally, your Quoting Assistant. I'm here to help you create quotes for your customers. Let's start by identifying the account you want to quote for. What's the account name, or any details you can provide to help me find it?"
+
+        after_reasoning: |
+            *** CRITICAL: CHECK {!@variables.output_format} FIRST ***
+            IF output_format == "json":
+              - MUST respond with ONLY valid JSON: {"type": "account_search", "message": "<brief_message>", "data": <array>, "actions": []}
+              - Put account search results ONLY in "data" field as JSON array
+              - "message" field: ONLY brief prompt like "I found X accounts. Please select one." - NO account names, NO details
+              - NEVER list accounts in message field
+
             if @variables.account_confirmed == True:
-                | Account confirmed: {!@variables.account_name} (ID: {!@variables.account_id}).
-                  The account is ready. Ask the user if they want to proceed to product search.
+                | I'm ready to help you quote for account {!@variables.account_name}.
+                  Would you like to search for products and build a quote?
 
-            if @variables.account_confirmed == False:
-                | Help the user identify which account the quote is for.
-                  Ask for the account name or any identifying information.
-                  Use the {!@actions.search_accounts} action to search Salesforce for matching accounts.
+            else:
+                | Use the {!@actions.search_accounts} action to search Salesforce for matching accounts.
 
-                  OUTPUT FORMAT - CHECK {!@variables.output_format}:
+                  OUTPUT FORMAT:
                   IF output_format is "json":
                     - Put structured results in "data" field as JSON array
                     - Put ONLY a brief message in "message" field (e.g., "I found 5 matching accounts. Please select one.")
@@ -448,12 +470,10 @@ subagent quote_generation:
               * status ("Draft")
               * cart (full array of line items - parse {!@variables.shopping_cart} if it's a JSON string,
                       include sku, productName, quantity, unitPrice, lineTotal for each item)
-              Brief message in "message" field only (no product details in message)
-            - If TEXT: Show quote confirmation with quote number, account, total value, items as readable text (NO JSON)
+              message: "Thank you for using me to create the quote! Your cart has now been cleared. Feel free to end the session or start quote creation again by selecting an account."
+            - If TEXT: Show quote confirmation with quote number, account, total value, items as readable text (NO JSON), then add the thank you message above.
 
-            STEP 4 - CLEAR CART: Use {!@actions.clear_cart} to empty the shopping cart.
-            - If JSON: Brief confirmation message
-            - If TEXT: Natural text confirmation that cart is cleared
+            STEP 4 - IMMEDIATELY AFTER CREATING QUOTE: Use {!@actions.clear_cart} to clear the cart variables.
 
             VIEWING QUOTES:
             - Use {!@actions.get_quote_history} to show past quotes for the current account.
@@ -480,10 +500,17 @@ subagent quote_generation:
                 set @variables.quote_number = @outputs.quoteNumber
 
             clear: @actions.clear_cart
-                description: "Clear the cart after quote creation"
+                description: "Clear the cart and reset session variables after quote creation"
                 set @variables.shopping_cart = ""
                 set @variables.cart_empty = True
                 set @variables.cart_item_count = 0
+                set @variables.account_id = ""
+                set @variables.account_name = ""
+                set @variables.account_confirmed = False
+                set @variables.product_search_results = ""
+                set @variables.quote_description = ""
+                set @variables.quote_id = ""
+                set @variables.quote_number = ""
 
             history: @actions.get_quote_history
                 description: "View quote history for the current account"
@@ -498,4 +525,7 @@ subagent quote_generation:
 
             back: @utils.transition to @subagent.agent_router
                 description: "Go back to main menu"
+
+        after_reasoning: |
+            | Thank you for using me to create the quote! Your cart has now been cleared. Feel free to end the session or start quote creation again by selecting an account.
 
