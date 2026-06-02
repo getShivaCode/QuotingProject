@@ -1,60 +1,82 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, LogOut, Code, RotateCw, Mic, MicOff } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Send, MessageCircle, LogOut, Code, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { startSession, sendMessage as sendAgentMessage, endSession } from '../services/agentApi';
-import useSpeechRecognition from '../hooks/useSpeechRecognition';
-import AccountCard from './cards/AccountCard';
-import ProductCard from './cards/ProductCard';
-import CartCard from './cards/CartCard';
-import QuoteCard from './cards/QuoteCard';
 import '../styles/agent.css';
-
-const THINKING_MESSAGES = [
-  'Exercising those neurons...',
-  'Using them tokens...',
-  'Making the magic happen...',
-  'Channeling my inner ChatGPT...',
-  'Hallucinating the response...',
-  'Spinning up the LLM...',
-  'Asking the oracle...',
-  'Consulting the digital tea leaves...',
-  'Decoding the matrix...',
-  'Summoning the quoting gods...',
-  'Brewing some coffee...',
-  'Reticulating splines...',
-  'Buffering brain cells...',
-  'Reading the quoting runes...',
-  'One sec, consulting my rubber duck...',
-  'Tokenizing reality...',
-  'Searching the vaults...',
-  'Connecting the dots...',
-];
 
 interface Message {
   id: string;
   role: 'user' | 'agent';
   content?: string;
+  cards?: any[];
+  cardType?: 'account' | 'product';
   timestamp: Date;
 }
+
+interface Account {
+  id: string;
+  name: string;
+  industry: string;
+  arr: number;
+  location: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  sku: string;
+  price: number;
+  description: string;
+}
+
+interface CartItem {
+  id: string;
+  name: string;
+  sku: string;
+  qty: number;
+  price: number;
+  total: number;
+}
+
+type ConversationStage = 'start' | 'account-search' | 'product-search' | 'cart-management' | 'quote-generated';
 
 export default function HeadlessAgentForce() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [messages, setMessages] = useState<Message[]>([]);
+  const mockAccounts: Account[] = [
+    { id: '1', name: 'Acme Corp', industry: 'Manufacturing', arr: 2500000, location: 'New York' },
+    { id: '2', name: 'TechVision Inc', industry: 'Technology', arr: 5000000, location: 'San Francisco' },
+    { id: '3', name: 'Global Industries', industry: 'Distribution', arr: 1800000, location: 'Chicago' },
+    { id: '4', name: 'Summit Solutions', industry: 'Consulting', arr: 3200000, location: 'Boston' },
+  ];
+
+  const mockProducts: Product[] = [
+    { id: 'P1', name: 'Heavy Duty Valve', sku: 'CHEM-008', price: 250, description: 'Industrial grade chemical valve' },
+    { id: 'P2', name: 'Safety Relief', sku: 'CHEM-045', price: 150, description: 'Safety relief valve system' },
+    { id: 'P3', name: 'Flow Control', sku: 'CHEM-052', price: 320, description: 'Precision flow control device' },
+    { id: 'P4', name: 'Pressure Gauge', sku: 'CHEM-089', price: 85, description: 'Digital pressure monitoring' },
+  ];
+
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      role: 'agent',
+      content: "Hi! I'm the Quoting Assistant. How can I help you today?",
+      timestamp: new Date(),
+    },
+  ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const [stage, setStage] = useState<ConversationStage>('start');
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showJson, setShowJson] = useState(false);
+  const [liveMode, setLiveMode] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isFirstMessage, setIsFirstMessage] = useState(true);
   const [liveResponseData, setLiveResponseData] = useState<any>(null);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState<any>(null);
-  const [isCreatingQuote, setIsCreatingQuote] = useState(false);
-  const [isSessionReady, setIsSessionReady] = useState(false);
-  const [thinkingMessage, setThinkingMessage] = useState('');
-
-  const { transcript, interimTranscript, isListening, isSupported: isSpeechSupported, error: speechError, startListening, stopListening } = useSpeechRecognition();
-  const [showSpeechError, setShowSpeechError] = useState(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -64,102 +86,205 @@ export default function HeadlessAgentForce() {
     scrollToBottom();
   }, [messages, isLoading]);
 
-  useEffect(() => {
-    if (transcript && !isListening) {
-      setInputValue(transcript);
-      handleSendMessage(transcript);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transcript, isListening]);
-
-  useEffect(() => {
-    if (speechError) {
-      setShowSpeechError(true);
-      setTimeout(() => setShowSpeechError(false), 3000);
-    }
-  }, [speechError]);
-
-  const handleLogin = async () => {
+  const handleLogin = () => {
     setAuthenticated(true);
-    setIsConnecting(true);
-    setIsSessionReady(false);
-    // Initialize session when entering live mode
-    try {
-      const session = await startSession();
-      setSessionId(session.sessionId);
-      setMessages([]);
-
-      // Send initialization message to set JSON output mode and wait for agent to be ready
-      try {
-        await sendAgentMessage(session.sessionId, 'output_format: json show me accounts');
-      } catch {
-        // Ignore errors from initialization message
-      }
-
-      // Display Tally's greeting after agent is ready
-      const greetingMsg: Message = {
-        id: Date.now().toString(),
-        role: 'agent',
-        content: "Hi! I'm Tally, your Quoting Assistant. I'm here to help you create quotes for your customers. Let's start by identifying the account you want to quote for. What's the account name, or any details you can provide to help me find it?",
-        timestamp: new Date(),
-      };
-      setMessages([greetingMsg]);
-      setIsSessionReady(true);
-    } catch (e) {
-      console.error('Failed to start session:', e);
-    } finally {
-      setIsConnecting(false);
-    }
+    setStage('start');
   };
 
   const handleLogout = async () => {
-    if (sessionId) {
+    if (liveMode && sessionId) {
       try { await endSession(sessionId); } catch {}
     }
     setAuthenticated(false);
+    setStage('start');
+    setSelectedAccount(null);
+    setSelectedProducts([]);
+    setCartItems([]);
     setShowJson(false);
     setSessionId(null);
+    setIsFirstMessage(true);
     setLiveResponseData(null);
-    setMessages([]);
-    setIsConnecting(false);
-    setSelectedAccount(null);
-    setIsCreatingQuote(false);
+    setMessages([
+      {
+        id: '1',
+        role: 'agent',
+        content: "Hi! I'm the Quoting Assistant. How can I help you today?",
+        timestamp: new Date(),
+      },
+    ]);
   };
 
-  const handleNewSession = async () => {
-    // End current session if exists
-    if (sessionId) {
-      try { await endSession(sessionId); } catch {}
-    }
-    // Start fresh session
-    setIsConnecting(true);
-    setIsSessionReady(false);
-    try {
-      const session = await startSession();
-      setSessionId(session.sessionId);
-      setMessages([]);
-      setShowJson(false);
-      setLiveResponseData(null);
-      setSelectedAccount(null);
-      setIsCreatingQuote(false);
+  const handleAccountClick = (account: Account) => {
+    setSelectedAccount(account);
+    setStage('product-search');
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: account.name,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setInputValue('');
+    setIsLoading(true);
 
-      // Send output_format command with a valid request to set JSON mode
-      await sendAgentMessage(session.sessionId, 'output_format: json show me accounts');
-      setIsSessionReady(true);
-    } catch (e) {
-      console.error('Failed to start new session:', e);
-    } finally {
-      setIsConnecting(false);
-    }
+    setTimeout(() => {
+      const agentMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'agent',
+        content: `Great! I've selected ${account.name}. Now, what products would you like to add to the quote? Search for a product name.`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, agentMsg]);
+      setIsLoading(false);
+    }, 800);
   };
 
+  const handleProductClick = (product: Product) => {
+    setSelectedProducts((prev) => [...prev, product]);
+    const cartItem: CartItem = {
+      id: product.id,
+      name: product.name,
+      sku: product.sku,
+      qty: 1,
+      price: product.price,
+      total: product.price,
+    };
+    setCartItems((prev) => [...prev, cartItem]);
+    setStage('cart-management');
+
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: product.name,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setInputValue('');
+    setIsLoading(true);
+
+    setTimeout(() => {
+      const agentMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'agent',
+        content: `Added ${product.name} to your cart. You can type to adjust quantities or add more products.`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, agentMsg]);
+      setIsLoading(false);
+    }, 500);
+  };
+
+  const handleMessageSubmit = (message: string) => {
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: message,
+      timestamp: new Date(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue('');
+    setIsLoading(true);
+
+    setTimeout(() => {
+      let agentContent = '';
+      let agentCards: any[] | undefined;
+      let cardType: 'account' | 'product' | undefined;
+
+      if (stage === 'start') {
+        // Search for accounts
+        const searchResults = mockAccounts.filter((acc) =>
+          acc.name.toLowerCase().includes(message.toLowerCase())
+        );
+
+        if (searchResults.length === 1) {
+          handleAccountClick(searchResults[0]);
+          setIsLoading(false);
+          return;
+        } else if (searchResults.length > 1) {
+          agentContent = `Found ${searchResults.length} companies. Please select one:`;
+          agentCards = searchResults;
+          cardType = 'account';
+          setStage('account-search');
+        } else {
+          agentContent = `No companies found with "${message}". Try searching for: ${mockAccounts.map((a) => a.name).join(', ')}`;
+        }
+      } else if (stage === 'product-search') {
+        // Search for products
+        const searchResults = mockProducts.filter((prod) =>
+          prod.name.toLowerCase().includes(message.toLowerCase())
+        );
+
+        if (searchResults.length > 0) {
+          if (searchResults.length === 1) {
+            handleProductClick(searchResults[0]);
+            setIsLoading(false);
+            return;
+          } else {
+            agentContent = `Found ${searchResults.length} products. Please select one:`;
+            agentCards = searchResults;
+            cardType = 'product';
+          }
+        } else {
+          agentContent = `No products found with "${message}". Try: ${mockProducts.map((p) => p.name).join(', ')}`;
+        }
+      } else if (stage === 'cart-management') {
+        // Parse cart commands
+        const lowerMsg = message.toLowerCase();
+
+        if (lowerMsg.includes('add') || lowerMsg.includes('more')) {
+          agentContent = `What product would you like to add?`;
+          agentCards = mockProducts.filter(
+            (p) => !selectedProducts.some((sp) => sp.id === p.id)
+          );
+          cardType = 'product';
+          setStage('product-search');
+        } else if (lowerMsg.includes('remove') || lowerMsg.includes('delete')) {
+          agentContent = `Which product would you like to remove?`;
+        } else if (lowerMsg.match(/\d+/)) {
+          // Assume it's a quantity update
+          const match = message.match(/\d+/);
+          const qty = match ? parseInt(match[0]) : NaN;
+          if (!isNaN(qty) && cartItems.length > 0) {
+            const updatedCart = [...cartItems];
+            updatedCart[0].qty = qty;
+            updatedCart[0].total = qty * updatedCart[0].price;
+            setCartItems(updatedCart);
+            agentContent = `Updated quantity to ${qty} for ${updatedCart[0].name}.`;
+          } else if (isNaN(qty)) {
+            agentContent = `Please enter a valid number for the quantity.`;
+          }
+        } else {
+          agentContent = `You can adjust quantities by typing numbers, or type "add more" to add more products.`;
+        }
+      }
+
+      const agentMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'agent',
+        content: agentContent,
+        cards: agentCards,
+        cardType: cardType,
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, agentMsg]);
+      setIsLoading(false);
+    }, 800);
+  };
 
   const handleLiveMessage = async (message: string) => {
-    if (!sessionId) {
-      console.error('No active session');
-      return;
+    let activeSessionId = sessionId;
+    if (!activeSessionId) {
+      try {
+        const session = await startSession();
+        activeSessionId = session.sessionId;
+        setSessionId(activeSessionId);
+      } catch (e) {
+        console.error('Failed to start session:', e);
+        return;
+      }
     }
-    const activeSessionId = sessionId;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -170,10 +295,14 @@ export default function HeadlessAgentForce() {
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
     setIsLoading(true);
-    setThinkingMessage(THINKING_MESSAGES[Math.floor(Math.random() * THINKING_MESSAGES.length)]);
 
     try {
-      const response = await sendAgentMessage(activeSessionId!, message);
+      const utterance = isFirstMessage
+        ? `output_format: json. ${message}`
+        : message;
+      setIsFirstMessage(false);
+
+      const response = await sendAgentMessage(activeSessionId!, utterance);
       setLiveResponseData(response);
 
       const agentMsg: Message = {
@@ -196,18 +325,53 @@ export default function HeadlessAgentForce() {
     }
   };
 
-  const handleSendMessage = (messageOverride?: string) => {
-    const messageToSend = messageOverride || inputValue;
-    if (!messageToSend.trim()) return;
-    handleLiveMessage(messageToSend);
+  const handleSendMessage = () => {
+    if (!inputValue.trim()) return;
+    if (liveMode) {
+      handleLiveMessage(inputValue);
+    } else {
+      handleMessageSubmit(inputValue);
+    }
   };
 
+  const handleGenerateQuote = () => {
+    const userMsg: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: 'Generate quote',
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    setStage('quote-generated');
+    setIsLoading(true);
+
+    setTimeout(() => {
+      const agentMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'agent',
+        content: `Your quote has been generated successfully!`,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, agentMsg]);
+      setIsLoading(false);
+    }, 800);
+  };
+
+  const getAgentResponseJson = () => {
+    const total = cartItems.reduce((sum, item) => sum + item.total, 0);
+    return {
+      stage,
+      selectedAccount,
+      cartItems,
+      total,
+      quoteNumber: 'Q-0000123',
+      timestamp: new Date().toISOString(),
+    };
+  };
 
   const renderVizContent = () => {
-    if (!liveResponseData) return null;
-
-    // Show raw JSON if toggled
-    if (showJson) {
+    if (liveMode && liveResponseData) {
+      const jsonData = showJson ? liveResponseData : liveResponseData.data;
       return (
         <div style={{
           flex: 1,
@@ -219,120 +383,22 @@ export default function HeadlessAgentForce() {
             flex: 1,
             overflow: 'auto',
             padding: '12px',
-            background: '#2c3e50',
+            background: 'rgba(0, 0, 0, 0.3)',
             borderRadius: '6px',
             fontSize: '11px',
             fontFamily: "'Monaco', 'Courier New', monospace",
-            color: '#66dd99',
+            color: '#00ff88',
             margin: 0,
             lineHeight: '1.4',
           }}>
-            {JSON.stringify(liveResponseData, null, 2)}
+            {JSON.stringify(jsonData, null, 2)}
           </pre>
         </div>
       );
     }
 
-    const { type, data } = liveResponseData;
-
-    switch (type) {
-      case 'account_search':
-        if (!data || !Array.isArray(data)) {
-          return (
-            <div style={{ padding: '16px', textAlign: 'center', color: '#9ca3af' }}>
-              No accounts found
-            </div>
-          );
-        }
-        return (
-          <div className="card-grid">
-            {data.map((account: any, idx: number) => (
-              <AccountCard
-                key={account.Id}
-                account={account}
-                index={idx + 1}
-                disabled={selectedAccount !== null}
-                onSelect={(index: number) => {
-                  const selected = data[index - 1];
-                  setSelectedAccount(selected);
-                  const message = `Select the account "${selected.Name}"`;
-                  handleLiveMessage(message);
-                }}
-              />
-            ))}
-          </div>
-        );
-
-      case 'account_confirm':
-        // Show selected account card with location and phone
-        return (
-          <motion.div
-            className="viz-account-card-selected"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="account-header">
-              <span className="account-number">✓</span>
-              <span className="account-name">{data.account_name}</span>
-            </div>
-            {selectedAccount && (
-              <>
-                <div className="account-location-large">
-                  {selectedAccount.BillingCity && selectedAccount.BillingState && (
-                    `${selectedAccount.BillingCity}, ${selectedAccount.BillingState}`
-                  )}
-                </div>
-                {selectedAccount.Phone && (
-                  <div className="account-phone-large">{selectedAccount.Phone}</div>
-                )}
-              </>
-            )}
-            <div className="account-status">Account Confirmed</div>
-          </motion.div>
-        );
-
-      case 'product_search':
-        if (!data || !Array.isArray(data)) {
-          return (
-            <div style={{ padding: '16px', textAlign: 'center', color: '#9ca3af' }}>
-              No products found
-            </div>
-          );
-        }
-        return (
-          <div className="card-grid">
-            {data.map((product: any, idx: number) => (
-              <ProductCard
-                key={product.sku}
-                product={product}
-                index={idx}
-                onAddToCart={(sku: string, qty: number) => {
-                  setInputValue(`Add ${qty} units of ${sku}`);
-                  handleSendMessage();
-                }}
-              />
-            ))}
-          </div>
-        );
-
-      case 'cart_update':
-        return (
-          <CartCard
-            cartData={data}
-            isCreatingQuote={isCreatingQuote}
-            onCreateQuote={() => {
-              setIsCreatingQuote(true);
-              handleLiveMessage("I'm ready to create a quote");
-            }}
-          />
-        );
-
-      case 'quote_confirm':
-      case 'quote_created':
-        return <QuoteCard quoteData={data} />;
-
-      default:
+    if (stage === 'cart-management' || stage === 'quote-generated') {
+      if (showJson) {
         return (
           <div style={{
             flex: 1,
@@ -344,19 +410,104 @@ export default function HeadlessAgentForce() {
               flex: 1,
               overflow: 'auto',
               padding: '12px',
-              background: '#2c3e50',
+              background: 'rgba(0, 0, 0, 0.3)',
               borderRadius: '6px',
               fontSize: '11px',
               fontFamily: "'Monaco', 'Courier New', monospace",
-              color: '#66dd99',
+              color: '#00ff88',
               margin: 0,
               lineHeight: '1.4',
             }}>
-              {JSON.stringify(data, null, 2)}
+              {JSON.stringify(getAgentResponseJson(), null, 2)}
             </pre>
           </div>
         );
+      }
+
+      if (stage === 'quote-generated') {
+        const total = cartItems.reduce((sum) => sum + 0, 0) + cartItems.reduce((sum, item) => sum + item.total, 0);
+        return (
+          <div className="quote-display">
+            <div className="quote-header">
+              <div className="quote-number">Quote #Q-0000123</div>
+              <div className="quote-status status-draft">Draft</div>
+            </div>
+            <div className="quote-details">
+              <div className="quote-row">
+                <span>Account:</span>
+                <strong>{selectedAccount?.name}</strong>
+              </div>
+              <div className="quote-row">
+                <span>Items:</span>
+                <strong>{cartItems.length} products</strong>
+              </div>
+              <div className="quote-row">
+                <span>Total Value:</span>
+                <strong>${cartItems.reduce((sum, item) => sum + item.total, 0).toLocaleString()}</strong>
+              </div>
+              <div className="quote-row">
+                <span>Generated:</span>
+                <strong>{new Date().toLocaleDateString()}</strong>
+              </div>
+              <div style={{ marginTop: '16px', borderTop: '1px solid rgba(0, 217, 255, 0.2)', paddingTop: '16px' }}>
+                <div style={{ fontSize: '12px', fontWeight: '600', color: '#00d9ff', marginBottom: '8px' }}>ITEMS</div>
+                {cartItems.map((item) => (
+                  <div key={item.id} style={{ fontSize: '11px', marginBottom: '8px', padding: '8px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '4px' }}>
+                    <div style={{ color: '#ffffff', fontWeight: '600' }}>{item.name}</div>
+                    <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '10px' }}>{item.sku}</div>
+                    <div style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '10px' }}>Qty: {item.qty} × ${item.price} = ${item.total}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // Cart management view
+      const total = cartItems.reduce((sum, item) => sum + item.total, 0);
+      return (
+        <div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
+            {cartItems.map((item) => (
+              <div key={item.id} className="cart-item-display">
+                <div className="item-info">
+                  <div className="item-name">{item.name}</div>
+                  <div className="item-sku">{item.sku}</div>
+                </div>
+                <div className="item-qty">Qty: {item.qty}</div>
+                <div className="item-price">${item.total}</div>
+              </div>
+            ))}
+            <div className="cart-total-display">
+              <span>Total:</span>
+              <span className="total-value">${total.toLocaleString()}</span>
+            </div>
+          </div>
+          <motion.button
+            onClick={handleGenerateQuote}
+            style={{
+              marginTop: '16px',
+              padding: '10px 16px',
+              background: 'linear-gradient(135deg, #00d9ff 0%, #0099ff 100%)',
+              border: 'none',
+              borderRadius: '8px',
+              color: '#ffffff',
+              fontSize: '12px',
+              fontWeight: '600',
+              cursor: 'pointer',
+              width: '100%',
+            }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Generate Quote
+          </motion.button>
+        </div>
+      );
     }
+
+    return null;
   };
 
   if (!authenticated) {
@@ -398,48 +549,21 @@ export default function HeadlessAgentForce() {
     <div className="agent-wrapper">
       <div className="agent-left">
         <div className="agent-header">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
-            <div className="agent-title">
-              <MessageCircle size={20} />
-              <span>Tally</span>
-              {sessionId && <span className="live-badge">LIVE</span>}
-            </div>
-            {isConnecting && (
-              <span style={{
-                fontSize: '11px',
-                color: 'rgba(255, 200, 0, 0.8)',
-                fontFamily: "'Monaco', 'Courier New', monospace",
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}>
-                <span style={{ display: 'inline-block', animation: 'pulse 1.5s infinite' }}>●</span>
-                Connecting...
-              </span>
-            )}
-            {sessionId && !isConnecting && (
-              <span style={{
-                fontSize: '10px',
-                color: '#1B9B9E',
-                fontFamily: "'Monaco', 'Courier New', monospace",
-                wordBreak: 'break-all',
-              }}>
-                Session: {sessionId}
-              </span>
-            )}
+          <div className="agent-title">
+            <MessageCircle size={20} />
+            <span>Quoting Assistant</span>
+            {liveMode && <span className="live-badge">LIVE</span>}
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            {sessionId && !isConnecting && (
-              <motion.button
-                className="new-session-button"
-                onClick={handleNewSession}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                title="Start a new session"
-              >
-                <RotateCw size={18} />
-              </motion.button>
-            )}
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <motion.button
+              className={`live-toggle ${liveMode ? 'live-active' : ''}`}
+              onClick={() => setLiveMode(!liveMode)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              title={liveMode ? 'Switch to Demo Mode' : 'Switch to Live Agent'}
+            >
+              <Zap size={16} />
+            </motion.button>
             <motion.button
               className="logout-button"
               onClick={handleLogout}
@@ -466,6 +590,38 @@ export default function HeadlessAgentForce() {
                   {message.content}
                 </div>
               )}
+              {message.cards && message.cards.length > 0 && (
+                <div className="message-cards-container">
+                  {message.cards.map((card) => (
+                    <motion.div
+                      key={card.id}
+                      onClick={() => {
+                        if (message.cardType === 'account') {
+                          handleAccountClick(card);
+                        } else if (message.cardType === 'product') {
+                          handleProductClick(card);
+                        }
+                      }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {message.cardType === 'account' ? (
+                        <div className="account-card-inline">
+                          <div className="account-name">{card.name}</div>
+                          <div className="account-detail">{card.industry}</div>
+                          <div className="account-detail">${(card.arr / 1000000).toFixed(1)}M ARR</div>
+                        </div>
+                      ) : (
+                        <div className="product-card-inline">
+                          <div className="product-name">{card.name}</div>
+                          <div className="product-sku">{card.sku}</div>
+                          <div className="product-price">${card.price}</div>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
+              )}
               <div className="message-time">
                 {message.timestamp.toLocaleTimeString([], {
                   hour: '2-digit',
@@ -481,15 +637,10 @@ export default function HeadlessAgentForce() {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="message-bubble">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div className="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                  <span style={{ fontSize: '13px', color: '#666', fontStyle: 'italic' }}>
-                    {thinkingMessage}
-                  </span>
+                <div className="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
                 </div>
               </div>
             </motion.div>
@@ -500,64 +651,43 @@ export default function HeadlessAgentForce() {
         <div className="agent-input">
           <input
             type="text"
-            value={isListening ? (interimTranscript || inputValue) : inputValue}
+            value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !isLoading && !isListening) { e.preventDefault(); handleSendMessage(); } }}
-            placeholder={authenticated && sessionId ? (isListening ? "Listening..." : "Type or click mic...") : "Click 'Try It Live' to start"}
-            disabled={isLoading || !authenticated || !sessionId || isListening || !isSessionReady}
+            onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSendMessage(); } }}
+            placeholder={
+              stage === 'start'
+                ? 'Search for a company...'
+                : stage === 'product-search'
+                ? 'Search for a product...'
+                : 'Type a quantity or command...'
+            }
+            disabled={isLoading}
             className="input-field"
-            style={isLoading || isListening ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
           />
-          {isSpeechSupported && (
-            <motion.button
-              onClick={() => isListening ? stopListening() : startListening()}
-              disabled={isLoading || !authenticated || !sessionId || !isSessionReady}
-              className={`microphone-button ${isListening ? 'listening' : ''}`}
-              whileHover={!isLoading && !isListening ? { scale: 1.05 } : {}}
-              whileTap={!isLoading ? { scale: 0.95 } : {}}
-              style={isLoading ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
-              title={isListening ? "Stop listening" : "Click to speak"}
-            >
-              {isListening ? <MicOff size={18} /> : <Mic size={18} />}
-            </motion.button>
-          )}
           <motion.button
-            onClick={() => handleSendMessage()}
-            disabled={!inputValue.trim() || isLoading || !authenticated || !sessionId || isListening || !isSessionReady}
+            onClick={handleSendMessage}
+            disabled={!inputValue.trim() || isLoading}
             className="send-button"
-            whileHover={!isLoading && !isListening ? { scale: 1.05 } : {}}
-            whileTap={!isLoading ? { scale: 0.95 } : {}}
-            style={isLoading || isListening ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <Send size={18} />
           </motion.button>
         </div>
-        {showSpeechError && speechError && (
-          <div style={{
-            color: '#ff6b6b',
-            fontSize: '12px',
-            padding: '8px 12px',
-            marginTop: '8px',
-            textAlign: 'center',
-          }}>
-            {speechError === 'network' ? 'Network error. Please check your connection.' : `Error: ${speechError}`}
-          </div>
-        )}
       </div>
 
       <div className="agent-right">
         <div className="viz-header">
           <h3>
-            {liveResponseData && !showJson
-              ? (liveResponseData.type === 'account_search' ? 'Accounts'
-                 : liveResponseData.type === 'account_confirm' ? 'Account'
-                 : liveResponseData.type === 'product_search' ? 'Products'
-                 : liveResponseData.type === 'cart_update' ? (isCreatingQuote ? 'Draft Quote' : 'Shopping Cart')
-                 : liveResponseData.type === 'quote_created' ? 'Quote Created'
-                 : 'Agent Response')
-              : 'Agent Response'}
+            {liveMode && liveResponseData
+              ? (liveResponseData.type === 'quote_created' ? 'Quote Created' : 'Agent Response')
+              : stage === 'cart-management' || stage === 'quote-generated'
+                ? stage === 'quote-generated'
+                  ? 'Generated Quote'
+                  : 'Shopping Cart'
+                : 'Order Summary'}
           </h3>
-          {liveResponseData && (
+          {((stage === 'cart-management' || stage === 'quote-generated') || (liveMode && liveResponseData)) && (
             <motion.button
               onClick={() => setShowJson(!showJson)}
               style={{
