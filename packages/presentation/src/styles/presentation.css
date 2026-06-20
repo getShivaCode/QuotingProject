@@ -522,3 +522,99 @@
 .presentation-container.dark-mode .header-divider {
   color: rgba(255, 255, 255, 0.5);
 }
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 28px 32px;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+.presentation-container.dark-mode .modal-content {
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  color: #ffffff;
+}
+
+.modal-content h2 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.presentation-container.dark-mode .modal-content h2 {
+  color: #ffffff;
+}
+
+.modal-content p {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.presentation-container.dark-mode .modal-content p {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+
+.modal-button.cancel {
+  color: rgba(0, 0, 0, 0.6);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.modal-button.cancel:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.modal-button.confirm {
+  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
+  color: #ffffff;
+  border-color: rgba(0, 217, 255, 0.5);
+}
+
+.modal-button.confirm:hover {
+  box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
+}
+
+.presentation-container.dark-mode .modal-button.cancel {
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.presentation-container.dark-mode .modal-button.cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}

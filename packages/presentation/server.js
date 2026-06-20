@@ -32,33 +32,25 @@ function runSfCommand(command) {
   }
 }
 
-// Parse agent message - handles JSON strings, plain text, and mixed responses
+// Parse agent message - with deterministic Phase 1 enforcement, agent guarantees pure JSON when json_mode=True
 function parseAgentResponse(agentMessage) {
-  // Try direct JSON parse first
   try {
     const parsed = JSON.parse(agentMessage);
-    logger.info('parseAgentResponse: direct JSON parse succeeded');
+    logger.info('parseAgentResponse: JSON parse succeeded', { type: parsed.type });
     return parsed;
-  } catch (e) {
-    logger.info('parseAgentResponse: direct JSON parse failed, trying extraction');
-
-    // Not direct JSON, try to extract JSON from message (agent outputs text + JSON)
-    const jsonMatch = agentMessage.match(/\{[\s\S]*\}$/);
-    if (jsonMatch) {
-      logger.info('parseAgentResponse: JSON match found', { matchLength: jsonMatch[0].length });
-      try {
-        const extracted = JSON.parse(jsonMatch[0]);
-        logger.info('parseAgentResponse: JSON extraction succeeded');
-        return extracted;
-      } catch (e2) {
-        logger.error('parseAgentResponse: JSON extraction failed', { error: e2.message });
-        return agentMessage;
-      }
-    }
-
-    // No JSON found, return as plain text
-    logger.info('parseAgentResponse: no JSON found, returning as plain text');
-    return agentMessage;
+  } catch (error) {
+    // If json_mode is enabled, parsing should never fail. If it does, log and fail fast.
+    logger.error('parseAgentResponse: Failed to parse agent response', {
+      error: error.message,
+      messagePreview: agentMessage.substring(0, 200),
+    });
+    // Return as plain text response (agent may be in text mode or error state)
+    return {
+      type: 'text',
+      message: agentMessage,
+      data: null,
+      actions: [],
+    };
   }
 }
 

@@ -68,35 +68,22 @@ export async function sendMessage(sessionId: string, message: string): Promise<A
 
     logger.logResponse(method, url, response.status, duration, data);
 
-    console.log('Agent response:', data);
-
-    // Handle pre-parsed JSON from server
+    // Server now guarantees agentMessage is already properly parsed
+    // (either JSON object when json_mode=True, or plain text object when json_mode=False)
     if (typeof data.agentMessage === 'object' && data.agentMessage !== null) {
-      console.log('Agent message is already parsed JSON');
-      return data.agentMessage as AgentMessage;
+      const agentMessage = data.agentMessage as AgentMessage;
+      console.log('Agent message parsed as object', { type: agentMessage.type });
+      return agentMessage;
     }
 
-    // Handle string - try direct parse first
+    // Fallback: if for some reason agentMessage is a string, try to parse it
     if (typeof data.agentMessage === 'string') {
+      console.log('Agent message is string, attempting parse');
       try {
         const parsed = JSON.parse(data.agentMessage);
-        console.log('Parsed JSON from string');
         return parsed as AgentMessage;
       } catch {
-        // Agent outputs text + JSON together - extract JSON from end of message
-        const jsonMatch = data.agentMessage.match(/\{[\s\S]*\}$/);
-        if (jsonMatch) {
-          try {
-            const extracted = JSON.parse(jsonMatch[0]);
-            console.log('Extracted JSON from message');
-            return extracted as AgentMessage;
-          } catch (e) {
-            console.log('Failed to extract JSON');
-          }
-        }
-
-        // Just plain text, wrap it
-        console.log('Plain text response');
+        // Return as plain text response
         return {
           type: 'text',
           message: data.agentMessage,
@@ -106,7 +93,7 @@ export async function sendMessage(sessionId: string, message: string): Promise<A
       }
     }
 
-    throw new Error('Unexpected agentMessage format');
+    throw new Error('Unexpected agentMessage format: expected object or string');
 
   } catch (error) {
     const duration = performance.now() - startTime;

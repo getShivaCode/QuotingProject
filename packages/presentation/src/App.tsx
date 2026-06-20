@@ -1,12 +1,15 @@
 import React from 'react';
 import Presentation from './components/Presentation';
+import { SessionProvider } from './context/SessionContext';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <Presentation />
-    </div>
+    <SessionProvider>
+      <div className="App">
+        <Presentation />
+      </div>
+    </SessionProvider>
   );
 }
 

@@ -3,6 +3,7 @@ import { Send, MessageCircle, LogOut, Code, RotateCw, Mic, MicOff } from 'lucide
 import { motion } from 'framer-motion';
 import { startSession, sendMessage as sendAgentMessage, endSession } from '../services/agentApi';
 import useSpeechRecognition from '../hooks/useSpeechRecognition';
+import { useSession } from '../context/SessionContext';
 import AccountCard from './cards/AccountCard';
 import ProductCard from './cards/ProductCard';
 import CartCard from './cards/CartCard';
@@ -39,6 +40,7 @@ interface Message {
 
 export default function HeadlessAgentForce() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { setSessionId: setContextSessionId } = useSession();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -52,6 +54,7 @@ export default function HeadlessAgentForce() {
   const [isCreatingQuote, setIsCreatingQuote] = useState(false);
   const [isSessionReady, setIsSessionReady] = useState(false);
   const [thinkingMessage, setThinkingMessage] = useState('');
+  const [quoteName, setQuoteName] = useState('');
 
   const { transcript, interimTranscript, isListening, isSupported: isSpeechSupported, error: speechError, startListening, stopListening } = useSpeechRecognition();
   const [showSpeechError, setShowSpeechError] = useState(false);
@@ -87,6 +90,7 @@ export default function HeadlessAgentForce() {
     try {
       const session = await startSession();
       setSessionId(session.sessionId);
+      setContextSessionId(session.sessionId);
       setMessages([]);
 
       // Session is initialized server-side with JSON mode enabled
@@ -114,6 +118,7 @@ export default function HeadlessAgentForce() {
     setAuthenticated(false);
     setShowJson(false);
     setSessionId(null);
+    setContextSessionId(null);
     setLiveResponseData(null);
     setMessages([]);
     setIsConnecting(false);
@@ -132,6 +137,7 @@ export default function HeadlessAgentForce() {
     try {
       const session = await startSession();
       setSessionId(session.sessionId);
+      setContextSessionId(session.sessionId);
       setMessages([]);
       setShowJson(false);
       setLiveResponseData(null);
@@ -269,7 +275,7 @@ export default function HeadlessAgentForce() {
           >
             <div className="account-header">
               <span className="account-number">✓</span>
-              <span className="account-name">{data.account_name}</span>
+              <span className="account-name">{selectedAccount?.Name || 'Account Selected'}</span>
             </div>
             {selectedAccount && (
               <>
@@ -323,9 +329,152 @@ export default function HeadlessAgentForce() {
           />
         );
 
+      case 'pricing':
+        // Show draft quote with line items and total, plus quote name input
+        const isReadyToSubmit = quoteName.trim().length > 0;
+        const items = data?.items || [];
+        const grandTotal = data?.grandTotal || 0;
+
+        return (
+          <motion.div
+            className="viz-draft-quote"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              padding: '16px',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(0, 217, 255, 0.05)',
+              border: '1px solid rgba(0, 217, 255, 0.2)',
+            }}
+          >
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: 'rgba(255, 255, 255, 0.9)' }}>
+                {data?.accountName || 'Quote'}
+              </div>
+            </div>
+
+            <div style={{ flex: 1, overflow: 'auto', marginBottom: '12px' }}>
+              <div style={{ fontSize: '11px' }}>
+                {Array.isArray(items) && items.length > 0 ? (
+                  <div>
+                    {items.map((item: any, idx: number) => {
+                      const price = item.unitPrice || item.unit_price || 0;
+                      const total = item.lineTotal || item.subtotal || 0;
+                      return (
+                        <div key={idx} style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                          <div style={{ fontWeight: '500', color: 'rgba(0, 217, 255, 0.8)' }}>{item.name}</div>
+                          <div style={{ color: 'rgba(255, 255, 255, 0.6)', marginTop: '4px', fontSize: '10px' }}>
+                            SKU: {item.sku}
+                          </div>
+                          <div style={{ color: 'rgba(255, 255, 255, 0.7)', marginTop: '6px', display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px', fontSize: '10px' }}>
+                            <span>Qty:</span>
+                            <span>{item.quantity} @ ${Number(price).toFixed(2)}</span>
+                            <span>Line:</span>
+                            <span style={{ color: 'rgba(0, 217, 255, 0.8)' }}>${Number(total).toFixed(2)}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div style={{ color: 'rgba(255, 255, 255, 0.5)' }}>No items in quote</div>
+                )}
+              </div>
+            </div>
+
+            <div style={{ borderTop: '1px solid rgba(0, 217, 255, 0.3)', paddingTop: '12px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '16px', fontSize: '13px', marginBottom: '16px' }}>
+                <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Grand Total:</span>
+                <span style={{ color: 'rgba(0, 217, 255, 0.9)', fontWeight: '600' }}>
+                  ${Number(grandTotal).toFixed(2)} {data?.currency || 'USD'}
+                </span>
+              </div>
+
+              <div style={{ marginBottom: '12px' }}>
+                <label style={{ fontSize: '12px', color: 'rgba(0, 217, 255, 0.8)', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
+                  QUOTE NAME (Required)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g., Project Alpha Q2 2024"
+                  value={quoteName}
+                  onChange={(e) => setQuoteName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && isReadyToSubmit && !isLoading) {
+                      handleLiveMessage(`Create quote with name: ${quoteName}`);
+                      setQuoteName('');
+                    }
+                  }}
+                  disabled={isLoading}
+                  style={{
+                    width: '100%',
+                    padding: '8px 10px',
+                    borderRadius: '4px',
+                    border: isReadyToSubmit ? '1px solid rgba(0, 217, 255, 0.6)' : '1px solid rgba(255, 255, 255, 0.2)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    fontSize: '12px',
+                    fontFamily: 'inherit',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <motion.button
+                onClick={() => {
+                  if (isReadyToSubmit && !isLoading) {
+                    handleLiveMessage(`Create quote with name: ${quoteName}`);
+                    setQuoteName('');
+                  }
+                }}
+                disabled={!isReadyToSubmit || isLoading}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  borderRadius: '4px',
+                  border: 'none',
+                  backgroundColor: isReadyToSubmit && !isLoading ? 'rgba(0, 217, 255, 0.8)' : 'rgba(0, 217, 255, 0.3)',
+                  color: '#ffffff',
+                  fontWeight: '600',
+                  fontSize: '12px',
+                  cursor: isReadyToSubmit && !isLoading ? 'pointer' : 'not-allowed',
+                  transition: 'all 0.2s ease',
+                  opacity: isReadyToSubmit && !isLoading ? 1 : 0.5,
+                }}
+                whileHover={isReadyToSubmit && !isLoading ? { scale: 1.02 } : {}}
+                whileTap={isReadyToSubmit && !isLoading ? { scale: 0.98 } : {}}
+              >
+                {isLoading ? 'Creating...' : 'Create Quote'}
+              </motion.button>
+            </div>
+          </motion.div>
+        );
+
       case 'quote_confirm':
       case 'quote_created':
-        return <QuoteCard quoteData={data} />;
+        // Transform agent response to QuoteCard format
+        const transformedQuoteData = {
+          quoteNumber: data?.quoteNumber,
+          quoteId: data?.quoteId,
+          accountName: data?.accountName,
+          grandTotal: Number(data?.grandTotal || 0),
+          status: 'Generated',
+          currency: data?.currency || 'USD',
+          itemCount: (data?.items || []).length,
+          items: (data?.items || []).map((item: any) => ({
+            sku: item.sku,
+            name: item.name,
+            quantity: item.quantity,
+            unit_price: item.unitPrice,
+            subtotal: item.lineTotal,
+          })),
+        };
+        return <QuoteCard quoteData={transformedQuoteData} />;
 
       default:
         return (
@@ -548,6 +697,7 @@ export default function HeadlessAgentForce() {
                  : liveResponseData.type === 'account_confirm' ? 'Account'
                  : liveResponseData.type === 'product_search' ? 'Products'
                  : liveResponseData.type === 'cart_update' ? (isCreatingQuote ? 'Draft Quote' : 'Shopping Cart')
+                 : liveResponseData.type === 'pricing' ? 'Draft Quote'
                  : liveResponseData.type === 'quote_created' ? 'Quote Created'
                  : 'Agent Response')
               : 'Agent Response'}

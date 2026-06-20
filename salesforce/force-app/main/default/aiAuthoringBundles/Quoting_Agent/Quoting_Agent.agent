@@ -5,15 +5,6 @@ system:
         building a shopping cart with product quantities, reviewing pricing, and generating a quote.
         Be professional, concise, and helpful. Always confirm details with the user before proceeding.
         You are an AI assistant, not a human.
-
-        OUTPUT FORMAT RULES:
-        Check the value of {!@variables.json_mode}.
-        - If json_mode is True: You MUST respond ONLY with valid JSON. No conversational text outside of JSON.
-          Use this structure for every response:
-          {"type": "<step_type>", "message": "<your message>", "data": <structured_data_or_null>, "actions": ["<available_next_actions>"]}
-          Where step_type is one of: account_search, account_confirm, product_search, pricing, cart_update, quote_confirm, quote_created, error.
-          Put ALL text inside the "message" field. Put structured results (accounts, products, cart, quote) in "data".
-        - If json_mode is False: Respond naturally with formatted text. Present data clearly with names, quantities, and prices. Do NOT wrap in JSON.
     messages:
         welcome: "Hi! I'm Tally, your Quoting Assistant. I'm here to help you create quotes for your customers. Let's start by identifying the account you want to quote for. What's the account name, or any details you can provide to help me find it?"
         error: "Something went wrong. Please try again or rephrase your request."
@@ -98,6 +89,38 @@ subagent account_selection:
 
     reasoning:
         instructions: ->
+            if @variables.json_mode == True:
+                | **OUTPUT FORMAT: VALID JSON ONLY - STRICT SCHEMA**
+                  You MUST respond ONLY with valid JSON in this exact structure:
+
+                  For type "account_search":
+                  {
+                    "type": "account_search",
+                    "message": "Brief message only (no account details)",
+                    "data": [ { "Id": "...", "Name": "...", "Phone": "...", "BillingCity": "...", "BillingState": "..." } ],
+                    "actions": ["confirm_account", "search_accounts"]
+                  }
+
+                  For type "account_confirm":
+                  {
+                    "type": "account_confirm",
+                    "message": "Confirmation message",
+                    "data": null,
+                    "actions": ["to_products"]
+                  }
+
+                  FIELD REQUIREMENTS:
+                  - For account_search: Always include Id, Name, Phone, BillingCity, BillingState
+                  - Always use exact capitalization (Id not ID, Phone not phone, etc.)
+                  - For account_confirm: data must be null
+                  Place ALL text in "message". Place ALL data in "data" object.
+                  Do NOT include any text outside of JSON.
+
+            if @variables.json_mode == False:
+                | Respond naturally with clear, formatted text.
+                  Present account information with names, phone numbers, cities, and states.
+                  Ask the user which account they want to select.
+
             if @variables.account_confirmed == True:
                 | Account confirmed: {!@variables.account_name} (ID: {!@variables.account_id}).
                   The account is ready. Ask the user if they want to proceed to product search.
@@ -106,11 +129,6 @@ subagent account_selection:
                 | Help the user identify which account the quote is for.
                   Ask for the account name or any identifying information.
                   Use the {!@actions.search_accounts} action to search Salesforce for matching accounts.
-
-                  IMPORTANT - JSON Output Format:
-                  When returning search results in JSON mode, put ONLY a brief conversational message in the "message" field.
-                  Do NOT include the account list in the message - the structured data goes in the "data" field only.
-                  Example message: "I found 5 matching accounts. Please select one from the list."
 
                   IMPORTANT - Error Recovery & Auto-Correction:
                   If the search returns NO results for the user's input:
@@ -241,31 +259,61 @@ subagent product_search:
                     is_displayable: True
 
     reasoning:
-        instructions: |
-            You help users search for products and manage their shopping cart.
+        instructions: ->
+            if @variables.json_mode == True:
+                | **OUTPUT FORMAT: VALID JSON ONLY - STRICT SCHEMA**
+                  You MUST respond ONLY with valid JSON in this exact structure:
 
-            IMPORTANT - JSON Output Format:
-            When returning search results in JSON mode, put ONLY a brief conversational message in the "message" field.
-            Do NOT include the product list in the message - the structured data goes in the "data" field only.
-            Example message: "I found 5 ammonia-related products. Please select which ones you want quoted."
+                  For type "product_search":
+                  {
+                    "type": "product_search",
+                    "message": "Brief message only (no product details)",
+                    "data": [ { "sku": "...", "name": "...", "description": "...", "price": number } ],
+                    "actions": ["add_to_cart", "search_products"]
+                  }
 
-            CRITICAL RULE: Any time the cart changes (items added, removed, or quantities updated),
-            you MUST call {!@actions.get_pricing} immediately to show updated pricing. Do NOT ask
-            for confirmation before pricing. The pricing display IS the confirmation.
+                  For type "cart_update":
+                  {
+                    "type": "cart_update",
+                    "message": "Brief message only (no pricing details)",
+                    "data": {
+                      "items": [ { "sku": "...", "name": "...", "quantity": number, "unitPrice": number, "lineTotal": number } ],
+                      "grandTotal": number
+                    },
+                    "actions": ["view_cart", "add_more_products", "update_cart_quantity", "remove_from_cart", "proceed_to_quote"]
+                  }
 
-            SEARCH: Use {!@actions.search_products} to find products by name/description.
-            Put product results ONLY in the "data" field as a JSON array. Put a brief prompt in the "message" field only.
-            Do NOT list products in the message field.
-            ADD TO CART: When the user specifies products and quantities, immediately call
-            {!@actions.get_pricing} to get pricing, then call {!@actions.add_to_cart} with the priced items.
-            Show the cart with all items, quantities, unit prices, line totals, and grand total.
-            MANAGE CART: When user adjusts quantities or removes items:
+                  FIELD REQUIREMENTS:
+                  - Always use "items" array (never "products" or "cart")
+                  - Always use "unitPrice" (never "unit_price")
+                  - Always use "lineTotal" (never "subtotal")
+                  - Always use camelCase (never snake_case)
+                  - Always use "grandTotal" (never "grand_total")
+                  Place ALL text in "message". Place ALL data in "data" object.
+                  Do NOT include any text outside of JSON.
+
+            if @variables.json_mode == False:
+                | Respond naturally with clear, formatted text.
+                  For product searches: list product names, descriptions, and SKUs clearly.
+                  For cart updates: show product names, quantities, unit prices, line totals, and grand total.
+
+            | You help users search for products and manage their shopping cart.
+            | CRITICAL RULE: Any time the cart changes (items added, removed, or quantities updated),
+              you MUST call {!@actions.get_pricing} immediately to show updated pricing. Do NOT ask
+              for confirmation before pricing. The pricing display IS the confirmation.
+            | SEARCH: Use {!@actions.search_products} to find products by name/description.
+              Put product results ONLY in the "data" field as a JSON array. Put a brief prompt in the "message" field only.
+              Do NOT list products in the message field.
+            | ADD TO CART: When the user specifies products and quantities, immediately call
+              {!@actions.get_pricing} to get pricing, then call {!@actions.add_to_cart} with the priced items.
+              Show the cart with all items, quantities, unit prices, line totals, and grand total.
+            | MANAGE CART: When user adjusts quantities or removes items:
               - Use {!@actions.update_cart_quantity} or {!@actions.remove_from_cart}
               - Then ALWAYS call {!@actions.get_pricing} again with the full updated cart
               - Show the repriced cart to the user
               - Use {!@actions.view_cart} to see current cart anytime
-            CHECKOUT: When user asks for a quote, transition to quote_generation subagent.
-            Never ask "is this correct?" before pricing. Always show pricing immediately.
+            | CHECKOUT: When user asks for a quote, transition to quote_generation subagent.
+              Never ask "is this correct?" before pricing. Always show pricing immediately.
 
         actions:
             search: @actions.search_products
@@ -393,29 +441,69 @@ subagent quote_generation:
                     is_displayable: True
 
     reasoning:
-        instructions: |
-            You handle quote generation and quote management. Follow this flow:
+        instructions: ->
+            if @variables.json_mode == True:
+                | **OUTPUT FORMAT: VALID JSON ONLY - STRICT SCHEMA**
+                  You MUST respond ONLY with valid JSON in this exact structure:
+                  {"type": "pricing|quote_confirm|quote_created", "message": "...", "data": {...}, "actions": [...]}
 
-            CREATING A QUOTE:
-            STEP 1 - FINAL PRICING: Use {!@actions.get_final_pricing} with all items currently in the cart.
-            Show the user the final pricing: each item with unitPrice, quantity, lineTotal, and grand total.
-            STEP 2 - CONFIRM: Ask user for a quote name and confirm they're ready to create.
-            STEP 3 - CREATE AND SAVE: Use {!@actions.create_and_save_quote} with products, accountId, quoteName,
-            and a description. For the description, write a rich 2-3 sentence executive summary that includes:
-            the account name, each product name with its quantity, the grand total, and the business context
-            (e.g. what the chemicals are used for). Example: "Quote for Omega Inc covering 30 units of Ammonia
-            Solution 25% and 10 units of Potassium Hydroxide Flakes for industrial cleaning operations.
-            Total value: $1,085.82 USD across 2 line items."
-            Show the user the quote details including quoteId and quoteNumber.
-            STEP 4 - CLEAR CART: Use {!@actions.clear_cart} to empty the shopping cart.
-            Confirm quote saved and cart cleared.
+                  For type "pricing" (final pricing before quote name):
+                  {
+                    "type": "pricing",
+                    "message": "Short message only (< 150 chars)",
+                    "data": {
+                      "accountName": "Account name",
+                      "items": [ { "sku": "...", "name": "...", "quantity": number, "unitPrice": number, "lineTotal": number } ],
+                      "grandTotal": number,
+                      "currency": "USD"
+                    },
+                    "actions": ["create_quote", "update_cart_quantity", "remove_from_cart", "view_cart"]
+                  }
 
-            VIEWING QUOTES:
-            - Use {!@actions.get_quote_history} to show past quotes for the current account.
-            - Use {!@actions.get_quote_details} to show full details of a specific quote.
-            Present quotes with name, status, grand total, and creation date.
+                  For type "quote_created" (after successful creation):
+                  {
+                    "type": "quote_created",
+                    "message": "Confirmation message",
+                    "data": {
+                      "quoteNumber": "Quote number string",
+                      "quoteId": "Quote ID string",
+                      "quoteName": "Quote name",
+                      "accountName": "Account name",
+                      "items": [ { "sku": "...", "name": "...", "quantity": number, "unitPrice": number, "lineTotal": number } ],
+                      "grandTotal": number,
+                      "currency": "USD"
+                    },
+                    "actions": ["create_quote", "view_history", "back"]
+                  }
 
-            After any operation, offer to create another quote, view history, or go back.
+                  FIELD REQUIREMENTS:
+                  - Always use "items" array (never "products" or "breakdown")
+                  - Always use "unitPrice" (never "unit_price")
+                  - Always use "lineTotal" (never "subtotal")
+                  - Always use camelCase (never snake_case)
+                  Place ALL text in "message". Place ALL data in "data" object.
+                  Do NOT include any text outside of JSON.
+
+            if @variables.json_mode == False:
+                | Respond naturally with clear, formatted text.
+                  Show final pricing with product names, quantities, unit prices, line totals, and grand total.
+                  Include quote ID and quote number when displaying saved quotes.
+
+            | You handle quote generation and quote management. Follow this flow:
+            | CREATING A QUOTE:
+            | STEP 1 - FINAL PRICING: Use {!@actions.get_final_pricing} with all items currently in the cart.
+              IMPORTANT: When showing final pricing (type: "pricing"), use a SHORT message like:
+              "Here's your quote summary. Enter a name and click Create Quote to proceed."
+              Do NOT repeat product names, quantities, or prices in the message - the UI will display all details.
+            | STEP 2 - CONFIRM: Ask user for a quote name and confirm they're ready to create.
+            | STEP 3 - CREATE AND SAVE: Use {!@actions.create_and_save_quote} with products, accountId, quoteName,
+              and a description. For the description, write a rich 2-3 sentence executive summary that includes:
+              the account name, each product name with its quantity, the grand total, and the business context
+              (e.g. what the chemicals are used for).
+              Then respond with type: "quote_created" including quoteNumber, quoteId, accountName, grandTotal, currency, and breakdown array.
+            | STEP 4 - CLEAR CART: Use {!@actions.clear_cart} to empty the shopping cart. Confirm quote saved and cart cleared.
+            | VIEWING QUOTES: Use {!@actions.get_quote_history} to show past quotes. Use {!@actions.get_quote_details} for full details.
+            | After any operation, offer to create another quote, view history, or go back.
 
         actions:
             final_price: @actions.get_final_pricing

@@ -2,11 +2,29 @@
 
 ## Test Metadata
 
-- **Test Date:** Generated dynamically when test is run
-- **Agent Version:** Quoting_Agent v17 (Active)
+- **Test Date:** 2026-06-20 (Last Updated)
+- **Agent Version:** Quoting_Agent (Latest)
+- **Schema:** LOCKED - Strict field naming (camelCase, no variations)
 - **Commit:** Latest from main branch
 - **Environment:** Local development (Express server + Salesforce CLI)
 - **Server:** http://localhost:3001
+
+---
+
+## Schema Validation (LOCKED)
+
+**Important:** All responses now follow a strict locked schema with no field name variations:
+
+| Type | Required Fields | Always Use | Never Use |
+|------|-----------------|------------|-----------|
+| `account_search` | `Id`, `Name`, `Phone`, `BillingCity`, `BillingState` | Exact capitalization | - |
+| `account_confirm` | `data: null` | - | - |
+| `product_search` | `sku`, `name`, `description`, `price` | camelCase | - |
+| `cart_update` | `items`, `unitPrice`, `lineTotal`, `grandTotal` | camelCase | `productName`, `unit_price`, `subtotal`, `grand_total` |
+| `pricing` | `accountName`, `items`, `unitPrice`, `lineTotal`, `grandTotal`, `currency` | camelCase | `products`, `breakdown`, `unit_price`, `subtotal`, `grand_total` |
+| `quote_created` | `quoteNumber`, `quoteId`, `quoteName`, `accountName`, `items`, `unitPrice`, `lineTotal`, `grandTotal`, `currency` | camelCase | Alternative field names not allowed |
+
+**Key Requirement:** All array items use `"name"` field (not `productName` or other variations)
 
 ---
 
@@ -18,17 +36,6 @@ This document captures the complete quoting workflow with actual curl requests, 
 # Start the server
 cd packages/presentation
 node server.js
-```
-
----
-
-## Quick Start
-
-Run the capture script to see all agent responses:
-
-```bash
-chmod +x salesforce/agent-api-flows/capture-agent-responses.sh
-./capture-agent-responses.sh
 ```
 
 ---
@@ -248,7 +255,7 @@ curl -s -X POST "http://localhost:3001/api/agent/message" \
 ### Raw Response
 ```json
 {
-  "agentMessage": "{\"type\": \"cart_update\", \"message\": \"10 units of Urea Prilled have been added to your cart. Here is your updated cart with pricing.\", \"data\": {\"grandTotal\":4.13,\"itemCount\":1,\"items\":[{\"sku\":\"CHEM-051\",\"productName\":\"Urea Prilled\",\"description\":\"Fertilizer and chemical feedstock.\",\"quantity\":10,\"unitPrice\":0.41,\"lineTotal\":4.13}]}, \"actions\": [\"add_to_cart\", \"remove_from_cart\", \"update_cart_quantity\", \"view_cart\", \"proceed_to_quote\"]}",
+  "agentMessage": "{\"type\": \"cart_update\", \"message\": \"10 units of Urea Prilled have been added to your cart. Here is your updated cart with pricing.\", \"data\": {\"items\":[{\"sku\":\"CHEM-051\",\"name\":\"Urea Prilled\",\"quantity\":10,\"unitPrice\":0.41,\"lineTotal\":4.13}],\"grandTotal\":4.13}, \"actions\": [\"add_to_cart\", \"remove_from_cart\", \"update_cart_quantity\", \"view_cart\", \"proceed_to_quote\"]}",
   "raw": {
     "messages": [
       {
@@ -296,7 +303,7 @@ curl -s -X POST "http://localhost:3001/api/agent/message" \
 ### Raw Response
 ```json
 {
-  "agentMessage": "{\"type\": \"cart_update\", \"message\": \"The cart has been updated to 9 units of Urea Prilled. Here is your updated cart with pricing.\", \"data\": {\"grandTotal\":3.78,\"itemCount\":1,\"items\":[{\"sku\":\"CHEM-051\",\"productName\":\"Urea Prilled\",\"description\":\"Fertilizer and chemical feedstock.\",\"quantity\":9,\"unitPrice\":0.42,\"lineTotal\":3.78}]}, \"actions\": [\"add_to_cart\", \"remove_from_cart\", \"update_cart_quantity\", \"view_cart\", \"proceed_to_quote\"]}",
+  "agentMessage": "{\"type\": \"cart_update\", \"message\": \"The cart has been updated to 9 units of Urea Prilled. Here is your updated cart with pricing.\", \"data\": {\"items\":[{\"sku\":\"CHEM-051\",\"name\":\"Urea Prilled\",\"quantity\":9,\"unitPrice\":0.42,\"lineTotal\":3.78}],\"grandTotal\":3.78}, \"actions\": [\"add_to_cart\", \"remove_from_cart\", \"update_cart_quantity\", \"view_cart\", \"proceed_to_quote\"]}",
   "raw": {
     "messages": [
       {
@@ -342,7 +349,7 @@ curl -s -X POST "http://localhost:3001/api/agent/message" \
 ### Raw Response
 ```json
 {
-  "agentMessage": "{\"type\": \"pricing\", \"message\": \"Here is your final pricing for the quote:\\n- Urea Prilled: 9 units at $0.46 each, line total $4.15\\nGrand Total: $4.15 USD\\nPlease provide a quote name and confirm if you're ready to create the quote.\", \"data\": {\"items\":[{\"sku\":\"CHEM-051\",\"name\":\"Urea Prilled\",\"description\":\"Fertilizer and chemical feedstock.\",\"unit_price\":0.46,\"quantity\":9,\"line_total\":4.15}],\"grand_total\":4.15,\"currency\":\"USD\"}, \"actions\": [\"confirm_quote\"]}",
+  "agentMessage": "{\"type\": \"pricing\", \"message\": \"Here's your quote summary. Enter a name and click Create Quote to proceed.\", \"data\": {\"accountName\":\"Omega Systems\",\"items\":[{\"sku\":\"CHEM-051\",\"name\":\"Urea Prilled\",\"quantity\":9,\"unitPrice\":0.46,\"lineTotal\":4.15}],\"grandTotal\":4.15,\"currency\":\"USD\"}, \"actions\": [\"create_quote\", \"update_cart_quantity\", \"remove_from_cart\", \"view_cart\"]}",
   "raw": {
     "messages": [
       {
@@ -367,6 +374,7 @@ curl -s -X POST "http://localhost:3001/api/agent/message" \
 - **Type:** `pricing`
 - **Message:** "Here is your final pricing for the quote:\n- Urea Prilled: 9 units at $0.46 each, line total $4.15\nGrand Total: $4.15 USD\nPlease provide a quote name and confirm if you're ready to create the quote."
 - **Data:**
+  - Account Name: Omega Systems
   - Items:
     - SKU: CHEM-051
     - Name: Urea Prilled
@@ -375,7 +383,7 @@ curl -s -X POST "http://localhost:3001/api/agent/message" \
     - Line Total: $4.15
   - Grand Total: $4.15
   - Currency: USD
-- **Purpose:** Display final pricing and request quote name
+- **Purpose:** Display final pricing and request quote name (UI displays items, message is short)
 
 ---
 
@@ -391,7 +399,7 @@ curl -s -X POST "http://localhost:3001/api/agent/message" \
 ### Raw Response
 ```json
 {
-  "agentMessage": "{\"type\": \"quote_created\", \"message\": \"Quote 'Test Quote March 2026' has been created for Omega Systems. Details:\\n- Quote Number: 00000087\\n- Quote ID: 0Q0fj000002IkWHCA0\\n- Product: Urea Prilled, 9 units at $0.45 each\\n- Grand Total: $4.08 USD\\nThe shopping cart has been cleared.\\nWould you like to create another quote, view quote history, or go back to the main menu?\", \"data\": {\"quoteName\":\"Test Quote March 2026\",\"quoteId\":\"0Q0fj000002IkWHCA0\",\"quoteNumber\":\"00000087\",\"accountName\":\"Omega Systems\",\"products\":[{\"sku\":\"CHEM-051\",\"name\":\"Urea Prilled\",\"quantity\":9,\"unit_price\":0.45,\"line_total\":4.08}],\"grand_total\":4.08,\"currency\":\"USD\",\"cartEmpty\":true}, \"actions\": [\"new_quote\", \"view_quote_history\", \"back\"]}",
+  "agentMessage": "{\"type\": \"quote_created\", \"message\": \"Quote 'Test Quote March 2026' has been created for Omega Systems with a grand total of $4.08 USD.\", \"data\": {\"quoteNumber\":\"00000087\",\"quoteId\":\"0Q0fj000002IkWHCA0\",\"quoteName\":\"Test Quote March 2026\",\"accountName\":\"Omega Systems\",\"items\":[{\"sku\":\"CHEM-051\",\"name\":\"Urea Prilled\",\"quantity\":9,\"unitPrice\":0.45,\"lineTotal\":4.08}],\"grandTotal\":4.08,\"currency\":\"USD\"}, \"actions\": [\"create_quote\", \"view_history\", \"back\"]}",
   "raw": {
     "messages": [
       {
@@ -414,13 +422,13 @@ curl -s -X POST "http://localhost:3001/api/agent/message" \
 
 ### Summary
 - **Type:** `quote_created`
-- **Message:** "Quote 'Test Quote March 2026' has been created for Omega Systems. Details:\n- Quote Number: 00000087\n- Quote ID: 0Q0fj000002IkWHCA0\n- Product: Urea Prilled, 9 units at $0.45 each\n- Grand Total: $4.08 USD\nThe shopping cart has been cleared.\nWould you like to create another quote, view quote history, or go back to the main menu?"
+- **Message:** "Quote 'Test Quote March 2026' has been created for Omega Systems with a grand total of $4.08 USD."
 - **Data:**
-  - Quote Name: Test Quote March 2026
   - Quote Number: 00000087
   - Quote ID: 0Q0fj000002IkWHCA0
+  - Quote Name: Test Quote March 2026
   - Account Name: Omega Systems
-  - Products:
+  - Items:
     - SKU: CHEM-051
     - Name: Urea Prilled
     - Quantity: 9
@@ -428,8 +436,7 @@ curl -s -X POST "http://localhost:3001/api/agent/message" \
     - Line Total: $4.08
   - Grand Total: $4.08
   - Currency: USD
-  - Cart Empty: true
-- **Purpose:** Create quote, return confirmation with quote details, clear cart
+- **Purpose:** Create quote, return confirmation with all quote details and line items (UI displays full card)
 
 ---
 
