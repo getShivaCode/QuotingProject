@@ -32,11 +32,58 @@ function runSfCommand(command) {
   }
 }
 
+// Parse agent message - handles JSON strings, plain text, and mixed responses
+function parseAgentResponse(agentMessage) {
+  // Try direct JSON parse first
+  try {
+    const parsed = JSON.parse(agentMessage);
+    logger.info('parseAgentResponse: direct JSON parse succeeded');
+    return parsed;
+  } catch (e) {
+    logger.info('parseAgentResponse: direct JSON parse failed, trying extraction');
+
+    // Not direct JSON, try to extract JSON from message (agent outputs text + JSON)
+    const jsonMatch = agentMessage.match(/\{[\s\S]*\}$/);
+    if (jsonMatch) {
+      logger.info('parseAgentResponse: JSON match found', { matchLength: jsonMatch[0].length });
+      try {
+        const extracted = JSON.parse(jsonMatch[0]);
+        logger.info('parseAgentResponse: JSON extraction succeeded');
+        return extracted;
+      } catch (e2) {
+        logger.error('parseAgentResponse: JSON extraction failed', { error: e2.message });
+        return agentMessage;
+      }
+    }
+
+    // No JSON found, return as plain text
+    logger.info('parseAgentResponse: no JSON found, returning as plain text');
+    return agentMessage;
+  }
+}
+
+// Initialize session with JSON mode enabled
+function initializeSession(sessionId) {
+  try {
+    logger.info('>>> INITIALIZING SESSION', { sessionId });
+    const result = runSfCommand(
+      `sf agent preview send --json --authoring-bundle ${AGENT_NAME} --session-id ${sessionId} --utterance 'set_json_format' --target-org ${ORG_ALIAS}`
+    );
+    logger.info('>>> SESSION INITIALIZED - json_mode set to True', { sessionId });
+    return sessionId;
+  } catch (error) {
+    logger.error('>>> SESSION INITIALIZATION FAILED', { sessionId, error: error.message });
+    throw error;
+  }
+}
+
 // Start a new agent session
 app.post('/api/agent/session', (req, res) => {
   const method = 'POST';
   const endpoint = '/api/agent/session';
   const startTime = Date.now();
+
+  logger.info('>>> POST /api/agent/session - Creating new session');
 
   logger.logRequest(method, endpoint);
 
@@ -51,6 +98,11 @@ app.post('/api/agent/session', (req, res) => {
       `sf agent preview start --json --authoring-bundle ${AGENT_NAME} --use-live-actions --target-org ${ORG_ALIAS}`
     );
     const sessionId = result.result.sessionId;
+    logger.info('>>> Session created', { sessionId });
+
+    // Initialize JSON mode for this session
+    initializeSession(sessionId);
+
     const duration = Date.now() - startTime;
 
     logger.logResponse(method, endpoint, 200, duration, { sessionId });
@@ -69,6 +121,8 @@ app.post('/api/agent/message', (req, res) => {
   const startTime = Date.now();
   const { sessionId, message } = req.body;
 
+  logger.info('>>> POST /api/agent/message', { sessionId, message });
+
   logger.logRequest(method, endpoint, { sessionId, messageLength: message?.length });
 
   if (!sessionId || !message) {
@@ -85,8 +139,10 @@ app.post('/api/agent/message', (req, res) => {
     const agentMessage = result.result.messages[0]?.message || '';
     const duration = Date.now() - startTime;
 
+    const parsedMessage = parseAgentResponse(agentMessage);
+
     logger.logResponse(method, endpoint, 200, duration, { sessionId, responseLength: agentMessage.length });
-    res.json({ agentMessage, raw: result.result });
+    res.json({ agentMessage: parsedMessage, raw: result.result });
   } catch (error) {
     const duration = Date.now() - startTime;
     logger.logError(method, endpoint, error, duration);

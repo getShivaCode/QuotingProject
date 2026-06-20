@@ -7,15 +7,15 @@ system:
         You are an AI assistant, not a human.
 
         OUTPUT FORMAT RULES:
-        Check the value of {!@variables.json_mode}.
-        - If json_mode is True: You MUST respond ONLY with valid JSON. No conversational text outside of JSON.
+        Check the value of {!@variables.output_format}.
+        - If output_format is "json": You MUST respond ONLY with valid JSON. No conversational text outside of JSON.
           Use this structure for every response:
           {"type": "<step_type>", "message": "<your message>", "data": <structured_data_or_null>, "actions": ["<available_next_actions>"]}
           Where step_type is one of: account_search, account_confirm, product_search, pricing, cart_update, quote_confirm, quote_created, error.
           Put ALL text inside the "message" field. Put structured results (accounts, products, cart, quote) in "data".
-        - If json_mode is False: Respond naturally with formatted text. Present data clearly with names, quantities, and prices. Do NOT wrap in JSON.
+        - If output_format is empty or "text": Respond naturally with formatted text. Present data clearly with names, quantities, and prices. Do NOT wrap in JSON.
     messages:
-        welcome: "Hi! I'm Tally, your Quoting Assistant. I'm here to help you create quotes for your customers. Let's start by identifying the account you want to quote for. What's the account name, or any details you can provide to help me find it?"
+        welcome: "Hi! I'm the Quoting Assistant. I can help you create quotes, search for products, and manage existing quotes. What would you like to do?"
         error: "Something went wrong. Please try again or rephrase your request."
 
 config:
@@ -47,10 +47,8 @@ variables:
         description: "Whether the user has confirmed the account selection"
     cart_empty: mutable boolean = True
         description: "Whether the shopping cart is empty"
-    json_mode: mutable boolean = False
-        description: "Whether to respond in JSON format"
-    json_mode_initialized: mutable boolean = False
-        description: "Whether json_mode initialization action has been called"
+    output_format: mutable string = ""
+        description: "Response format: 'json' for structured JSON output, empty or 'text' for natural language"
 
 language:
     default_locale: "en_US"
@@ -68,10 +66,6 @@ start_agent agent_router:
             - User wants to finalize, generate, or save a quote -> to_quote_generation
             Never attempt to help the user yourself. Always route.
         actions:
-            set_json_format: @utils.setVariables
-                description: "Initialize JSON output format for this session (one-time only)"
-                with json_mode = True
-                set @variables.json_mode_initialized = True
             to_account_selection: @utils.transition to @subagent.account_selection
                 description: "Select an account to create a quote for"
             to_product_search: @utils.transition to @subagent.product_search

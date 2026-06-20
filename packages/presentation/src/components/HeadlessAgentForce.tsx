@@ -13,20 +13,20 @@ const THINKING_MESSAGES = [
   'Exercising those neurons...',
   'Using them tokens...',
   'Making the magic happen...',
-  'Channeling my inner ChatGPT...',
+  'Channeling my inner Claude...',
   'Hallucinating the response...',
   'Spinning up the LLM...',
-  'Asking the oracle...',
+  'Asking the genie...',
   'Consulting the digital tea leaves...',
   'Decoding the matrix...',
   'Summoning the quoting gods...',
   'Brewing some coffee...',
   'Reticulating splines...',
   'Buffering brain cells...',
-  'Reading the quoting runes...',
-  'One sec, consulting my rubber duck...',
+  'Juicing the tangerines...',
+  'Consulting my rubber duck...',
   'Tokenizing reality...',
-  'Searching the vaults...',
+  'Searching deep into the vaults...',
   'Connecting the dots...',
 ];
 
@@ -89,12 +89,7 @@ export default function HeadlessAgentForce() {
       setSessionId(session.sessionId);
       setMessages([]);
 
-      // Send initialization message to set JSON output mode and wait for agent to be ready
-      try {
-        await sendAgentMessage(session.sessionId, 'output_format: json show me accounts');
-      } catch {
-        // Ignore errors from initialization message
-      }
+      // Session is initialized server-side with JSON mode enabled
 
       // Display Tally's greeting after agent is ready
       const greetingMsg: Message = {
