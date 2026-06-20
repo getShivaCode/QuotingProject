@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 const PROXY_URL = 'http://localhost:3001';
 
 export interface AgentMessage {
@@ -12,44 +14,115 @@ export interface AgentSession {
 }
 
 export async function startSession(): Promise<AgentSession> {
-  const response = await fetch(`${PROXY_URL}/api/agent/session`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to start session: ${response.statusText}`);
+  const url = `${PROXY_URL}/api/agent/session`;
+  const method = 'POST';
+  const startTime = performance.now();
+
+  logger.logRequest(method, url);
+
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const duration = performance.now() - startTime;
+    const data = await response.json();
+
+    if (!response.ok) {
+      logger.logError(method, url, response.statusText, duration);
+      throw new Error(`Failed to start session: ${response.statusText}`);
+    }
+
+    logger.logResponse(method, url, response.status, duration, data);
+    return data;
+  } catch (error) {
+    const duration = performance.now() - startTime;
+    logger.logError(method, url, error instanceof Error ? error.message : String(error), duration);
+    throw error;
   }
-  return response.json();
 }
 
 export async function sendMessage(sessionId: string, message: string): Promise<AgentMessage> {
-  const response = await fetch(`${PROXY_URL}/api/agent/message`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sessionId, message }),
-  });
-  if (!response.ok) {
-    throw new Error(`Failed to send message: ${response.statusText}`);
-  }
-  const data = await response.json();
+  const url = `${PROXY_URL}/api/agent/message`;
+  const method = 'POST';
+  const requestBody = { sessionId, message };
+  const startTime = performance.now();
 
-  // Try to parse the agent's message as JSON (when output_format is json)
+  logger.logRequest(method, url, requestBody);
+
   try {
-    const parsed = JSON.parse(data.agentMessage);
-    return parsed as AgentMessage;
-  } catch {
-    // Text mode - wrap in our standard format
-    return {
-      type: 'text',
-      message: data.agentMessage,
-      data: null,
-      actions: [],
-    };
+    const response = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestBody),
+    });
+
+    const duration = performance.now() - startTime;
+    const data = await response.json();
+
+    if (!response.ok) {
+      logger.logError(method, url, response.statusText, duration);
+      throw new Error(`Failed to send message: ${response.statusText}`);
+    }
+
+    logger.logResponse(method, url, response.status, duration, data);
+
+    // Server now guarantees agentMessage is already properly parsed
+    // (either JSON object when json_mode=True, or plain text object when json_mode=False)
+    if (typeof data.agentMessage === 'object' && data.agentMessage !== null) {
+      const agentMessage = data.agentMessage as AgentMessage;
+      console.log('Agent message parsed as object', { type: agentMessage.type });
+      return agentMessage;
+    }
+
+    // Fallback: if for some reason agentMessage is a string, try to parse it
+    if (typeof data.agentMessage === 'string') {
+      console.log('Agent message is string, attempting parse');
+      try {
+        const parsed = JSON.parse(data.agentMessage);
+        return parsed as AgentMessage;
+      } catch {
+        // Return as plain text response
+        return {
+          type: 'text',
+          message: data.agentMessage,
+          data: null,
+          actions: [],
+        };
+      }
+    }
+
+    throw new Error('Unexpected agentMessage format: expected object or string');
+
+  } catch (error) {
+    const duration = performance.now() - startTime;
+    logger.logError(method, url, error instanceof Error ? error.message : String(error), duration);
+    throw error;
   }
 }
 
 export async function endSession(sessionId: string): Promise<void> {
-  await fetch(`${PROXY_URL}/api/agent/session/${sessionId}`, {
-    method: 'DELETE',
-  });
+  const url = `${PROXY_URL}/api/agent/session/${sessionId}`;
+  const method = 'DELETE';
+  const startTime = performance.now();
+
+  logger.logRequest(method, url);
+
+  try {
+    const response = await fetch(url, {
+      method,
+    });
+
+    const duration = performance.now() - startTime;
+
+    if (!response.ok) {
+      logger.logError(method, url, response.statusText, duration);
+    } else {
+      logger.logResponse(method, url, response.status, duration);
+    }
+  } catch (error) {
+    const duration = performance.now() - startTime;
+    logger.logError(method, url, error instanceof Error ? error.message : String(error), duration);
+  }
 }

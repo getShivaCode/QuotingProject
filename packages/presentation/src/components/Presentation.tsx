@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Slide1 from './slides/Slide1';
@@ -10,6 +10,7 @@ import Slide6 from './slides/Slide6';
 import Slide7 from './slides/Slide7';
 import Slide8 from './slides/Slide8';
 import Slide10 from './slides/Slide10';
+import { useSession } from '../context/SessionContext';
 import '../styles/presentation.css';
 
 const slides = [
@@ -32,24 +33,38 @@ const allSlides = [...slides, ...hiddenSlides];
 export default function Presentation() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [showNavConfirmation, setShowNavConfirmation] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<number | null>(null);
+  const { sessionId } = useSession();
 
-  const handleNext = React.useCallback(() => {
-    setCurrentSlide((prev) => {
-      if (prev < slides.length - 1) {
-        return prev + 1;
-      }
-      return prev;
-    });
+  const isSlide8 = currentSlide === 7; // Slide 8 is at index 7
+  const hasActiveSession = !!sessionId && isSlide8;
+
+  const handleNavigationConfirmed = useCallback((newSlide: number) => {
+    setCurrentSlide(newSlide);
+    setShowNavConfirmation(false);
+    setPendingNavigation(null);
   }, []);
 
-  const handlePrev = React.useCallback(() => {
-    setCurrentSlide((prev) => {
-      if (prev > 0) {
-        return prev - 1;
-      }
-      return prev;
-    });
-  }, []);
+  const handleNext = useCallback(() => {
+    const newSlide = Math.min(currentSlide + 1, slides.length - 1);
+    if (hasActiveSession && newSlide !== currentSlide) {
+      setPendingNavigation(newSlide);
+      setShowNavConfirmation(true);
+    } else if (newSlide !== currentSlide) {
+      setCurrentSlide(newSlide);
+    }
+  }, [currentSlide, hasActiveSession]);
+
+  const handlePrev = useCallback(() => {
+    const newSlide = Math.max(currentSlide - 1, 0);
+    if (hasActiveSession && newSlide !== currentSlide) {
+      setPendingNavigation(newSlide);
+      setShowNavConfirmation(true);
+    } else if (newSlide !== currentSlide) {
+      setCurrentSlide(newSlide);
+    }
+  }, [currentSlide, hasActiveSession]);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -57,7 +72,13 @@ export default function Presentation() {
       if (e.key === 'ArrowLeft') handlePrev();
       if (e.key === 'ArrowDown' && currentSlide < allSlides.length - 1) {
         if (currentSlide < slides.length) {
-          setCurrentSlide(slides.length);
+          const newSlide = slides.length;
+          if (hasActiveSession) {
+            setPendingNavigation(newSlide);
+            setShowNavConfirmation(true);
+          } else {
+            setCurrentSlide(newSlide);
+          }
         } else {
           setCurrentSlide(currentSlide + 1);
         }
@@ -69,7 +90,7 @@ export default function Presentation() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlide, handleNext, handlePrev]);
+  }, [currentSlide, handleNext, handlePrev, hasActiveSession]);
 
   const CurrentSlide = allSlides[currentSlide].component;
 
@@ -121,7 +142,14 @@ export default function Presentation() {
             <motion.div
               key={slide.id}
               className={`breadcrumb ${index === currentSlide ? 'active' : ''} ${index < currentSlide ? 'completed' : ''}`}
-              onClick={() => setCurrentSlide(index)}
+              onClick={() => {
+                if (hasActiveSession && index !== currentSlide) {
+                  setPendingNavigation(index);
+                  setShowNavConfirmation(true);
+                } else {
+                  setCurrentSlide(index);
+                }
+              }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -163,6 +191,52 @@ export default function Presentation() {
       <div className="keyboard-hint">
         Use ← → keys to navigate
       </div>
+
+      {/* Navigation Confirmation Modal */}
+      <AnimatePresence>
+        {showNavConfirmation && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowNavConfirmation(false)}
+          >
+            <motion.div
+              className="modal-content"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2>Active Chat Session</h2>
+              <p>You have an active chat session. Are you sure you want to leave this slide?</p>
+              <div className="modal-buttons">
+                <motion.button
+                  className="modal-button cancel"
+                  onClick={() => setShowNavConfirmation(false)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Stay
+                </motion.button>
+                <motion.button
+                  className="modal-button confirm"
+                  onClick={() => {
+                    if (pendingNavigation !== null) {
+                      handleNavigationConfirmed(pendingNavigation);
+                    }
+                  }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Leave
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

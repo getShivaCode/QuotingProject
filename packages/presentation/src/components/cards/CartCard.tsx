@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 
 interface CartItem {
   sku: string;
-  productName: string;
-  description: string;
+  name: string;
+  description?: string;
   quantity: number;
   unitPrice: number;
   lineTotal: number;
@@ -51,7 +51,7 @@ export default function CartCard({ cartData, onCreateQuote, isCreatingQuote }: C
         {cartData.items.map((item, idx) => (
           <motion.div key={idx} className="viz-cart-item" variants={itemVariants}>
             <div className="cart-item-left">
-              <div className="cart-item-name">{item.productName}</div>
+              <div className="cart-item-name">{item.name}</div>
               <div className="cart-item-sku">{item.sku}</div>
             </div>
             <div className="cart-item-details">

@@ -5,10 +5,11 @@ A conversational AI-powered presentation and quoting system that showcases how A
 ## Overview
 
 This project demonstrates an end-to-end quoting experience with:
-- **8-slide professional presentation** with interactive demo (Slide 8)
-- **Live agent interaction widget** showing real quoting workflow simulation
+- **8-slide professional presentation** with live embedded agent (Slide 8)
+- **Real-time agent interaction** with Salesforce Agentforce backend
 - **Dark/Light theme** toggle with responsive mobile design
 - **JSON payload inspector** for viewing agent responses
+- **Server-side JSON initialization** for clean session setup
 - **Salesforce integration** with Agentforce backend
 
 ## Project Structure
@@ -35,30 +36,16 @@ QuotingProject/
 ### Development
 
 ```bash
-# Install dependencies for all packages
-yarn install
+# Terminal 1: Start the backend server (required for live agent)
+cd packages/presentation
+npm install
+npm start
 
-# Run presentation app (slides 1-7)
-yarn dev
-
-# Run headless agent app separately
-yarn dev:agent
-
-# Run both
-# Terminal 1: yarn dev
-# Terminal 2: yarn dev:agent
+# This starts both the presentation slides AND the Express backend server on port 3001
+# Open http://localhost:3000 in your browser
 ```
 
-### Building
-
-```bash
-# Build all packages
-yarn build
-
-# Build individual packages
-yarn build:presentation
-yarn build:agent
-```
+The backend server initializes agent sessions with JSON mode automatically. No dummy messages needed.
 
 ## Presentation Package
 
@@ -85,32 +72,44 @@ The main deliverable: `packages/presentation/` is a professional 8-slide present
 
 ### Try It Live (Slide 8)
 
-The final slide embeds an interactive agent widget:
-- **Left Panel**: Chat interface for multi-turn conversation
-  - Mock account search, product search, quote generation flows
-  - Clickable cards for account and product selection
+The final slide embeds a live interactive agent widget:
+- **Left Panel**: Chat interface for multi-turn conversation with real Agentforce agent
+  - Account search and selection (queries Salesforce)
+  - Product search via external MCP pricing server
+  - Shopping cart management
+  - Real quote generation and storage
   - Real-time typing indicators and message history
 - **Right Panel**: Order summary visualization
   - Shopping cart with line items and totals
   - Quote display with account, items, and metadata
   - **JSON Toggle** (top-right): Click code icon to view agent response JSON
+  - Real Salesforce data displayed as cards
 
-### Running Locally
+### Testing Agent Flows
+
+Run end-to-end tests for the full quoting workflow:
 
 ```bash
-cd QuotingProject
-yarn install
-cd packages/presentation
-yarn start
+cd salesforce/agent-api-flows
+./capture-agent-responses.sh
 ```
 
-Then open http://localhost:3000 in your browser.
+This script:
+- Creates a session with auto-initialized JSON mode
+- Searches for accounts
+- Selects an account
+- Searches for products
+- Adds items to cart
+- Creates and names a quote
+- Captures all agent responses as JSON
+
+See `docs/AGENT_ARCHITECTURE.md` for detailed flow documentation.
 
 ### Building for Production
 
 ```bash
 cd packages/presentation
-yarn build
+npm build
 ```
 
 Output goes to `build/` directory.
@@ -204,14 +203,16 @@ presentation/src/
 ## Status
 
 ✅ **Complete**
-- All 8 slides built and styled
-- Live agent widget with conversation flow
+- All 8 slides built and styled with live agent on Slide 8
+- Real Agentforce agent integration (CLI-based, no mocks)
+- Server-side session initialization with JSON mode
 - Dark/light theme with full responsiveness
-- Mobile optimizations (header logo centered, compact controls)
-- JSON response inspector for agent debugging
+- Mobile optimizations
+- JSON response inspector for debugging
+- E2E test scripts for full workflow validation
 
 🚀 **Ready for**
-- Salesforce OAuth integration
-- Real agent API connection (Agent Runtime)
-- Production deployment
 - Customer demos
+- REST API refactor (when needed; see `REST_API_IMPLEMENTATION_GUIDE.md` for parked work)
+- Production deployment (replace CLI with REST API)
+- Heroku deployment (requires REST API)
