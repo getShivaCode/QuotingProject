@@ -5,11 +5,11 @@
 This request uses client credentials flow to get a JWT access token with the correct scopes.
 
 ```bash
-curl -s https://trailsignup-816972be03897e.my.salesforce.com/services/oauth2/token \
+curl -s https://<your-instance>.my.salesforce.com/services/oauth2/token \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data-urlencode 'grant_type=client_credentials' \
-  --data-urlencode 'client_id=3MVG9HtWXcDGV.nGlw7I_uvdA94xfWBFNVgN7G9LzFTspqKfxmY_at6LO3jCC8xXZQPJzsdwjfnl9hk2LcFQz' \
-  --data-urlencode 'client_secret=BA8C60DB374F7636063944078ADD38533B6CD4C6527B45B4CF843DF5FA446D42'
+  --data-urlencode 'client_id=<your_client_id>' \
+  --data-urlencode 'client_secret=<your_client_secret>'
 ```
 
 **Expected Response:**
@@ -106,8 +106,8 @@ curl -i --location -X DELETE https://api.salesforce.com/einstein/ai-agent/v1/age
 
 ```bash
 # OAuth Credentials (from Connected App)
-SF_OAUTH_CLIENT_ID=3MVG9HtWXcDGV.nGlw7I_uvdA94xfWBFNVgN7G9LzFTspqKfxmY_at6LO3jCC8xXZQPJzsdwjfnl9hk2LcFQz
-SF_OAUTH_CLIENT_SECRET=BA8C60DB374F7636063944078ADD38533B6CD4C6527B45B4CF843DF5FA446D42
+SF_OAUTH_CLIENT_ID=<your_client_id>
+SF_OAUTH_CLIENT_SECRET=<your_client_secret>
 
 # Org Configuration
 SF_INSTANCE_URL=https://trailsignup-816972be03897e.my.salesforce.com
@@ -126,10 +126,10 @@ Save as `test-agent-api.sh`:
 #!/bin/bash
 
 # Configuration
-INSTANCE_URL="https://trailsignup-816972be03897e.my.salesforce.com"
-CLIENT_ID="3MVG9HtWXcDGV.nGlw7I_uvdA94xfWBFNVgN7G9LzFTspqKfxmY_at6LO3jCC8xXZQPJzsdwjfnl9hk2LcFQz"
-CLIENT_SECRET="BA8C60DB374F7636063944078ADD38533B6CD4C6527B45B4CF843DF5FA446D42"
-AGENT_ID="0Xxfj000001zIM1CAM"
+INSTANCE_URL="https://<your-instance>.my.salesforce.com"
+CLIENT_ID="<your_client_id>"
+CLIENT_SECRET="<your_client_secret>"
+AGENT_ID="<your_agent_id>"
 
 # Step 1: Get token
 echo "🔐 Getting OAuth token..."

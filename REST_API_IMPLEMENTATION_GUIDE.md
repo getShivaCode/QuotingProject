@@ -28,14 +28,15 @@ React Client → Node Server (OAuth + direct HTTP) → Salesforce Einstein Agent
 
 ```bash
 # OAuth 2.0 Client Credentials (from connected app)
-SF_OAUTH_CLIENT_ID=3MVG9HtWXcDGV.nGlw7I_uvdA94xfWBFNVgN7G9LzFTspqKfxmY_at6LO3jCC8xXZQPJzsdwjfnl9hk2LcFQz
-SF_OAUTH_CLIENT_SECRET=BA8C60DB374F7636063944078ADD38533B6CD4C6527B45B4CF843DF5FA446D42
+# ⚠️ DO NOT COMMIT REAL CREDENTIALS TO VERSION CONTROL
+SF_OAUTH_CLIENT_ID=<your_client_id>
+SF_OAUTH_CLIENT_SECRET=<your_client_secret>
 
 # Salesforce Instance
-SF_INSTANCE_URL=https://trailsignup-816972be03897e.my.salesforce.com
+SF_INSTANCE_URL=https://<your-instance>.my.salesforce.com
 
 # Agent Configuration
-SF_AGENT_ID=0Xxfj000001zIM1CAM
+SF_AGENT_ID=<your_agent_id>
 
 # Server
 PORT=3001
