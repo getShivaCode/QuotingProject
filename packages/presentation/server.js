@@ -4,6 +4,7 @@ const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const logger = require('./logger');
+const serverLogger = require('./src/utils/serverLogger');
 
 const app = express();
 app.use(cors());
@@ -112,32 +113,53 @@ app.post('/api/agent/message', (req, res) => {
   const endpoint = '/api/agent/message';
   const startTime = Date.now();
   const { sessionId, message } = req.body;
+  const debug = req.query.debug === 'true';
 
   logger.info('>>> POST /api/agent/message', { sessionId, message });
 
   logger.logRequest(method, endpoint, { sessionId, messageLength: message?.length });
 
+  // Server logger: log client request
+  serverLogger.clientRequest(endpoint, { sessionId, message, debug });
+
   if (!sessionId || !message) {
     const duration = Date.now() - startTime;
     logger.warn(`${method} ${endpoint} - Missing required params (${duration}ms)`, { sessionId: !!sessionId, message: !!message });
+    serverLogger.warning('VALIDATION', 'Missing required parameters', { sessionId: !!sessionId, message: !!message });
     return res.status(400).json({ error: 'sessionId and message are required' });
   }
 
   try {
     const escapedMessage = message.replace(/'/g, "'\\''");
-    const result = runSfCommand(
-      `sf agent preview send --json --authoring-bundle ${AGENT_NAME} --session-id ${sessionId} --utterance '${escapedMessage}' --target-org ${ORG_ALIAS}`
-    );
+    const cliCommand = `sf agent preview send --json --authoring-bundle ${AGENT_NAME} --session-id ${sessionId} --utterance '${escapedMessage}' --target-org ${ORG_ALIAS}`;
+
+    serverLogger.debug('SF_CLI', 'Executing command', cliCommand);
+
+    const result = runSfCommand(cliCommand);
+
+    serverLogger.cliCommand(cliCommand, debug ? result : 'OK');
+
     const agentMessage = result.result.messages[0]?.message || '';
     const duration = Date.now() - startTime;
 
     const parsedMessage = parseAgentResponse(agentMessage);
 
     logger.logResponse(method, endpoint, 200, duration, { sessionId, responseLength: agentMessage.length });
-    res.json({ agentMessage: parsedMessage, raw: result.result });
+
+    // Build response
+    const response = { agentMessage: parsedMessage };
+
+    // Only include raw if debug param is true
+    if (debug) {
+      response.raw = result.result;
+    }
+
+    serverLogger.clientResponse(endpoint, debug ? response : { agentMessage: parsedMessage, debug: false });
+    res.json(response);
   } catch (error) {
     const duration = Date.now() - startTime;
     logger.logError(method, endpoint, error, duration);
+    serverLogger.cliError('SF_CLI', error.message);
     res.status(500).json({ error: 'Failed to send message' });
   }
 });

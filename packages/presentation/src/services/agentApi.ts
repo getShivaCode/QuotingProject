@@ -43,8 +43,8 @@ export async function startSession(): Promise<AgentSession> {
   }
 }
 
-export async function sendMessage(sessionId: string, message: string): Promise<AgentMessage> {
-  const url = `${PROXY_URL}/api/agent/message`;
+export async function sendMessage(sessionId: string, message: string, debug?: boolean): Promise<AgentMessage> {
+  const url = `${PROXY_URL}/api/agent/message${debug ? '?debug=true' : ''}`;
   const method = 'POST';
   const requestBody = { sessionId, message };
   const startTime = performance.now();
@@ -72,7 +72,7 @@ export async function sendMessage(sessionId: string, message: string): Promise<A
     // (either JSON object when json_mode=True, or plain text object when json_mode=False)
     if (typeof data.agentMessage === 'object' && data.agentMessage !== null) {
       const agentMessage = data.agentMessage as AgentMessage;
-      console.log('Agent message parsed as object', { type: agentMessage.type });
+      console.log('Agent message parsed as object', { type: agentMessage.type, debug: !!data.raw });
       return agentMessage;
     }
 

@@ -4,7 +4,7 @@
   "description": "Agentforce Intelligent Quoting - Complete Platform",
   "private": true,
   "scripts": {
-    "dev": "cd packages/presentation && npm start",
+    "dev": "cd packages/presentation && npm run dev",
     "build": "cd packages/presentation && npm run build",
     "install:all": "npm --prefix packages/presentation install"
   },

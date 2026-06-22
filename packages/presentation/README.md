@@ -32,6 +32,35 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
+### Server Logging
+
+The server logs to stdout with configurable levels. Set `LOG_LEVEL` environment variable:
+
+```bash
+# Default (warnings + errors only)
+npm run dev
+
+# Verbose mode (see all API interactions)
+LOG_LEVEL=info npm run dev
+
+# Debug mode (full payloads and SF CLI commands)
+LOG_LEVEL=debug npm run dev
+```
+
+**Available levels**: `error`, `warning` (default), `info`, `debug`
+
+#### Debug Query Parameter
+
+Include `?debug=true` to get full Salesforce CLI response:
+
+```bash
+curl -X POST 'http://localhost:3001/api/agent/message?debug=true' \
+  -H "Content-Type: application/json" \
+  -d '{"sessionId": "...", "message": "search for Omega"}'
+```
+
+By default, the `raw` field is omitted from responses to reduce payload size. Use `?debug=true` only when debugging agent behavior.
+
 ## Navigation
 
 - **Arrow Keys** (← →) - Navigate between slides
