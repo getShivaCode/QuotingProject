@@ -38,7 +38,7 @@ export default function Presentation() {
   const { sessionId } = useSession();
 
   const isSlide8 = currentSlide === 7; // Slide 8 is at index 7
-  const hasActiveSession = !!sessionId && isSlide8;
+  const hasActiveSession = isSlide8 && !!sessionId;
 
   const handleNavigationConfirmed = useCallback((newSlide: number) => {
     setCurrentSlide(newSlide);
