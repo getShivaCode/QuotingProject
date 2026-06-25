@@ -44,6 +44,12 @@ export default function QuoteCard({ quoteData }: QuoteCardProps) {
   const items = ((quoteData.cart && quoteData.cart.length > 0) ? quoteData.cart : quoteData.items) || [];
   const hasLineItems = Array.isArray(items) && items.length > 0;
 
+  const getQuoteUrl = () => {
+    if (!quoteData.quoteId) return null;
+    const instanceUrl = process.env.REACT_APP_SF_INSTANCE_URL || 'https://trailsignup-816972be03897e.my.salesforce.com';
+    return `${instanceUrl}/${quoteData.quoteId}`;
+  };
+
   return (
     <motion.div
       className="quote-summary"
@@ -55,11 +61,35 @@ export default function QuoteCard({ quoteData }: QuoteCardProps) {
       <motion.div className="summary-header" variants={itemVariants}>
         <div>
           <div className="summary-label">Quote Number</div>
-          <div className="summary-value">{quoteData.quoteNumber || 'Pending'}</div>
+          <div className="summary-value">
+            {getQuoteUrl() ? (
+              <a
+                href={getQuoteUrl()!}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: 'inherit',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  transition: 'opacity 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.opacity = '0.7';
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLAnchorElement).style.opacity = '1';
+                }}
+              >
+                {quoteData.quoteNumber || 'Pending'}
+              </a>
+            ) : (
+              quoteData.quoteNumber || 'Pending'
+            )}
+          </div>
         </div>
         <div>
           <div className="summary-label">Status</div>
-          <div className={`summary-value ${quoteData.status === 'Draft' ? 'status-draft' : ''}`}>
+          <div className="status-draft">
             {quoteData.status || 'Draft'}
           </div>
         </div>

@@ -24,7 +24,7 @@
   "scripts": {
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
-    "start:server": "node server.js",
+    "start:server": "NODE_ENV=production node server.js",
     "dev": "concurrently -n \"SERVER,CLIENT\" -c \"cyan,blue\" \"npm run start:server\" \"PORT=3000 npm start\"",
     "start:prod": "npm run build && npm run start:server",
     "test": "react-scripts test",
