@@ -61,7 +61,7 @@ export default function QuoteCard({ quoteData }: QuoteCardProps) {
       <motion.div className="summary-header" variants={itemVariants}>
         <div>
           <div className="summary-label">Quote Number</div>
-          <div className="summary-value">
+          <div className="summary-value" style={{ fontSize: '14px' }}>
             {getQuoteUrl() ? (
               <a
                 href={getQuoteUrl()!}
@@ -69,7 +69,7 @@ export default function QuoteCard({ quoteData }: QuoteCardProps) {
                 rel="noopener noreferrer"
                 style={{
                   color: 'inherit',
-                  textDecoration: 'underline',
+                  textDecoration: 'none',
                   cursor: 'pointer',
                   transition: 'opacity 0.2s',
                 }}
