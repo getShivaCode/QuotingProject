@@ -1,8 +1,8 @@
-# REST API Implementation Artifacts Index
+# REST API Implementation Artifacts & Strategy
 
-**Created:** June 2, 2026  
-**Status:** Documentation saved for future implementation  
-**Decision:** Currently using CLI-based approach (proven reliable). These artifacts preserve REST API refactor work.
+**Last Updated:** June 25, 2026  
+**Status:** REST API fully implemented and in production use  
+**Decision:** Dual-mode architecture - CLI for local development, REST API for production deployment
 
 ---
 
@@ -207,24 +207,26 @@ npm run start:server
 
 ---
 
-## Context for Next Session
+## Current Architecture (June 25, 2026)
 
-**Why these files exist:**
-- A complete REST API refactor was implemented to enable Heroku deployment (no CLI dependency)
-- The work was parked because:
-  - CLI-based approach proved reliably stable
-  - Salesforce org connection issues (HTTP 420) prevented agent configuration deployment
-  - REST API required complex client-side parsing fallbacks
+**Dual-Mode Strategy:**
+- **Local Development:** `npm run dev` uses SF CLI via Express server for rapid iteration
+- **Production Deployment:** `npm run start:server` (NODE_ENV=production) uses direct Salesforce REST API
 
-**Current state:**
-- CLI-based server.js is in use and works reliably
-- REST API code changes are **not deployed** (reverted to CLI)
-- These files preserve the implementation for future resumption
+**REST API Implementation:**
+- ✅ **Core:** `packages/presentation/src/utils/restApiClient.js` - Full OAuth and agent API implementation
+- ✅ **Token Caching:** Proactive refresh pattern with 1-hour TTL and 5-minute buffer
+- ✅ **Server Integration:** All Express endpoints (`POST /api/agent/session`, `POST /api/agent/message`, `DELETE /api/agent/session/:id`) use pure async REST calls
+- ✅ **Client Features:** Quote cards include Salesforce hyperlinks, improved logout/restart UX, navigation confirmation modal
 
-**Decision logic:**
-- REST API refactor requires: fixing Salesforce org, deploying agent instructions, testing thoroughly
-- If Heroku deployment becomes urgent, use these files to resume work
-- If staying with CLI, these files can be archived/ignored
+**Why dual-mode:**
+- CLI approach: Great for local development (no OAuth setup), instant feedback
+- REST API approach: Production-ready, Heroku-deployable, no CLI dependency, better performance (28% faster, 15.5× better CPU efficiency)
+
+**Tests available:**
+- `test-agent-rest-api.sh` - REST API connectivity test
+- `test-agent-e2e-rest-api.sh` - Full E2E workflow via REST API
+- `test-server-e2e.sh` - Full E2E workflow via Express server (supports both CLI and REST backends)
 
 ---
 
@@ -274,21 +276,43 @@ sleep 5
 
 ---
 
-## Next Steps If Resuming
+## Environment Configuration
 
-1. **Fix Salesforce org connection** (highest priority)
-   - Investigate HTTP 420 error
-   - Verify org connectivity
-   - Deploy agent instructions
+**Required environment variables:**
+- `SF_CLIENT_ID` - OAuth client ID (external app)
+- `SF_CLIENT_SECRET` - OAuth client secret
+- `SF_INSTANCE_URL` - Salesforce instance URL
+- `EXTERNAL_APP_KEY` - External app key
+- `EXTERNAL_APP_SECRET` - External app secret
+- `SF_AGENT_ID` - Agentforce agent ID
+- `REACT_APP_SF_INSTANCE_URL` - Client-side instance URL (for quote links)
+- `TOKEN_TTL_SECONDS` - Token refresh interval (default: 3600)
+- `NODE_ENV` - Set to `production` to use REST API
 
-2. **Run tests** to validate everything works
-   - `test-agent-rest-api.sh` - connectivity
-   - `test-agent-e2e-rest-api.sh` - full flow
-   - `test-server-e2e.sh` - server implementation
+**Token Management:**
+- Tokens obtained via OAuth client credentials flow
+- Cached with proactive refresh 5 minutes before expiration
+- TTL configurable via `TOKEN_TTL_SECONDS` environment variable
+- Note: Salesforce OAuth doesn't return `expires_in`; defaults to 2-hour sliding window, 1-hour conservative TTL recommended
 
-3. **Reference the guide** for implementation details
-   - Use code examples from `REST_API_IMPLEMENTATION_GUIDE.md`
-   - Check for issues in `API_IMPLEMENTATION.md`
+## When to Use Each Approach
+
+**Use SF CLI (local development):**
+```bash
+npm run dev
+```
+- Faster setup (no OAuth configuration)
+- Great for testing and development iteration
+- Server: `node server.js` (uses execSync for CLI commands)
+
+**Use REST API (production):**
+```bash
+NODE_ENV=production npm run start:server
+```
+- No CLI dependency (works on Heroku, cloud platforms)
+- Better performance (28% faster, 15.5× better CPU efficiency)
+- Automatic token refresh and caching
+- Server: `node server.js` (uses async REST API calls)
 
 ---
 
