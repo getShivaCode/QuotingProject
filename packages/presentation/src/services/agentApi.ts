@@ -110,19 +110,26 @@ export async function endSession(sessionId: string): Promise<void> {
   logger.logRequest(method, url);
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
     const response = await fetch(url, {
       method,
+      signal: controller.signal,
     });
 
+    clearTimeout(timeout);
     const duration = performance.now() - startTime;
 
     if (!response.ok) {
       logger.logError(method, url, response.statusText, duration);
-    } else {
-      logger.logResponse(method, url, response.status, duration);
+      throw new Error(`Failed to end session: ${response.statusText}`);
     }
+
+    logger.logResponse(method, url, response.status, duration);
   } catch (error) {
     const duration = performance.now() - startTime;
     logger.logError(method, url, error instanceof Error ? error.message : String(error), duration);
+    throw error;
   }
 }

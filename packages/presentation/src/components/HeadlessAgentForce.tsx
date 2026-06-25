@@ -55,6 +55,8 @@ export default function HeadlessAgentForce() {
   const [isSessionReady, setIsSessionReady] = useState(false);
   const [thinkingMessage, setThinkingMessage] = useState('');
   const [quoteName, setQuoteName] = useState('');
+  const [isRestarting, setIsRestarting] = useState(false);
+  const [isLoggingOff, setIsLoggingOff] = useState(false);
 
   const { transcript, interimTranscript, isListening, isSupported: isSpeechSupported, error: speechError, startListening, stopListening } = useSpeechRecognition();
   const [showSpeechError, setShowSpeechError] = useState(false);
@@ -112,43 +114,88 @@ export default function HeadlessAgentForce() {
   };
 
   const handleLogout = async () => {
-    if (sessionId) {
-      try { await endSession(sessionId); } catch {}
-    }
-    setAuthenticated(false);
-    setShowJson(false);
-    setSessionId(null);
-    setContextSessionId(null);
-    setLiveResponseData(null);
+    console.log('[LOGOUT] Starting logout...');
+
+    // Clear all UI state immediately for snappy feedback
     setMessages([]);
-    setIsConnecting(false);
+    setLiveResponseData(null);
+    setInputValue('');
+    setShowJson(false);
     setSelectedAccount(null);
     setIsCreatingQuote(false);
+    setThinkingMessage('');
+    setQuoteName('');
+    setIsLoggingOff(true);
+    setIsSessionReady(false);
+
+    // End session if exists (background task)
+    if (sessionId) {
+      console.log('[LOGOUT] Ending session:', sessionId);
+      try {
+        await endSession(sessionId);
+        console.log('[LOGOUT] Session ended successfully');
+      } catch (e) {
+        console.error('[LOGOUT] Failed to end session:', e);
+      }
+    }
+
+    // Return to login screen
+    setAuthenticated(false);
+    setSessionId(null);
+    setContextSessionId(null);
+    setIsLoggingOff(false);
   };
 
   const handleNewSession = async () => {
-    // End current session if exists
-    if (sessionId) {
-      try { await endSession(sessionId); } catch {}
-    }
-    // Start fresh session
-    setIsConnecting(true);
+    console.log('[RESTART] Starting new session...');
+
+    // Clear all UI state immediately for snappy feedback
+    setMessages([]);
+    setLiveResponseData(null);
+    setInputValue('');
+    setShowJson(false);
+    setSelectedAccount(null);
+    setIsCreatingQuote(false);
+    setThinkingMessage('');
+    setQuoteName('');
+    setIsRestarting(true);
     setIsSessionReady(false);
+
+    // End current session if exists (background task)
+    if (sessionId) {
+      console.log('[RESTART] Ending old session:', sessionId);
+      try {
+        await endSession(sessionId);
+        console.log('[RESTART] Old session ended successfully');
+      } catch (e) {
+        console.error('[RESTART] Failed to end old session:', e);
+      }
+    }
+
+    // Transition to "Connecting..." state
+    setIsRestarting(false);
+    setIsConnecting(true);
+
+    // Start fresh session
     try {
+      console.log('[RESTART] Creating new session...');
       const session = await startSession();
+      console.log('[RESTART] New session created:', session.sessionId);
       setSessionId(session.sessionId);
       setContextSessionId(session.sessionId);
-      setMessages([]);
-      setShowJson(false);
-      setLiveResponseData(null);
-      setSelectedAccount(null);
-      setIsCreatingQuote(false);
 
-      // Send output_format command with a valid request to set JSON mode
-      await sendAgentMessage(session.sessionId, 'output_format: json show me accounts');
+      // Session initialized server-side with JSON mode enabled
+      // Display Tally's greeting after agent is ready
+      const greetingMsg: Message = {
+        id: Date.now().toString(),
+        role: 'agent',
+        content: "Hi! I'm Tally, your Quoting Assistant. I'm here to help you create quotes for your customers. Let's start by identifying the account you want to quote for. What's the account name, or any details you can provide to help me find it?",
+        timestamp: new Date(),
+      };
+      setMessages([greetingMsg]);
       setIsSessionReady(true);
     } catch (e) {
-      console.error('Failed to start new session:', e);
+      console.error('[RESTART] Failed to create new session:', e);
     } finally {
       setIsConnecting(false);
     }
@@ -548,7 +595,7 @@ export default function HeadlessAgentForce() {
               <span>Tally</span>
               {sessionId && <span className="live-badge">LIVE</span>}
             </div>
-            {isConnecting && (
+            {isLoggingOff && (
               <span style={{
                 fontSize: '11px',
                 color: 'rgba(255, 200, 0, 0.8)',
@@ -558,10 +605,23 @@ export default function HeadlessAgentForce() {
                 gap: '6px',
               }}>
                 <span style={{ display: 'inline-block', animation: 'pulse 1.5s infinite' }}>●</span>
-                Connecting...
+                Logging off...
               </span>
             )}
-            {sessionId && !isConnecting && (
+            {(isConnecting || isRestarting) && !isLoggingOff && (
+              <span style={{
+                fontSize: '11px',
+                color: 'rgba(255, 200, 0, 0.8)',
+                fontFamily: "'Monaco', 'Courier New', monospace",
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}>
+                <span style={{ display: 'inline-block', animation: 'pulse 1.5s infinite' }}>●</span>
+                {isRestarting ? 'Restarting session...' : 'Connecting...'}
+              </span>
+            )}
+            {sessionId && !isConnecting && !isRestarting && !isLoggingOff && (
               <span style={{
                 fontSize: '10px',
                 color: '#1B9B9E',
@@ -573,7 +633,7 @@ export default function HeadlessAgentForce() {
             )}
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
-            {sessionId && !isConnecting && (
+            {sessionId && !isConnecting && !isRestarting && !isLoggingOff && (
               <motion.button
                 className="new-session-button"
                 onClick={handleNewSession}
@@ -587,6 +647,7 @@ export default function HeadlessAgentForce() {
             <motion.button
               className="logout-button"
               onClick={handleLogout}
+              disabled={isLoggingOff}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -648,18 +709,18 @@ export default function HeadlessAgentForce() {
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !isLoading && !isListening) { e.preventDefault(); handleSendMessage(); } }}
             placeholder={authenticated && sessionId ? (isListening ? "Listening..." : "Type or click mic...") : "Click 'Try It Live' to start"}
-            disabled={isLoading || !authenticated || !sessionId || isListening || !isSessionReady}
+            disabled={isLoading || !authenticated || !sessionId || isListening || !isSessionReady || isRestarting || isLoggingOff}
             className="input-field"
-            style={isLoading || isListening ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+            style={isLoading || isListening || isRestarting || isLoggingOff ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
           />
           {isSpeechSupported && (
             <motion.button
               onClick={() => isListening ? stopListening() : startListening()}
-              disabled={isLoading || !authenticated || !sessionId || !isSessionReady}
+              disabled={isLoading || !authenticated || !sessionId || !isSessionReady || isRestarting || isLoggingOff}
               className={`microphone-button ${isListening ? 'listening' : ''}`}
-              whileHover={!isLoading && !isListening ? { scale: 1.05 } : {}}
-              whileTap={!isLoading ? { scale: 0.95 } : {}}
-              style={isLoading ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+              whileHover={!isLoading && !isListening && !isRestarting && !isLoggingOff ? { scale: 1.05 } : {}}
+              whileTap={!isLoading && !isRestarting && !isLoggingOff ? { scale: 0.95 } : {}}
+              style={isLoading || isListening || isRestarting || isLoggingOff ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
               title={isListening ? "Stop listening" : "Click to speak"}
             >
               {isListening ? <MicOff size={18} /> : <Mic size={18} />}
@@ -667,11 +728,11 @@ export default function HeadlessAgentForce() {
           )}
           <motion.button
             onClick={() => handleSendMessage()}
-            disabled={!inputValue.trim() || isLoading || !authenticated || !sessionId || isListening || !isSessionReady}
+            disabled={!inputValue.trim() || isLoading || !authenticated || !sessionId || isListening || !isSessionReady || isRestarting || isLoggingOff}
             className="send-button"
-            whileHover={!isLoading && !isListening ? { scale: 1.05 } : {}}
-            whileTap={!isLoading ? { scale: 0.95 } : {}}
-            style={isLoading || isListening ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+            whileHover={!isLoading && !isListening && !isRestarting && !isLoggingOff ? { scale: 1.05 } : {}}
+            whileTap={!isLoading && !isRestarting && !isLoggingOff ? { scale: 0.95 } : {}}
+            style={isLoading || isListening || isRestarting || isLoggingOff ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
           >
             <Send size={18} />
           </motion.button>
