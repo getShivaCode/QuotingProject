@@ -1,20 +1,21 @@
+require('dotenv').config({ path: '.env.local', override: false });
+
 const express = require('express');
 const cors = require('cors');
-const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const logger = require('./logger');
 const serverLogger = require('./src/utils/serverLogger');
+const restApiClient = require('./src/utils/restApiClient');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const PROJECT_DIR = path.resolve(__dirname, '../..');
-const ORG_ALIAS = 'demo-org';
-const AGENT_NAME = 'Quoting_Agent';
 const BUILD_DIR = path.join(__dirname, 'build');
-const IS_PRODUCTION = process.env.NODE_ENV === 'production' || fs.existsSync(BUILD_DIR);
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const LOG_LEVEL = process.env.LOG_LEVEL || (IS_PRODUCTION ? 'warn' : 'info');
 
 function runSfCommand(command) {
   try {
@@ -22,7 +23,7 @@ function runSfCommand(command) {
       cwd: PROJECT_DIR,
       encoding: 'utf-8',
       timeout: 60000,
-      env: { ...process.env, NO_COLOR: '1', SF_DISABLE_TELEMETRY: 'true' },
+      env: { ...process.env, SF_DISABLE_TELEMETRY: 'true' },
     });
     // Strip ANSI escape codes from output
     const cleanedResult = result.replace(/\[[0-9;]*m/g, '').trim();
@@ -71,7 +72,7 @@ function initializeSession(sessionId) {
 }
 
 // Start a new agent session
-app.post('/api/agent/session', (req, res) => {
+app.post('/api/agent/session', async (req, res) => {
   const method = 'POST';
   const endpoint = '/api/agent/session';
   const startTime = Date.now();
@@ -87,14 +88,17 @@ app.post('/api/agent/session', (req, res) => {
     .catch((err) => logger.debug('MCP server wake-up call failed', { error: err.message }));
 
   try {
-    const result = runSfCommand(
-      `sf agent preview start --json --authoring-bundle ${AGENT_NAME} --use-live-actions --target-org ${ORG_ALIAS}`
-    );
-    const sessionId = result.result.sessionId;
+    const agentId = process.env.SF_AGENT_ID;
+    logger.debug('[REST_API] Session init request', { agentId });
+    const sessionId = await restApiClient.initializeSession(agentId);
     logger.info('>>> Session created', { sessionId });
+    logger.debug('[REST_API] Session init response', { sessionId });
 
-    // Initialize JSON mode for this session
-    initializeSession(sessionId);
+    // Initialize JSON mode for REST API
+    serverLogger.clientRequest('/api/agent/message (set_json_format)', { sessionId, message: 'set_json_format', debug: false });
+    const jsonModeResponse = await restApiClient.sendMessage(sessionId, 'set_json_format');
+    serverLogger.clientResponse('/api/agent/message (set_json_format)', { agentMessage: jsonModeResponse });
+    logger.debug('>>> JSON mode initialized', { sessionId });
 
     const duration = Date.now() - startTime;
 
@@ -108,7 +112,7 @@ app.post('/api/agent/session', (req, res) => {
 });
 
 // Send a message to the agent
-app.post('/api/agent/message', (req, res) => {
+app.post('/api/agent/message', async (req, res) => {
   const method = 'POST';
   const endpoint = '/api/agent/message';
   const startTime = Date.now();
@@ -130,16 +134,10 @@ app.post('/api/agent/message', (req, res) => {
   }
 
   try {
-    const escapedMessage = message.replace(/'/g, "'\\''");
-    const cliCommand = `sf agent preview send --json --authoring-bundle ${AGENT_NAME} --session-id ${sessionId} --utterance '${escapedMessage}' --target-org ${ORG_ALIAS}`;
+    const restResult = await restApiClient.sendMessage(sessionId, message);
+    const agentMessage = restResult.agentMessage || '';
+    const rawResult = restResult;
 
-    serverLogger.debug('SF_CLI', 'Executing command', cliCommand);
-
-    const result = runSfCommand(cliCommand);
-
-    serverLogger.cliCommand(cliCommand, debug ? result : 'OK');
-
-    const agentMessage = result.result.messages[0]?.message || '';
     const duration = Date.now() - startTime;
 
     const parsedMessage = parseAgentResponse(agentMessage);
@@ -151,21 +149,21 @@ app.post('/api/agent/message', (req, res) => {
 
     // Only include raw if debug param is true
     if (debug) {
-      response.raw = result.result;
+      response.raw = rawResult;
     }
 
-    serverLogger.clientResponse(endpoint, debug ? response : { agentMessage: parsedMessage, debug: false });
+    serverLogger.clientResponse(endpoint, response);
     res.json(response);
   } catch (error) {
     const duration = Date.now() - startTime;
     logger.logError(method, endpoint, error, duration);
-    serverLogger.cliError('SF_CLI', error.message);
+    serverLogger.cliError('REST_API', error.message);
     res.status(500).json({ error: 'Failed to send message' });
   }
 });
 
 // End a session
-app.delete('/api/agent/session/:sessionId', (req, res) => {
+app.delete('/api/agent/session/:sessionId', async (req, res) => {
   const method = 'DELETE';
   const endpoint = `/api/agent/session/:sessionId`;
   const startTime = Date.now();
@@ -174,9 +172,10 @@ app.delete('/api/agent/session/:sessionId', (req, res) => {
   logger.logRequest(method, endpoint, { sessionId });
 
   try {
-    runSfCommand(
-      `sf agent preview end --json --authoring-bundle ${AGENT_NAME} --session-id ${sessionId} --target-org ${ORG_ALIAS}`
-    );
+    logger.debug('[REST_API] Session end request', { sessionId });
+    await restApiClient.endSession(sessionId);
+    logger.debug('[REST_API] Session end response', { sessionId });
+
     const duration = Date.now() - startTime;
 
     logger.logResponse(method, endpoint, 200, duration, { sessionId });
@@ -199,6 +198,15 @@ if (IS_PRODUCTION) {
 }
 
 const PORT = process.env.PORT || 3001;
+const TOKEN_TTL_SECONDS = Math.max(
+  parseInt(process.env.TOKEN_TTL_SECONDS || '3600', 10),
+  60
+);
+
 app.listen(PORT, () => {
-  logger.info(`Server running on http://localhost:${PORT}`, { org: ORG_ALIAS, agent: AGENT_NAME, environment: IS_PRODUCTION ? 'PRODUCTION' : 'DEVELOPMENT' });
+  logger.info(`Server running on http://localhost:${PORT}`, {
+    environment: IS_PRODUCTION ? 'PRODUCTION' : 'DEVELOPMENT',
+    logLevel: LOG_LEVEL,
+    tokenTtlSeconds: TOKEN_TTL_SECONDS
+  });
 });

@@ -647,9 +647,9 @@ export default function HeadlessAgentForce() {
             <motion.button
               className="logout-button"
               onClick={handleLogout}
-              disabled={isLoggingOff}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              disabled={isLoggingOff || isConnecting || !sessionId}
+              whileHover={!(isLoggingOff || isConnecting || !sessionId) ? { scale: 1.1 } : undefined}
+              whileTap={!(isLoggingOff || isConnecting || !sessionId) ? { scale: 0.95 } : undefined}
             >
               <LogOut size={18} />
             </motion.button>

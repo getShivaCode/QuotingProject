@@ -8,6 +8,12 @@ if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
 
+// Log levels: 0=error, 1=warn, 2=info, 3=debug
+const LOG_LEVELS = { error: 0, warn: 1, info: 2, debug: 3 };
+const CURRENT_LOG_LEVEL = LOG_LEVELS[process.env.LOG_LEVEL?.toLowerCase() || 'info'];
+
+const shouldLog = (level) => LOG_LEVELS[level] <= CURRENT_LOG_LEVEL;
+
 const formatLog = (level, message, data = null) => {
   const timestamp = new Date().toISOString();
   let logMessage = `[${timestamp}] [${level}]`;
@@ -33,26 +39,34 @@ const writeToFile = (level, message, data) => {
 
 const logger = {
   info: (message, data = null) => {
-    const log = formatLog('INFO', message, data);
-    console.log(log);
+    if (shouldLog('info')) {
+      const log = formatLog('INFO', message, data);
+      console.log(log);
+    }
     writeToFile('INFO', message, data);
   },
 
   error: (message, data = null) => {
-    const log = formatLog('ERROR', message, data);
-    console.error(log);
+    if (shouldLog('error')) {
+      const log = formatLog('ERROR', message, data);
+      console.error(log);
+    }
     writeToFile('ERROR', message, data);
   },
 
   warn: (message, data = null) => {
-    const log = formatLog('WARN', message, data);
-    console.warn(log);
+    if (shouldLog('warn')) {
+      const log = formatLog('WARN', message, data);
+      console.warn(log);
+    }
     writeToFile('WARN', message, data);
   },
 
   debug: (message, data = null) => {
-    const log = formatLog('DEBUG', message, data);
-    console.log(log);
+    if (shouldLog('debug')) {
+      const log = formatLog('DEBUG', message, data);
+      console.log(log);
+    }
     writeToFile('DEBUG', message, data);
   },
 
