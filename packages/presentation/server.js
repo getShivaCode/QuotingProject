@@ -12,27 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PROJECT_DIR = path.resolve(__dirname, '../..');
 const BUILD_DIR = path.join(__dirname, 'build');
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const LOG_LEVEL = process.env.LOG_LEVEL || (IS_PRODUCTION ? 'warn' : 'info');
-
-function runSfCommand(command) {
-  try {
-    const result = execSync(command, {
-      cwd: PROJECT_DIR,
-      encoding: 'utf-8',
-      timeout: 60000,
-      env: { ...process.env, SF_DISABLE_TELEMETRY: 'true' },
-    });
-    // Strip ANSI escape codes from output
-    const cleanedResult = result.replace(/\[[0-9;]*m/g, '').trim();
-    return JSON.parse(cleanedResult);
-  } catch (error) {
-    logger.error('SF CLI error:', { command, error: error.message });
-    throw error;
-  }
-}
 
 // Parse agent message - with deterministic Phase 1 enforcement, agent guarantees pure JSON when json_mode=True
 function parseAgentResponse(agentMessage) {
@@ -53,21 +35,6 @@ function parseAgentResponse(agentMessage) {
       data: null,
       actions: [],
     };
-  }
-}
-
-// Initialize session with JSON mode enabled
-function initializeSession(sessionId) {
-  try {
-    logger.info('>>> INITIALIZING SESSION', { sessionId });
-    const result = runSfCommand(
-      `sf agent preview send --json --authoring-bundle ${AGENT_NAME} --session-id ${sessionId} --utterance 'set_json_format' --target-org ${ORG_ALIAS}`
-    );
-    logger.info('>>> SESSION INITIALIZED - json_mode set to True', { sessionId });
-    return sessionId;
-  } catch (error) {
-    logger.error('>>> SESSION INITIALIZATION FAILED', { sessionId, error: error.message });
-    throw error;
   }
 }
 
