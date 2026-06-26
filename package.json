@@ -5,8 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "cd packages/presentation && npm run dev",
-    "build": "cd packages/presentation && npm run build",
-    "install:all": "npm --prefix packages/presentation install"
+    "build": "cd packages/presentation && npm install && npm run build"
   },
   "devDependencies": {
     "typescript": "^5.0.0"
