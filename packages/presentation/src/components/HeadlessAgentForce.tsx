@@ -395,12 +395,12 @@ export default function HeadlessAgentForce() {
               overflow: 'hidden',
               padding: '16px',
               borderRadius: '8px',
-              backgroundColor: 'rgba(0, 217, 255, 0.05)',
-              border: '1px solid rgba(0, 217, 255, 0.2)',
+              backgroundColor: '#fef3f1',
+              border: '1px solid #f0d4cf',
             }}
           >
             <div style={{ marginBottom: '16px' }}>
-              <div style={{ fontSize: '14px', fontWeight: '600', color: 'rgba(255, 255, 255, 0.9)' }}>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>
                 {data?.accountName || 'Quote'}
               </div>
             </div>
@@ -413,37 +413,37 @@ export default function HeadlessAgentForce() {
                       const price = item.unitPrice || item.unit_price || 0;
                       const total = item.lineTotal || item.subtotal || 0;
                       return (
-                        <div key={idx} style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                          <div style={{ fontWeight: '500', color: 'rgba(0, 217, 255, 0.8)' }}>{item.name}</div>
-                          <div style={{ color: 'rgba(255, 255, 255, 0.6)', marginTop: '4px', fontSize: '10px' }}>
+                        <div key={idx} style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid #f0d4cf' }}>
+                          <div style={{ fontWeight: '500', color: '#0055a3' }}>{item.name}</div>
+                          <div style={{ color: 'rgba(26, 26, 26, 0.6)', marginTop: '4px', fontSize: '10px' }}>
                             SKU: {item.sku}
                           </div>
-                          <div style={{ color: 'rgba(255, 255, 255, 0.7)', marginTop: '6px', display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px', fontSize: '10px' }}>
+                          <div style={{ color: 'rgba(26, 26, 26, 0.7)', marginTop: '6px', display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px', fontSize: '10px' }}>
                             <span>Qty:</span>
                             <span>{item.quantity} @ ${Number(price).toFixed(2)}</span>
                             <span>Line:</span>
-                            <span style={{ color: 'rgba(0, 217, 255, 0.8)' }}>${Number(total).toFixed(2)}</span>
+                            <span style={{ color: '#0055a3', fontWeight: '500' }}>${Number(total).toFixed(2)}</span>
                           </div>
                         </div>
                       );
                     })}
                   </div>
                 ) : (
-                  <div style={{ color: 'rgba(255, 255, 255, 0.5)' }}>No items in quote</div>
+                  <div style={{ color: 'rgba(26, 26, 26, 0.4)' }}>No items in quote</div>
                 )}
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid rgba(0, 217, 255, 0.3)', paddingTop: '12px' }}>
+            <div style={{ borderTop: '1px solid #f0d4cf', paddingTop: '12px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '16px', fontSize: '13px', marginBottom: '16px' }}>
-                <span style={{ color: 'rgba(255, 255, 255, 0.6)' }}>Grand Total:</span>
-                <span style={{ color: 'rgba(0, 217, 255, 0.9)', fontWeight: '600' }}>
+                <span style={{ color: 'rgba(26, 26, 26, 0.6)' }}>Grand Total:</span>
+                <span style={{ color: '#0055a3', fontWeight: '600' }}>
                   ${Number(grandTotal).toFixed(2)} {data?.currency || 'USD'}
                 </span>
               </div>
 
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ fontSize: '12px', color: 'rgba(0, 217, 255, 0.8)', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '12px', color: '#0055a3', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
                   QUOTE NAME (Required)
                 </label>
                 <input
@@ -462,9 +462,9 @@ export default function HeadlessAgentForce() {
                     width: '100%',
                     padding: '8px 10px',
                     borderRadius: '4px',
-                    border: isReadyToSubmit ? '1px solid rgba(0, 217, 255, 0.6)' : '1px solid rgba(255, 255, 255, 0.2)',
-                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                    color: 'rgba(255, 255, 255, 0.9)',
+                    border: isReadyToSubmit ? '1px solid #0055a3' : '1px solid #f0d4cf',
+                    backgroundColor: '#ffffff',
+                    color: '#1a1a1a',
                     fontSize: '12px',
                     fontFamily: 'inherit',
                     boxSizing: 'border-box',
@@ -485,7 +485,7 @@ export default function HeadlessAgentForce() {
                   padding: '10px',
                   borderRadius: '4px',
                   border: 'none',
-                  backgroundColor: isReadyToSubmit && !isLoading ? 'rgba(0, 217, 255, 0.8)' : 'rgba(0, 217, 255, 0.3)',
+                  background: isReadyToSubmit && !isLoading ? 'linear-gradient(135deg, #0077b3 0%, #0055a3 100%)' : 'rgba(0, 85, 163, 0.3)',
                   color: '#ffffff',
                   fontWeight: '600',
                   fontSize: '12px',
@@ -611,7 +611,7 @@ export default function HeadlessAgentForce() {
             {(isConnecting || isRestarting) && !isLoggingOff && (
               <span style={{
                 fontSize: '11px',
-                color: 'rgba(255, 200, 0, 0.8)',
+                color: '#0055a3',
                 fontFamily: "'Monaco', 'Courier New', monospace",
                 display: 'flex',
                 alignItems: 'center',
@@ -624,7 +624,7 @@ export default function HeadlessAgentForce() {
             {sessionId && !isConnecting && !isRestarting && !isLoggingOff && (
               <span style={{
                 fontSize: '10px',
-                color: '#1B9B9E',
+                color: '#0055a3',
                 fontFamily: "'Monaco', 'Courier New', monospace",
                 wordBreak: 'break-all',
               }}>
@@ -767,10 +767,10 @@ export default function HeadlessAgentForce() {
             <motion.button
               onClick={() => setShowJson(!showJson)}
               style={{
-                background: 'transparent',
-                border: '1px solid rgba(0, 217, 255, 0.2)',
+                background: '#fef3f1',
+                border: '1px solid #0055a3',
                 borderRadius: '4px',
-                color: 'rgba(0, 217, 255, 0.5)',
+                color: '#0055a3',
                 padding: '4px 8px',
                 fontSize: '11px',
                 cursor: 'pointer',
@@ -779,7 +779,7 @@ export default function HeadlessAgentForce() {
                 gap: '4px',
                 transition: 'all 0.2s ease',
               }}
-              whileHover={{ color: 'rgba(0, 217, 255, 0.8)', borderColor: 'rgba(0, 217, 255, 0.4)' }}
+              whileHover={{ backgroundColor: 'rgba(0, 85, 163, 0.1)' }}
               whileTap={{ scale: 0.95 }}
             >
               <Code size={12} />

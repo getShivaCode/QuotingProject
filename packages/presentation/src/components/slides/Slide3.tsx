@@ -37,6 +37,7 @@ export default function Slide3() {
         <motion.div className="solution-flow" variants={containerVariants}>
           {/* Step 1 */}
           <motion.div className="flow-item" variants={itemVariants}>
+            <div className="flow-icon">👥</div>
             <div className="flow-number">1</div>
             <h3>Account Selection</h3>
             <p>Tell the agent which customer you're quoting for</p>
@@ -46,6 +47,7 @@ export default function Slide3() {
 
           {/* Step 2 */}
           <motion.div className="flow-item" variants={itemVariants}>
+            <div className="flow-icon">🔍</div>
             <div className="flow-number">2</div>
             <h3>Product Search</h3>
             <p>Describe what you need in plain English</p>
@@ -55,8 +57,9 @@ export default function Slide3() {
 
           {/* Step 3 */}
           <motion.div className="flow-item" variants={itemVariants}>
+            <div className="flow-icon">🛒</div>
             <div className="flow-number">3</div>
-            <h3>Build Quote</h3>
+            <h3>Build Shopping Cart</h3>
             <p>Add items and finalize pricing</p>
           </motion.div>
 
@@ -64,6 +67,7 @@ export default function Slide3() {
 
           {/* Step 4 */}
           <motion.div className="flow-item" variants={itemVariants}>
+            <div className="flow-icon">✉️</div>
             <div className="flow-number">4</div>
             <h3>Request Quote</h3>
             <p>Send to customer in seconds</p>

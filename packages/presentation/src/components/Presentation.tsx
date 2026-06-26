@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, Moon, Sun } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Moon, Sun, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Slide1 from './slides/Slide1';
 import Slide2 from './slides/Slide2';
@@ -10,6 +10,7 @@ import Slide6 from './slides/Slide6';
 import Slide7 from './slides/Slide7';
 import Slide8 from './slides/Slide8';
 import Slide10 from './slides/Slide10';
+import HeadlessAgentForce from './HeadlessAgentForce';
 import { useSession } from '../context/SessionContext';
 import '../styles/presentation.css';
 
@@ -35,6 +36,7 @@ export default function Presentation() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showNavConfirmation, setShowNavConfirmation] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<number | null>(null);
+  const [showStandaloneAgent, setShowStandaloneAgent] = useState(false);
   const { sessionId } = useSession();
 
   const isSlide8 = currentSlide === 7; // Slide 8 is at index 7
@@ -105,7 +107,22 @@ export default function Presentation() {
           <h1 className="presentation-title">
             Intelligent Quoting
             <span className="header-divider">powered by</span>
-            <img className="agentforce-logo-inline" src="https://content.partnerpage.io/eyJidWNrZXQiOiJwYXJ0bmVycGFnZS5wcm9kIiwia2V5IjoibWVkaWEvY29udGFjdF9pbWFnZXMvNWI4ZTAwYjMtNDY5YS00NTQ4LWI1MDgtNDZiZWQyOGRiY2ExL2RlYTVjMGM1LWVmN2QtNDJiNS04YTQwLTQ1ZjM2OGJlNDkxOC5wbmciLCJlZGl0cyI6eyJ0b0Zvcm1hdCI6IndlYnAiLCJyZXNpemUiOnsiZml0IjoiY29udGFpbiIsImJhY2tncm91bmQiOnsiciI6MjU1LCJnIjoyNTUsImIiOjI1NSwiYWxwaGEiOjB9fX19" alt="Agentforce" />
+            <motion.button
+              className="agentforce-logo-button"
+              onClick={() => setShowStandaloneAgent(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              title="Open Agentforce Assistant"
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+                display: 'inline-block',
+              }}
+            >
+              <img className="agentforce-logo-inline" src="https://content.partnerpage.io/eyJidWNrZXQiOiJwYXJ0bmVycGFnZS5wcm9kIiwia2V5IjoibWVkaWEvY29udGFjdF9pbWFnZXMvNWI4ZTAwYjMtNDY5YS00NTQ4LWI1MDgtNDZiZWQyOGRiY2ExL2RlYTVjMGM1LWVmN2QtNDJiNS04YTQwLTQ1ZjM2OGJlNDkxOC5wbmciLCJlZGl0cyI6eyJ0b0Zvcm1hdCI6IndlYnAiLCJyZXNpemUiOnsiZml0IjoiY29udGFpbiIsImJhY2tncm91bmQiOnsiciI6MjU1LCJnIjoyNTUsImIiOjI1NSwiYWxwaGEiOjB9fX19" alt="Agentforce" />
+            </motion.button>
           </h1>
         </div>
         <motion.button
@@ -233,6 +250,38 @@ export default function Presentation() {
                   Leave
                 </motion.button>
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Standalone Agent Modal */}
+      <AnimatePresence>
+        {showStandaloneAgent && (
+          <motion.div
+            className="standalone-agent-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowStandaloneAgent(false)}
+          >
+            <motion.div
+              className="standalone-agent-container"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <motion.button
+                className="standalone-agent-close"
+                onClick={() => setShowStandaloneAgent(false)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                title="Close"
+              >
+                <X size={20} />
+              </motion.button>
+              <HeadlessAgentForce />
             </motion.div>
           </motion.div>
         )}

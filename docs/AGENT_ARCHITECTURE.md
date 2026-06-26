@@ -18,9 +18,9 @@ These variables are stored at the agent level and persist throughout the entire 
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  AGENT-LEVEL VARIABLES (stored for entire agent session)                   │
+│  AGENT-LEVEL VARIABLES (stored for entire agent session)                    │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│  • account_id              (string)  - Salesforce Account ID                 │
+│  • account_id              (string)  - Salesforce Account ID                │
 │  • account_name            (string)  - Account Name for display             │
 │  • account_confirmed       (boolean) - Flag: account locked in?             │
 │  • selected_products       (string)  - JSON array of {sku, quantity}        │
@@ -181,13 +181,13 @@ User: "I need industrial valves"
 │ └──────────────────────────────────────┘        │
 │         ↓                                       │
 │ https://pricingmcp.onrender.com/mcp             │
-│ (External Pricing Server)                      │
+│ (External Pricing Server)                       │
 │         ↓                                       │
-│ Output: results = [                            │
-│   {sku: "CHEM-008", name: "Heavy Duty Valve",  │
-│    desc: "...", unitPrice: 250},               │
-│   {sku: "CHEM-045", name: "Safety Relief",     │
-│    desc: "...", unitPrice: 150},               │
+│ Output: results = [                             │
+│   {sku: "CHEM-008", name: "Heavy Duty Valve",   │
+│    desc: "...", unitPrice: 250},                │
+│   {sku: "CHEM-045", name: "Safety Relief",      │
+│    desc: "...", unitPrice: 150},                │
 │   ...                                           │
 │ ]                                               │
 │ SET: @variables.product_search_results =        │
@@ -215,11 +215,11 @@ User: "10x CHEM-008, 5x CHEM-045. Name it: Q-2026-001"
 
 #### STEP 4: UNIFIED ACTION - Generate & Save Quote
 ```
-┌──────────────────────────────────────────────────────────┐
-│ STEP 4: UNIFIED ACTION - Generate & Save Quote           │
-│ ──────────────────────────────────────────────────────── │
-│ Action: generate_quote                                   │
-│                                                          │
+┌─────────────────────────────────────────────────────────┐
+│ STEP 4: UNIFIED ACTION - Generate & Save Quote          │
+│ ────────────────────────────────────────────────────────│
+│ Action: generate_quote                                  │
+│                                                         │
 │ INPUT - Variable Binding (from earlier):                │
 │ • accountId = @variables.account_id                     │
 │   (bound with "with accountId = ...")                   │
@@ -227,11 +227,11 @@ User: "10x CHEM-008, 5x CHEM-045. Name it: Q-2026-001"
 │   (user-provided input)                                 │
 │ • products = [{"sku":"CHEM-008","qty":10},              │
 │              {"sku":"CHEM-045","qty":5}]                │
-│   (user selections)                                      │
-│                                                          │
+│   (user selections)                                     │
+│                                                         │
 │ ┌──────────────────────────────────────────┐            │
 │ │ GenerateAndSaveQuote (Apex Class)        │            │
-│ │ ────────────────────────────────────────  │            │
+│ │ ──────────────────────────────────────── │            │
 │ │ PART 1: Call MCP for Pricing             │            │
 │ │  • Initialize MCP session                │            │
 │ │  • Call MCP tool: calculate_quote        │            │
@@ -243,26 +243,26 @@ User: "10x CHEM-008, 5x CHEM-045. Name it: Q-2026-001"
 │ │  • Create Opportunity                    │            │
 │ │    (AccountId, Amount, StageName)        │            │
 │ │  • Create Quote                          │            │
-│ │    (OpportunityId, Name, Pricebook2Id)  │            │
+│ │    (OpportunityId, Name, Pricebook2Id)   │            │
 │ │  • Create QuoteLineItem                  │            │
 │ │    (qty=1, UnitPrice=grandTotal)         │            │
 │ │    ^ This triggers Quote.GrandTotal      │            │
 │ │      formula calculation                 │            │
 │ │  • Query & return Quote record           │            │
 │ └──────────────────────────────────────────┘            │
-│                                                          │
-│ OUTPUT:                                                  │
+│                                                         │
+│ OUTPUT:                                                 │
 │ • quoteDetails = formatted quote JSON                   │
 │   {product name, desc, qty, unitPrice,                  │
 │    lineTotal for each line, grandTotal}                 │
 │ • quoteId = "8060..." (SF Quote ID)                     │
 │ • quoteNumber = "0000123" (auto-generated)              │
-│                                                          │
+│                                                         │
 │ SET: @variables.quote_description = quoteDetails        │
 │ SET: @variables.quote_id = quoteId                      │
 │ SET: @variables.quote_total = quoteNumber               │
 │ (NO USER APPROVAL STEP - saved immediately!)            │
-└──────────────────────────────────────────────────────────┘
+└─────────────────────────────────────────────────────────┘
 ```
 
 **GenerateAndSaveQuote Details**:
@@ -350,9 +350,9 @@ User: "Show quotes for Acme Corp"
 │ │ QuoteHistoryAction       │                    │
 │ │ (Apex Class)             │                    │
 │ │ - SOQL Query on Quotes   │                    │
-│ │  for account via          │                    │
-│ │  Opportunity.AccountId    │                    │
-│ │ - Returns quote list      │                    │
+│ │  for account via         │                    │
+│ │  Opportunity.AccountId   │                    │
+│ │ - Returns quote list     │                    │
 │ └──────────────────────────┘                    │
 │ Output: quotes = [                              │
 │   {Id: "8060...", QuoteNumber: "0000123",       │
@@ -458,39 +458,39 @@ Variables persist at the agent level and are accessible to all subagents. Here's
 └─────────────────────────────────────────────────────────────────────────────┘
                                     ↓
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ account_selection                                                            │
+│ account_selection                                                           │
 │ • Calls: search_accounts(searchTerm)                                        │
 │ • Sets:  product_search_results = accountResults                            │
 │ • Calls: confirm_account (via LLM)                                          │
-│ • Sets:  ✓ account_id = "001..."                                           │
+│ • Sets:  ✓ account_id = "001..."                                            │
 │          ✓ account_name = "Acme Corp"                                       │
 │          ✓ account_confirmed = True                                         │
 │ • Transitions to: product_search                                            │
 └─────────────────────────────────────────────────────────────────────────────┘
      ↓ (Variables persist across transitions!)
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ product_search (RECEIVES account variables from previous subagent)          │
+┌───────────────────────────────────────────────────────────────────────────┐
+│ product_search (RECEIVES account variables from previous subagent)        │
 │ • Can READ: account_id, account_name (set = verified ✓)                   │
-│ • Calls: search_products(query)                                            │
-│ • Sets:  product_search_results = results                                  │
-│ • Calls: generate_quote with:                                              │
-│   - products = user input (JSON array)                                      │
+│ • Calls: search_products(query)                                           │
+│ • Sets:  product_search_results = results                                 │
+│ • Calls: generate_quote with:                                             │
+│   - products = user input (JSON array)                                    │
 │   - accountId = @variables.account_id ← REUSED FROM PREVIOUS              │
-│   - quoteName = user input                                                  │
-│ • Receives: quoteDetails, quoteId, quoteNumber                             │
+│   - quoteName = user input                                                │
+│ • Receives: quoteDetails, quoteId, quoteNumber                            │
 │ • Sets:  ✓ quote_description = quoteDetails                               │
-│          ✓ quote_id = quoteId                                              │
-│          ✓ quote_total = quoteNumber                                       │
-│ • Transitions to: agent_router (OR quote_management)                       │
-└─────────────────────────────────────────────────────────────────────────────┘
+│          ✓ quote_id = quoteId                                             │
+│          ✓ quote_total = quoteNumber                                      │
+│ • Transitions to: agent_router (OR quote_management)                      │
+└───────────────────────────────────────────────────────────────────────────┘
      ↓ (Variables persist!)
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ quote_management (OR back at agent_router)                                  │
+┌───────────────────────────────────────────────────────────────────────────┐
+│ quote_management (OR back at agent_router)                                │
 │ • Can READ: account_id ← reused from first subagent!                      │
-│ • Calls: get_quote_history(accountId)                                      │
+│ • Calls: get_quote_history(accountId)                                     │
 │ • OR:     get_quote_details(quoteId) ← can use from product_search!       │
-│ • All variables remain available for any future workflow step               │
-└─────────────────────────────────────────────────────────────────────────────┘
+│ • All variables remain available for any future workflow step             │
+└───────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Example Variable Journey**:

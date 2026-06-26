@@ -618,3 +618,113 @@
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.3);
 }
+
+/* Agentforce Logo Button */
+.agentforce-logo-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.agentforce-logo-button:hover .agentforce-logo-inline {
+  filter: brightness(1.1) drop-shadow(0 0 4px rgba(0, 217, 255, 0.3));
+}
+
+/* Standalone Agent Modal */
+.standalone-agent-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.standalone-agent-container {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  max-width: 1600px;
+  max-height: 900px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  border: 1px solid rgba(0, 217, 255, 0.2);
+  padding: 60px;
+  box-sizing: border-box;
+}
+
+.presentation-container.dark-mode .standalone-agent-container {
+  background: rgba(15, 23, 42, 0.98);
+  border-color: rgba(0, 217, 255, 0.3);
+}
+
+.standalone-agent-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 217, 255, 0.2);
+  background: rgba(0, 217, 255, 0.08);
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.standalone-agent-close:hover {
+  background: rgba(0, 217, 255, 0.15);
+  border-color: rgba(0, 217, 255, 0.4);
+  color: rgba(0, 217, 255, 0.8);
+}
+
+.presentation-container.dark-mode .standalone-agent-close {
+  background: rgba(0, 217, 255, 0.1);
+  border-color: rgba(0, 217, 255, 0.3);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.presentation-container.dark-mode .standalone-agent-close:hover {
+  background: rgba(0, 217, 255, 0.15);
+  border-color: rgba(0, 217, 255, 0.5);
+  color: rgba(0, 217, 255, 0.9);
+}
+
+/* Responsive - Tablet */
+@media (max-width: 1200px) {
+  .standalone-agent-container {
+    width: 95vw;
+    height: 95vh;
+  }
+}
+
+/* Responsive - Mobile */
+@media (max-width: 768px) {
+  .standalone-agent-overlay {
+    align-items: flex-end;
+  }
+
+  .standalone-agent-container {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+
+  .standalone-agent-close {
+    top: 8px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+  }
+}

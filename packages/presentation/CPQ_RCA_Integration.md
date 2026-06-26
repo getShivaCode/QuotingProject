@@ -401,13 +401,19 @@ This appendix defines a headless, real-time integration between Salesforce Sales
 ### A.2 Architecture Overview and Data Flow (Aligned to Section 5 Scenarios)
 
 ```text
-[ Salesforce User ]
-       │
-       ▼ (Clicks "Fetch Pricefx Pricing" or triggers save automation)
-[ Salesforce Quote + QuoteLineItems ] --(1) Auth / (2) Pricing/Config Request--> [ Pricefx API Gateway ]
-       ▲                                                                  │
-       │                                                                  ▼
-[ Field Updates in Salesforce ] <--(3) computedItems/expandedItems + errors-- [ Pricefx Logic Engine ]
+┌─────────────────┐
+│ Salesforce User │
+└────────┬────────┘
+         │
+         ▼ (Clicks "Fetch Pricefx Pricing" or triggers save automation)
+┌───────────────────────────────────────┐       (1) Auth / (2) Pricing/Config Request       ┌──────────────────────┐
+│ Salesforce Quote + QuoteLineItems     ├──────────────────────────────────────────────────►│ Pricefx API Gateway  │
+└───────────────────────┬───────────────┘                                                   └──────────┬───────────┘
+                        │                                                                              │
+                        │                                                                              ▼
+┌───────────────────────▼───────────────┐                                                    ┌──────────────────────┐
+│ Field Updates in Salesforce           │◄───────────────────────────────────────────────────┤ Pricefx Logic Engine │
+└───────────────────────────────────────┘      (3) computedItems/expandedItems + errors      └──────────────────────┘
 ```
 
 High-level flow:
