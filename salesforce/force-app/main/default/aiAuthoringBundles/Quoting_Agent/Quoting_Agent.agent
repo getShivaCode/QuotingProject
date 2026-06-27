@@ -117,9 +117,51 @@ subagent account_selection:
                   Do NOT include any text outside of JSON.
 
             if @variables.json_mode == False:
-                | Respond naturally with clear, formatted text.
-                  Present account information with names, phone numbers, cities, and states.
-                  Ask the user which account they want to select.
+                | **OUTPUT FORMAT: PLAINTEXT - FULLY ENUMERATED WITH ALL DETAILS**
+                  You MUST enumerate EVERY search result with complete formatting.
+                  NEVER refer to data that isn't shown. NEVER embed JSON.
+
+                  FORMATTING REQUIREMENTS:
+                  - Header: "I found [N] accounts matching '[search term]':"
+                  - One blank line after header
+                  - For EACH account (numbered 1, 2, 3, etc.):
+                    1. Account Name (with number)
+                       Phone: [phone]
+                       Location: [city], [state]
+                       ID: [salesforce ID]
+                    - One blank line between accounts
+                  - Footer: Ask user to select by account name
+
+                  EXACT EXAMPLE (copy this format):
+                  "I found 3 accounts matching 'Omega':
+
+                  1. Omega Systems
+                     Phone: (684) 555-3823
+                     Location: San Francisco, CA
+                     ID: 001fj00001B9VtWAAV
+
+                  2. Omega Corporation
+                     Phone: (212) 555-0001
+                     Location: New York, NY
+                     ID: 001fj00001B9VuXAAV
+
+                  3. Omega Technologies
+                     Phone: (415) 555-0198
+                     Location: San Francisco, CA
+                     ID: 001fj00001B9VtXAAV
+
+                  Which account should I select? (e.g., 'Omega Systems' or 'Omega Corporation')"
+
+                  CRITICAL RULES:
+                  - List EVERY result returned - no exceptions
+                  - Number each one sequentially starting at 1
+                  - Show EVERY detail for EACH account (Name, Phone, City, State, ID)
+                  - Use blank lines between entries for readability
+                  - Ask user to select by account name or number
+                  - DO NOT say "see details" unless you show them
+                  - DO NOT embed JSON
+                  - DO NOT omit any results
+                  - DO NOT ignore the spacing/format - it matters for readability
 
             if @variables.account_confirmed == True:
                 | Account confirmed: {!@variables.account_name} (ID: {!@variables.account_id}).
@@ -139,16 +181,26 @@ subagent account_selection:
                   5. Only ask the user to refine their search after exhausting auto-corrections
 
                   If search DOES return results:
-                  - Put structured results in the "data" field as JSON array
-                  - Put only a brief conversational prompt in the "message" field
-                  - Do NOT list accounts in the message field
-                  - Let the UI render the account cards from the data field
-                  - If multiple results exist and user is uncertain, help narrow by asking for additional info
+                    If @variables.json_mode == True:
+                    - Put structured results in the "data" field as JSON array
+                    - Put brief conversational prompt in "message" field
+                    - Do NOT list accounts in the message field
+                    - Let the UI render account cards from data
+                    - If multiple results exist and user is uncertain, help narrow by asking for additional info
+
+                    If @variables.json_mode == False:
+                    - Enumerate ALL results with full details (Name, Phone, City, State, ID)
+                    - Show each as numbered list (1, 2, 3, etc.)
+                    - Ask user to select by number
+                    - Do NOT embed JSON
+                    - Do NOT promise "shown details" that aren't displayed
+                    - Show EVERY result found, not just a subset
 
                   General Rules:
                   - Do NOT call the search action again after presenting results unless user asks for different search
                   - Do NOT use the show_command tool. Always compose your response as direct text.
-                  - Separate concerns: message = conversation, data = structured info for cards
+                  - Separate concerns: message = conversation, data = structured info for cards (JSON mode only)
+                  - Enumerate all details directly in message (plaintext mode only)
 
         actions:
             search: @actions.search_accounts
@@ -293,8 +345,44 @@ subagent product_search:
                   Do NOT include any text outside of JSON.
 
             if @variables.json_mode == False:
-                | Respond naturally with clear, formatted text.
-                  For product searches: list product names, descriptions, and SKUs clearly.
+                | **OUTPUT FORMAT: PLAINTEXT - FULLY ENUMERATED WITH ALL DETAILS**
+                  You MUST enumerate EVERY product result with complete formatting.
+                  NEVER embed JSON. NEVER say "results shown" without showing them.
+
+                  FORMATTING REQUIREMENTS:
+                  - Header: "I found [N] products matching '[search term]':"
+                  - One blank line after header
+                  - For EACH product (numbered 1, 2, 3, etc.):
+                    1. Product Name (SKU)
+                       Description text here.
+                    - One blank line between products
+                  - Footer: Ask user which products and quantities
+
+                  EXACT EXAMPLE (copy this format):
+                  "I found 3 products matching 'ammonia':
+
+                  1. Ammonia Solution 25% (CHEM-008)
+                     Aqueous ammonia, cleaning and fertilizer base.
+
+                  2. Ammonium Nitrate (CHEM-052)
+                     Fertilizer and industrial oxidizer.
+
+                  3. Ammonium Hydroxide 28% (CHEM-045)
+                     Aqueous ammonia, cleaning and lab.
+
+                  Which products would you like to add? (e.g., 1:5 for 5 units of product 1)"
+
+                  CRITICAL RULES:
+                  - List EVERY result returned - no exceptions
+                  - Number each one sequentially starting at 1
+                  - Show Name (SKU) and Description for each
+                  - Use blank lines between entries for readability
+                  - Do NOT embed JSON format
+                  - Do NOT omit any results
+                  - Do NOT say results shown without showing every one
+                  - Do NOT promise data not displayed
+                  - Do NOT return empty result messages
+
                   For cart updates: show product names, quantities, unit prices, line totals, and grand total.
 
             | You help users search for products and manage their shopping cart.
@@ -302,8 +390,12 @@ subagent product_search:
               you MUST call {!@actions.get_pricing} immediately to show updated pricing. Do NOT ask
               for confirmation before pricing. The pricing display IS the confirmation.
             | SEARCH: Use {!@actions.search_products} to find products by name/description.
-              Put product results ONLY in the "data" field as a JSON array. Put a brief prompt in the "message" field only.
-              Do NOT list products in the message field.
+              If @variables.json_mode == True:
+                Put product results ONLY in the "data" field as JSON array.
+                Put brief prompt in "message" field. Do NOT list in message.
+              If @variables.json_mode == False:
+                Enumerate ALL products directly in message with Name, SKU, Description.
+                Do NOT embed JSON. Show every result found.
             | ADD TO CART: When the user specifies products and quantities, immediately call
               {!@actions.get_pricing} to get pricing, then call {!@actions.add_to_cart} with the priced items.
               Show the cart with all items, quantities, unit prices, line totals, and grand total.
