@@ -141,14 +141,16 @@ app.delete('/api/agent/session/:sessionId', async (req, res) => {
   try {
     logger.debug('[REST_API] Session end request', { sessionId });
     await restApiClient.endSession(sessionId);
-    logger.debug('[REST_API] Session end response', { sessionId });
+    logger.info('>>> Session ended', { sessionId });
 
     const duration = Date.now() - startTime;
 
-    logger.logResponse(method, endpoint, 200, duration, { sessionId });
-    res.json({ success: true });
+    const response = { success: true, sessionId };
+    logger.logResponse(method, endpoint, 200, duration, response);
+    res.json(response);
   } catch (error) {
     const duration = Date.now() - startTime;
+    logger.error('>>> Failed to end session', { sessionId, error: error.message });
     logger.logError(method, endpoint, error, duration);
     res.status(500).json({ error: 'Failed to end session' });
   }

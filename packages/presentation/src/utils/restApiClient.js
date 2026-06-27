@@ -218,14 +218,26 @@ async function endSession(sessionId) {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
+        'x-session-end-reason': 'UserRequest',
       },
     };
 
+    const timeout = setTimeout(() => {
+      req.abort();
+      reject(new Error(`Session end request timed out after 10 seconds`));
+    }, 10000);
+
     const req = https.request(url, options, (res) => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
       res.on('end', () => {
+        clearTimeout(timeout);
         try {
+          logger.debug('[SESSION_DELETE] Response received', { statusCode: res.statusCode, data });
           if (res.statusCode !== 204 && res.statusCode !== 200) {
-            throw new Error(`Session end failed with status ${res.statusCode}`);
+            throw new Error(`Session end failed with status ${res.statusCode}: ${data}`);
           }
           resolve(true);
         } catch (error) {
@@ -235,6 +247,7 @@ async function endSession(sessionId) {
     });
 
     req.on('error', (error) => {
+      clearTimeout(timeout);
       reject(new Error(`Session end request failed: ${error.message}`));
     });
 

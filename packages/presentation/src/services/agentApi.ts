@@ -127,13 +127,13 @@ export async function endSession(sessionId: string): Promise<void> {
 
     if (!response.ok) {
       logger.logError(method, url, response.statusText, duration);
-      throw new Error(`Failed to end session: ${response.statusText}`);
     }
 
     logger.logResponse(method, url, response.status, duration);
   } catch (error) {
     const duration = performance.now() - startTime;
-    logger.logError(method, url, error instanceof Error ? error.message : String(error), duration);
-    throw error;
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      logger.logError(method, url, error instanceof Error ? error.message : String(error), duration);
+    }
   }
 }
