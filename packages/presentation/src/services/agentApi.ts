@@ -1,6 +1,10 @@
 import { logger } from './logger';
 
-const PROXY_URL = typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.host}` : 'http://localhost:3001';
+const PROXY_URL = typeof window !== 'undefined'
+  ? window.location.hostname === 'localhost'
+    ? 'http://localhost:3001'
+    : `${window.location.protocol}//${window.location.host}`
+  : 'http://localhost:3001';
 
 export interface AgentMessage {
   type: string;

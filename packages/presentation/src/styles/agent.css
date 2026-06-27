@@ -123,6 +123,31 @@
   margin: 0;
 }
 
+/* Dark Mode - Login Card */
+.presentation-container.dark-mode .login-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+.presentation-container.dark-mode .login-card h2 {
+  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.presentation-container.dark-mode .login-card p {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.presentation-container.dark-mode .login-button {
+  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
+}
+
+.presentation-container.dark-mode .login-hint {
+  color: rgba(255, 255, 255, 0.4);
+}
+
 /* Header */
 .agent-header {
   padding: 16px;
@@ -1975,6 +2000,50 @@
 
 .presentation-container.dark-mode .summary-row strong {
   color: #f3f4f6;
+}
+
+/* Draft Quote Card */
+.viz-draft-quote {
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #fef3f1;
+  border: 1px solid #f0d4cf;
+}
+
+.presentation-container.dark-mode .viz-draft-quote {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #ffffff;
+}
+
+.presentation-container.dark-mode .viz-draft-quote div,
+.presentation-container.dark-mode .viz-draft-quote span {
+  color: #ffffff !important;
+  border-color: #374151 !important;
+}
+
+.presentation-container.dark-mode .viz-draft-quote div[style*="#0055a3"],
+.presentation-container.dark-mode .viz-draft-quote span[style*="#0055a3"] {
+  color: #00d9ff !important;
+}
+
+.presentation-container.dark-mode .viz-draft-quote div[style*="rgba(26, 26, 26"],
+.presentation-container.dark-mode .viz-draft-quote span[style*="rgba(26, 26, 26"] {
+  color: #9ca3af !important;
+}
+
+.presentation-container.dark-mode .viz-draft-quote label {
+  color: rgba(0, 217, 255, 0.7) !important;
+}
+
+.presentation-container.dark-mode .viz-draft-quote button {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.2) 100%) !important;
+  border: 1px solid rgba(0, 217, 255, 0.4) !important;
+  color: #00d9ff !important;
+}
+
+.presentation-container.dark-mode .viz-draft-quote button:not(:disabled):hover {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.4) 0%, rgba(0, 217, 255, 0.3) 100%) !important;
 }
 
 /* Dark Mode - Create Quote Button */

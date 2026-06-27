@@ -393,10 +393,6 @@ export default function HeadlessAgentForce() {
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
-              padding: '16px',
-              borderRadius: '8px',
-              backgroundColor: '#fef3f1',
-              border: '1px solid #f0d4cf',
             }}
           >
             <div style={{ marginBottom: '16px' }}>

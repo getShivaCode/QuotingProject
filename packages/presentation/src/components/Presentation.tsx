@@ -13,6 +13,7 @@ import Slide10 from './slides/Slide10';
 import HeadlessAgentForce from './HeadlessAgentForce';
 import { useSession } from '../context/SessionContext';
 import '../styles/presentation.css';
+import '../styles/agent.css';
 
 const slides = [
   { id: 1, component: Slide1, title: 'Value Statement' },
