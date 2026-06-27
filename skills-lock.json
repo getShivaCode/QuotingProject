@@ -187,6 +187,12 @@
       "skillPath": "skills/implementing-ui-bundle-file-upload/SKILL.md",
       "computedHash": "90f98879b4e7ae9aa8887b481db683cf6fb215941d92a931a8bfae96b79c4df7"
     },
+    "mcp-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/mcp-builder/SKILL.md",
+      "computedHash": "826e46adf81e1372282e205c34e1a2ee876e72148007726e4a2512599d2fef7b"
+    },
     "observing-agentforce": {
       "source": "forcedotcom/sf-skills",
       "sourceType": "github",
