@@ -69,8 +69,12 @@ app.post('/api/agent/session', async (req, res) => {
 
     const duration = Date.now() - startTime;
 
-    logger.logResponse(method, endpoint, 200, duration, { sessionId });
-    res.json({ sessionId });
+    const response = {
+      sessionId,
+      instanceUrl: process.env.SF_INSTANCE_URL,
+    };
+    logger.logResponse(method, endpoint, 200, duration, response);
+    res.json(response);
   } catch (error) {
     const duration = Date.now() - startTime;
     logger.logError(method, endpoint, error, duration);

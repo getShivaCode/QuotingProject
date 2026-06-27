@@ -15,6 +15,7 @@ export interface AgentMessage {
 
 export interface AgentSession {
   sessionId: string;
+  instanceUrl?: string;
 }
 
 export async function startSession(): Promise<AgentSession> {

@@ -40,7 +40,7 @@ interface Message {
 
 export default function HeadlessAgentForce() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { setSessionId: setContextSessionId } = useSession();
+  const { setSessionId: setContextSessionId, setInstanceUrl } = useSession();
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -93,6 +93,7 @@ export default function HeadlessAgentForce() {
       const session = await startSession();
       setSessionId(session.sessionId);
       setContextSessionId(session.sessionId);
+      setInstanceUrl(session.instanceUrl || null);
       setMessages([]);
 
       // Session is initialized server-side with JSON mode enabled
@@ -183,6 +184,7 @@ export default function HeadlessAgentForce() {
       console.log('[RESTART] New session created:', session.sessionId);
       setSessionId(session.sessionId);
       setContextSessionId(session.sessionId);
+      setInstanceUrl(session.instanceUrl || null);
 
       // Session initialized server-side with JSON mode enabled
       // Display Tally's greeting after agent is ready
@@ -762,20 +764,8 @@ export default function HeadlessAgentForce() {
           {liveResponseData && (
             <motion.button
               onClick={() => setShowJson(!showJson)}
-              style={{
-                background: '#fef3f1',
-                border: '1px solid #0055a3',
-                borderRadius: '4px',
-                color: '#0055a3',
-                padding: '4px 8px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                transition: 'all 0.2s ease',
-              }}
-              whileHover={{ backgroundColor: 'rgba(0, 85, 163, 0.1)' }}
+              className="json-toggle-button"
+              whileHover={{ color: 'rgba(0, 217, 255, 0.8)', borderColor: 'rgba(0, 217, 255, 0.4)' }}
               whileTap={{ scale: 0.95 }}
             >
               <Code size={12} />

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSession } from '../../context/SessionContext';
 
 interface CartItem {
   sku: string;
@@ -28,6 +29,10 @@ interface QuoteCardProps {
 }
 
 export default function QuoteCard({ quoteData }: QuoteCardProps) {
+  const { instanceUrl } = useSession();
+
+  console.log('[QuoteCard] Debug:', { quoteId: quoteData.quoteId, instanceUrl });
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -45,8 +50,7 @@ export default function QuoteCard({ quoteData }: QuoteCardProps) {
   const hasLineItems = Array.isArray(items) && items.length > 0;
 
   const getQuoteUrl = () => {
-    if (!quoteData.quoteId) return null;
-    const instanceUrl = process.env.REACT_APP_SF_INSTANCE_URL;
+    if (!quoteData.quoteId || !instanceUrl) return null;
     return `${instanceUrl}/${quoteData.quoteId}`;
   };
 
