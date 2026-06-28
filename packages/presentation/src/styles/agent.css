@@ -360,7 +360,6 @@
 }
 
 .thinking-message {
-  font-size: 0.8125em;
   color: rgba(0, 0, 0, 0.6);
   font-style: italic;
 }
@@ -783,7 +782,11 @@
 .cart-item-total {
   font-weight: 700;
   color: #003d7a;
-  font-size: 0.75em;
+  font-size: 0.9em;
+}
+
+.presentation-container.dark-mode .cart-item-total {
+  color: #ffffff;
 }
 
 .viz-cart-total {
@@ -1722,7 +1725,7 @@
 
 .presentation-container.dark-mode .viz-account-card .account-location,
 .presentation-container.dark-mode .viz-account-card .account-phone {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .viz-product-card {
