@@ -406,12 +406,16 @@ subagent product_search:
               you MUST call {!@actions.get_pricing} immediately to show updated pricing. Do NOT ask
               for confirmation before pricing. The pricing display IS the confirmation.
             | SEARCH: Use {!@actions.search_products} to find products by name/description.
+              CRITICAL: After search, filter results to only include products with score >= 0.70
+              (remove any products with score < 0.70 from results before showing to user).
               If @variables.json_mode == True:
-                Put product results ONLY in the "data" field as JSON array.
+                Put FILTERED product results ONLY in the "data" field as JSON array.
                 Put brief prompt in "message" field. Do NOT list in message.
+                If no products remain after filtering, use empty data array and message: "No products found matching '[search term]'. Try different keywords?"
               If @variables.json_mode == False:
-                Enumerate ALL products directly in message with Name, SKU, Description.
-                Do NOT embed JSON. Show every result found.
+                Enumerate FILTERED products directly in message with Name, SKU, Description.
+                Do NOT embed JSON. Show every FILTERED result found.
+                If no products remain after filtering, report: "No products found matching '[search term]'. Try different keywords?"
             | ADD TO CART: When the user specifies products and quantities, immediately call
               {!@actions.get_pricing} to get pricing, then call {!@actions.add_to_cart} with the priced items.
               If @variables.json_mode == True:
