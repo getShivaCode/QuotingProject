@@ -40,8 +40,10 @@ export default function Slide5() {
           {/* Main Content */}
           <motion.div className="detail-main" variants={itemVariants}>
             <div className="detail-step-box">
-              <div className="step-icon">🔍</div>
-              <h3>Semantic Product Search</h3>
+              <div className="step-icon-title">
+                <div className="step-icon">🔍</div>
+                <h3>Semantic Product Search</h3>
+              </div>
               <p>
                 Describe what you need in plain English: "heavy duty industrial valves" or "sulfuric acid".
                 Our intelligent system searches your product catalog and returns relevant matches with

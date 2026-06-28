@@ -40,8 +40,10 @@ export default function Slide4() {
           {/* Main Content */}
           <motion.div className="detail-main" variants={itemVariants}>
             <div className="detail-step-box">
-              <div className="step-icon">👥</div>
-              <h3>Search & Select Account</h3>
+              <div className="step-icon-title">
+                <div className="step-icon">👥</div>
+                <h3>Search & Select Account</h3>
+              </div>
               <p>
                 Simply tell the agent which customer you want to quote for. The system searches your
                 Salesforce accounts in real-time using intelligent matching.

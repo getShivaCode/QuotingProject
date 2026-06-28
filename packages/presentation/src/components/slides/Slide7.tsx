@@ -40,8 +40,10 @@ export default function Slide7() {
           {/* Main Content */}
           <motion.div className="detail-main" variants={itemVariants}>
             <div className="detail-step-box">
-              <div className="step-icon">📄</div>
-              <h3>Generate & Submit</h3>
+              <div className="step-icon-title">
+                <div className="step-icon">📄</div>
+                <h3>Generate & Submit</h3>
+              </div>
               <p>
                 Click to generate the official quote with a unique quote number. It's
                 automatically saved to Salesforce and ready to send to your customer
@@ -50,36 +52,36 @@ export default function Slide7() {
 
               {/* Quote Summary Card */}
               <motion.div className="quote-summary" variants={containerVariants}>
-                <div className="summary-header">
-                  <div>
-                    <div className="summary-label">Quote Number</div>
-                    <div className="summary-value">Q-0000123</div>
-                  </div>
-                  <div>
-                    <div className="summary-label">Status</div>
-                    <div className="summary-value status-draft">Draft</div>
-                  </div>
+              <div className="summary-header">
+                <div>
+                  <div className="summary-label">Quote Number</div>
+                  <div className="summary-value">Q-0000123</div>
                 </div>
+                <div>
+                  <div className="summary-label">Status</div>
+                  <div className="summary-value status-draft">Draft</div>
+                </div>
+              </div>
 
-                <div className="summary-body">
-                  <div className="summary-row">
-                    <span>Account:</span>
-                    <strong>Acme Corp</strong>
-                  </div>
-                  <div className="summary-row">
-                    <span>Total Value:</span>
-                    <strong>$3,250.00</strong>
-                  </div>
-                  <div className="summary-row">
-                    <span>Items:</span>
-                    <strong>2 products</strong>
-                  </div>
-                  <div className="summary-row">
-                    <span>Generated:</span>
-                    <strong>Today</strong>
-                  </div>
+              <div className="summary-body">
+                <div className="summary-row">
+                  <span>Account:</span>
+                  <strong>Acme Corp</strong>
                 </div>
-              </motion.div>
+                <div className="summary-row">
+                  <span>Total Value:</span>
+                  <strong>$3,250.00</strong>
+                </div>
+                <div className="summary-row">
+                  <span>Items:</span>
+                  <strong>2 products</strong>
+                </div>
+                <div className="summary-row">
+                  <span>Generated:</span>
+                  <strong>Today</strong>
+                </div>
+              </div>
+            </motion.div>
 
               <div className="code-highlight">
                 <span className="code-label">Powered by:</span>

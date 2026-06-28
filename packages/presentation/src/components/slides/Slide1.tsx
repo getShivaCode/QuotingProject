@@ -26,9 +26,9 @@ export default function Slide1() {
       animate="visible"
     >
       <motion.div className="slide-content" variants={itemVariants}>
-        <motion.h1 className="value-title" variants={itemVariants}>
+        <motion.h2 className="slide-title" variants={itemVariants}>
           Transform Your Quoting Process
-        </motion.h1>
+        </motion.h2>
 
         <motion.p className="value-subtitle" variants={itemVariants}>
           Deliver accurate quotes in minutes, not days

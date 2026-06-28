@@ -47,8 +47,10 @@ export default function Slide6() {
           {/* Main Content - Shopping Cart */}
           <motion.div className="detail-main" variants={itemVariants}>
             <div className="detail-step-box">
-              <div className="step-icon">🛒</div>
-              <h3>Manage Your Items</h3>
+              <div className="step-icon-title">
+                <div className="step-icon">🛒</div>
+                <h3>Manage Your Items</h3>
+              </div>
               <p>
                 Review the products you've selected. Adjust quantities as needed and see
                 pricing update in real-time. Everything is calculated automatically with
@@ -57,24 +59,24 @@ export default function Slide6() {
 
               {/* Cart Visualization */}
               <motion.div className="cart-preview" variants={containerVariants}>
-                <div className="cart-header">Your Shopping Cart</div>
-                {cartItems.map((item, idx) => (
-                  <motion.div key={idx} className="cart-item" variants={itemVariants}>
-                    <div className="cart-item-info">
-                      <span className="item-name">{item.name}</span>
-                      <span className="item-qty">Qty: {item.qty}</span>
-                    </div>
-                    <div className="cart-item-price">
-                      <span className="item-unit">${item.price}/ea</span>
-                      <span className="item-total">${item.total}</span>
-                    </div>
-                  </motion.div>
-                ))}
-                <div className="cart-total">
-                  <span>Subtotal:</span>
-                  <span className="total-amount">${total.toLocaleString()}</span>
-                </div>
-              </motion.div>
+              <div className="cart-header">Your Shopping Cart</div>
+              {cartItems.map((item, idx) => (
+                <motion.div key={idx} className="cart-item" variants={itemVariants}>
+                  <div className="cart-item-info">
+                    <span className="item-name">{item.name}</span>
+                    <span className="item-qty">Qty: {item.qty}</span>
+                  </div>
+                  <div className="cart-item-price">
+                    <span className="item-unit">${item.price}/ea</span>
+                    <span className="item-total">${item.total}</span>
+                  </div>
+                </motion.div>
+              ))}
+              <div className="cart-total">
+                <span>Subtotal:</span>
+                <span className="total-amount">${total.toLocaleString()}</span>
+              </div>
+            </motion.div>
 
               <div className="code-highlight">
                 <span className="code-label">Powered by:</span>
