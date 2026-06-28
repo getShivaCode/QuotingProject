@@ -31,8 +31,8 @@
   position: absolute;
   top: 8px;
   right: 20px;
-  background: rgba(0, 217, 255, 0.1);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  background: rgba(0, 153, 255, 0.1);
+  border: 1px solid rgba(0, 153, 255, 0.3);
   border-radius: 8px;
   width: 40px;
   height: 40px;
@@ -40,24 +40,24 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
   transition: all 0.3s ease;
 }
 
 .theme-toggle:hover {
-  background: rgba(0, 217, 255, 0.15);
-  border-color: rgba(0, 217, 255, 0.3);
+  background: rgba(0, 153, 255, 0.2);
+  border-color: rgba(0, 153, 255, 0.5);
 }
 
 .presentation-container.dark-mode .theme-toggle {
-  background: rgba(0, 217, 255, 0.15);
-  border: 1px solid rgba(0, 217, 255, 0.3);
-  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 153, 255, 0.2);
+  border: 1px solid rgba(0, 153, 255, 0.5);
+  color: #ffffff;
 }
 
 .presentation-container.dark-mode .theme-toggle:hover {
-  background: rgba(0, 217, 255, 0.2);
-  border-color: rgba(0, 217, 255, 0.5);
+  background: rgba(0, 153, 255, 0.3);
+  border-color: rgba(0, 153, 255, 0.7);
 }
 
 .salesforce-logo-corner {
@@ -476,8 +476,8 @@
 }
 
 .presentation-container.dark-mode .breadcrumb-dot {
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .presentation-container.dark-mode .breadcrumb.active .breadcrumb-dot {
@@ -487,8 +487,8 @@
 }
 
 .presentation-container.dark-mode .breadcrumb.completed .breadcrumb-dot {
-  background: rgba(255, 255, 255, 0.4);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .presentation-container.dark-mode .breadcrumb-label {
@@ -496,31 +496,31 @@
 }
 
 .presentation-container.dark-mode .breadcrumb.active .breadcrumb-label {
-  color: rgba(255, 255, 255, 0.9);
+  color: #ffffff;
 }
 
 .presentation-container.dark-mode .nav-button {
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(255, 255, 255, 0.02);
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .nav-button:hover:not(:disabled) {
-  background: rgba(0, 217, 255, 0.1);
-  border-color: rgba(0, 217, 255, 0.3);
-  color: rgba(0, 217, 255, 0.7);
+  background: rgba(0, 221, 255, 0.1);
+  border-color: rgba(0, 221, 255, 0.4);
+  color: #00ddff;
 }
 
 .presentation-container.dark-mode .slide-counter {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .keyboard-hint {
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .presentation-container.dark-mode .header-divider {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Modal Styles */
@@ -541,12 +541,12 @@
   padding: 28px 32px;
   max-width: 400px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  border: 1px solid rgba(0, 221, 255, 0.2);
 }
 
 .presentation-container.dark-mode .modal-content {
   background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(0, 217, 255, 0.3);
+  border: 1px solid rgba(0, 221, 255, 0.3);
   color: #ffffff;
 }
 
@@ -580,7 +580,7 @@
 
 .modal-button {
   padding: 10px 20px;
-  border: 1px solid rgba(0, 217, 255, 0.3);
+  border: 1px solid rgba(0, 221, 255, 0.3);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
@@ -600,13 +600,13 @@
 }
 
 .modal-button.confirm {
-  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
+  background: linear-gradient(135deg, #00ddff 0%, #00aaff 100%);
   color: #ffffff;
-  border-color: rgba(0, 217, 255, 0.5);
+  border-color: rgba(0, 221, 255, 0.5);
 }
 
 .modal-button.confirm:hover {
-  box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 221, 255, 0.3);
 }
 
 .presentation-container.dark-mode .modal-button.cancel {
@@ -653,14 +653,14 @@
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  border: 1px solid rgba(0, 221, 255, 0.2);
   padding: 60px;
   box-sizing: border-box;
 }
 
 .presentation-container.dark-mode .standalone-agent-container {
   background: rgba(15, 23, 42, 0.98);
-  border-color: rgba(0, 217, 255, 0.3);
+  border-color: rgba(0, 221, 255, 0.3);
 }
 
 .standalone-agent-close {
@@ -670,8 +670,8 @@
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  border: 1px solid rgba(0, 217, 255, 0.2);
-  background: rgba(0, 217, 255, 0.08);
+  border: 1px solid rgba(0, 221, 255, 0.2);
+  background: rgba(0, 221, 255, 0.08);
   color: rgba(0, 0, 0, 0.6);
   cursor: pointer;
   display: flex;
@@ -682,21 +682,21 @@
 }
 
 .standalone-agent-close:hover {
-  background: rgba(0, 217, 255, 0.15);
-  border-color: rgba(0, 217, 255, 0.4);
-  color: rgba(0, 217, 255, 0.8);
+  background: rgba(0, 221, 255, 0.15);
+  border-color: rgba(0, 221, 255, 0.4);
+  color: rgba(0, 221, 255, 0.8);
 }
 
 .presentation-container.dark-mode .standalone-agent-close {
-  background: rgba(0, 217, 255, 0.1);
-  border-color: rgba(0, 217, 255, 0.3);
-  color: rgba(255, 255, 255, 0.6);
+  background: rgba(0, 221, 255, 0.1);
+  border-color: rgba(0, 221, 255, 0.3);
+  color: #00ddff;
 }
 
 .presentation-container.dark-mode .standalone-agent-close:hover {
-  background: rgba(0, 217, 255, 0.15);
-  border-color: rgba(0, 217, 255, 0.5);
-  color: rgba(0, 217, 255, 0.9);
+  background: rgba(0, 221, 255, 0.15);
+  border-color: rgba(0, 221, 255, 0.5);
+  color: #00ddff;
 }
 
 /* Responsive - Tablet */

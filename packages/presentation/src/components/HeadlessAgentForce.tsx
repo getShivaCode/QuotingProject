@@ -596,7 +596,7 @@ export default function HeadlessAgentForce() {
             {isLoggingOff && (
               <span style={{
                 fontSize: '11px',
-                color: 'rgba(255, 200, 0, 0.8)',
+                color: 'rgb(255, 255, 64)',
                 fontFamily: "'Monaco', 'Courier New', monospace",
                 display: 'flex',
                 alignItems: 'center',
@@ -609,7 +609,7 @@ export default function HeadlessAgentForce() {
             {(isConnecting || isRestarting) && !isLoggingOff && (
               <span style={{
                 fontSize: '11px',
-                color: '#0055a3',
+                color: 'rgb(255, 255, 64)',
                 fontFamily: "'Monaco', 'Courier New', monospace",
                 display: 'flex',
                 alignItems: 'center',
@@ -622,7 +622,7 @@ export default function HeadlessAgentForce() {
             {sessionId && !isConnecting && !isRestarting && !isLoggingOff && (
               <span style={{
                 fontSize: '10px',
-                color: '#0055a3',
+                color: '#0099ff',
                 fontFamily: "'Monaco', 'Courier New', monospace",
                 wordBreak: 'break-all',
               }}>

@@ -82,10 +82,7 @@
 .login-card h2 {
   font-size: 24px;
   margin: 0 0 8px 0;
-  background: linear-gradient(135deg, #0077b3 0%, #0055a3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0099ff;
 }
 
 .login-card p {
@@ -150,10 +147,8 @@
 }
 
 .presentation-container.dark-mode .login-card h2 {
-  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .presentation-container.dark-mode .login-card p {
@@ -1069,7 +1064,7 @@
   margin: 0;
   font-size: 15px;
   font-weight: 700;
-  color: #1a2332;
+  color: #0099ff;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1464,14 +1459,14 @@
 /* Dark Mode Overrides */
 .presentation-container.dark-mode .agent-left {
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  border: 1px solid rgba(0, 221, 255, 0.2);
   color: #ffffff;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .presentation-container.dark-mode .agent-right {
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  border: 1px solid rgba(0, 221, 255, 0.2);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
@@ -1485,15 +1480,15 @@
 }
 
 .presentation-container.dark-mode .new-session-button {
-  background: rgba(0, 217, 255, 0.1);
-  border: 1px solid rgba(0, 217, 255, 0.3);
-  color: rgba(0, 217, 255, 0.7);
+  background: rgba(0, 221, 255, 0.1);
+  border: 1px solid rgba(0, 221, 255, 0.3);
+  color: #00ddff;
 }
 
 .presentation-container.dark-mode .new-session-button:hover {
-  background: rgba(0, 217, 255, 0.2);
-  border-color: rgba(0, 217, 255, 0.5);
-  color: rgba(0, 217, 255, 0.9);
+  background: rgba(0, 221, 255, 0.2);
+  border-color: rgba(0, 221, 255, 0.5);
+  color: #00ddff;
 }
 
 .presentation-container.dark-mode .logout-button {
@@ -1512,11 +1507,11 @@
 }
 
 .presentation-container.dark-mode .agent-messages::-webkit-scrollbar-thumb {
-  background: rgba(0, 217, 255, 0.2);
+  background: rgba(0, 221, 255, 0.3);
 }
 
 .presentation-container.dark-mode .agent-messages::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 217, 255, 0.4);
+  background: rgba(0, 221, 255, 0.5);
 }
 
 .presentation-container.dark-mode .message-user .message-bubble {
@@ -1542,7 +1537,7 @@
 
 .presentation-container.dark-mode .input-field {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  border: 1px solid rgba(0, 221, 255, 0.2);
   color: #ffffff;
 }
 
@@ -1551,8 +1546,8 @@
 }
 
 .presentation-container.dark-mode .input-field:focus {
-  background: rgba(0, 217, 255, 0.1);
-  border-color: rgba(0, 217, 255, 0.5);
+  background: rgba(0, 221, 255, 0.1);
+  border-color: rgba(0, 221, 255, 0.5);
 }
 
 .presentation-container.dark-mode .viz-header {
@@ -1561,7 +1556,8 @@
 }
 
 .presentation-container.dark-mode .viz-header h3 {
-  color: #00d9ff;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .presentation-container.dark-mode .viz-content {
@@ -1573,39 +1569,39 @@
 }
 
 .presentation-container.dark-mode .account-card-inline {
-  background: rgba(0, 217, 255, 0.1);
-  border: 1px solid rgba(0, 217, 255, 0.3);
+  background: rgba(0, 221, 255, 0.1);
+  border: 1px solid rgba(0, 221, 255, 0.3);
 }
 
 .presentation-container.dark-mode .account-card-inline:hover {
-  background: rgba(0, 217, 255, 0.15);
-  border-color: rgba(0, 217, 255, 0.5);
+  background: rgba(0, 221, 255, 0.15);
+  border-color: rgba(0, 221, 255, 0.5);
 }
 
 .presentation-container.dark-mode .account-card-inline .account-name {
-  color: #00d9ff;
+  color: #00ddff;
 }
 
 .presentation-container.dark-mode .account-card-inline .account-detail {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .product-card-inline {
-  background: rgba(0, 217, 255, 0.1);
-  border: 1px solid rgba(0, 217, 255, 0.3);
+  background: rgba(0, 221, 255, 0.1);
+  border: 1px solid rgba(0, 221, 255, 0.3);
 }
 
 .presentation-container.dark-mode .product-card-inline:hover {
-  background: rgba(0, 217, 255, 0.15);
-  border-color: rgba(0, 217, 255, 0.5);
+  background: rgba(0, 221, 255, 0.15);
+  border-color: rgba(0, 221, 255, 0.5);
 }
 
 .presentation-container.dark-mode .product-card-inline .product-name {
-  color: #00d9ff;
+  color: #00ddff;
 }
 
 .presentation-container.dark-mode .product-card-inline .product-sku {
-  color: rgba(0, 217, 255, 0.7);
+  color: rgba(0, 221, 255, 0.7);
 }
 
 .presentation-container.dark-mode .product-card-inline .product-price {
@@ -1614,7 +1610,7 @@
 
 .presentation-container.dark-mode .cart-item-display {
   background: rgba(255, 255, 255, 0.02);
-  border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 221, 255, 0.1);
 }
 
 .presentation-container.dark-mode .item-name {
@@ -1622,7 +1618,7 @@
 }
 
 .presentation-container.dark-mode .item-qty {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .item-price {
@@ -1630,22 +1626,22 @@
 }
 
 .presentation-container.dark-mode .cart-total-display {
-  background: rgba(0, 217, 255, 0.1);
-  border-top: 1px solid rgba(0, 217, 255, 0.2);
+  background: rgba(0, 221, 255, 0.1);
+  border-top: 1px solid rgba(0, 221, 255, 0.2);
   color: #ffffff;
 }
 
 .presentation-container.dark-mode .total-value {
-  color: #00d9ff;
+  color: #00ddff;
 }
 
 .presentation-container.dark-mode .quote-display {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  border: 1px solid rgba(0, 221, 255, 0.2);
 }
 
 .presentation-container.dark-mode .quote-header {
-  border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+  border-bottom: 1px solid rgba(0, 221, 255, 0.2);
 }
 
 .presentation-container.dark-mode .quote-number {
@@ -1658,7 +1654,7 @@
 }
 
 .presentation-container.dark-mode .quote-row span {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .quote-row strong {

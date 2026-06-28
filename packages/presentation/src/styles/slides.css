@@ -17,10 +17,11 @@
   font-size: 48px;
   font-weight: 700;
   margin: 0 0 12px 0;
-  background: linear-gradient(135deg, #0077b3 0%, #0055a3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0099ff !important;
+}
+
+h2.slide-title {
+  color: #0099ff !important;
 }
 
 .slide-subtitle {
@@ -39,10 +40,7 @@
   font-size: 64px;
   font-weight: 700;
   margin: 0 0 16px 0;
-  background: linear-gradient(135deg, #0077b3 0%, #0055a3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0099ff;
   line-height: 1.2;
 }
 
@@ -84,7 +82,7 @@
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 8px 0;
-  color: #1a2332;
+  color: #0099ff;
 }
 
 .value-item p {
@@ -128,7 +126,7 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0 0 8px 0;
-  color: #1a2332;
+  color: #0099ff;
 }
 
 .challenge-card p {
@@ -176,10 +174,7 @@
 .flow-number {
   font-size: 36px;
   font-weight: 700;
-  background: linear-gradient(135deg, #0077b3 0%, #0055a3 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #0099ff;
   margin-bottom: 12px;
 }
 
@@ -187,7 +182,7 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0 0 8px 0;
-  color: #1a2332;
+  color: #0099ff;
 }
 
 .flow-item p {
@@ -578,10 +573,10 @@
   padding: 6px 14px;
   border-radius: 20px;
   background: #fef3f1;
-  border: 1px solid #f0d4cf;
+  border: 1px solid rgb(255, 255, 64);
   font-size: 12px;
   font-weight: 600;
-  color: #d45a5a;
+  color: rgb(255, 255, 64);
   margin-bottom: 20px;
   letter-spacing: 0.5px;
 }
@@ -620,7 +615,7 @@
   font-size: 24px;
   font-weight: 600;
   margin: 0 0 12px 0;
-  color: #1a2332;
+  color: #0099ff;
 }
 
 .detail-step-box p {
@@ -641,7 +636,7 @@
   font-size: 14px;
   font-weight: 600;
   margin: 0 0 16px 0;
-  color: #d45a5a;
+  color: #0099ff;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -702,11 +697,11 @@
 
 .cart-header {
   padding: 12px 16px;
-  background: rgba(0, 217, 255, 0.08);
+  background: rgba(0, 153, 255, 0.1);
   font-weight: 600;
   font-size: 13px;
-  border-bottom: 1px solid rgba(0, 217, 255, 0.15);
-  color: #1a1a1a;
+  border-bottom: 1px solid rgba(0, 153, 255, 0.2);
+  color: #0099ff;
 }
 
 .cart-item {
@@ -757,26 +752,27 @@
 
 .cart-total {
   padding: 12px 16px;
-  background: rgba(0, 217, 255, 0.08);
+  background: rgba(0, 153, 255, 0.1);
   display: flex;
   justify-content: space-between;
   font-weight: 600;
   font-size: 13px;
-  border-top: 1px solid rgba(0, 217, 255, 0.15);
+  border-top: 1px solid rgba(0, 153, 255, 0.2);
   color: #1a1a1a;
 }
 
 .total-amount {
   color: #0099ff;
   font-size: 16px;
+  font-weight: 700;
 }
 
 /* Quote Summary */
 .quote-summary {
   padding: 20px;
-  border: 2px solid rgba(0, 217, 255, 0.2);
+  border: 2px solid rgba(0, 153, 255, 0.2);
   border-radius: 12px;
-  background: rgba(0, 217, 255, 0.05);
+  background: rgba(0, 153, 255, 0.05);
   margin: 20px 0;
 }
 
@@ -858,7 +854,7 @@
 .final-cta h3 {
   font-size: 28px;
   margin: 0 0 12px 0;
-  color: #1a1a1a;
+  color: #0099ff;
 }
 
 .final-cta p {
@@ -1310,25 +1306,26 @@
 }
 
 .presentation-container.dark-mode .value-subtitle {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .presentation-container.dark-mode .value-item {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  border: 1px solid rgba(0, 221, 255, 0.2);
 }
 
 .presentation-container.dark-mode .value-item:hover {
-  background: rgba(0, 217, 255, 0.1);
-  border-color: rgba(0, 217, 255, 0.5);
+  background: rgba(0, 221, 255, 0.1);
+  border-color: rgba(0, 221, 255, 0.5);
 }
 
 .presentation-container.dark-mode .value-item h3 {
   color: #ffffff;
+  font-weight: 700;
 }
 
 .presentation-container.dark-mode .value-item p {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .challenge-card {
@@ -1343,21 +1340,23 @@
 
 .presentation-container.dark-mode .challenge-card h3 {
   color: #ffffff;
+  font-weight: 700;
 }
 
 .presentation-container.dark-mode .challenge-card p {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .flow-item {
-  background: rgba(0, 217, 255, 0.1);
-  border: 2px solid rgba(0, 217, 255, 0.3);
+  background: rgba(0, 221, 255, 0.1);
+  border: 2px solid rgba(0, 221, 255, 0.3);
 }
 .presentation-container.dark-mode .flow-item h3 {
   color: #ffffff;
+  font-weight: 700;
 }
 .presentation-container.dark-mode .flow-item p {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 .presentation-container.dark-mode .solution-benefits {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -1370,12 +1369,12 @@
   color: rgba(255, 255, 255, 0.5);
 }
 .presentation-container.dark-mode .zone-surface {
-  border-color: rgba(0, 153, 255, 0.3);
-  background: rgba(0, 153, 255, 0.05);
+  border-color: rgba(0, 221, 255, 0.3);
+  background: rgba(0, 221, 255, 0.05);
 }
 .presentation-container.dark-mode .zone-surface .zone-label {
-  background: rgba(0, 153, 255, 0.15);
-  color: #66ccff;
+  background: rgba(0, 221, 255, 0.15);
+  color: #00ddff;
 }
 .presentation-container.dark-mode .surface-logo-item {
   background: rgba(255, 255, 255, 0.06);
@@ -1383,11 +1382,11 @@
   color: rgba(255, 255, 255, 0.7);
 }
 .presentation-container.dark-mode .zone-agent {
-  border-color: rgba(0, 217, 255, 0.35);
-  background: rgba(0, 217, 255, 0.06);
+  border-color: rgba(0, 221, 255, 0.35);
+  background: rgba(0, 221, 255, 0.06);
 }
 .presentation-container.dark-mode .zone-agent .zone-label {
-  background: rgba(0, 217, 255, 0.15);
+  background: rgba(0, 221, 255, 0.15);
   color: #00ddff;
 }
 .presentation-container.dark-mode .zone-salesforce {
@@ -1399,52 +1398,52 @@
   color: #44dd88;
 }
 .presentation-container.dark-mode .zone-mcp {
-  border-color: rgba(150, 100, 255, 0.35);
-  background: rgba(150, 100, 255, 0.05);
+  border-color: rgba(0, 221, 255, 0.35);
+  background: rgba(0, 221, 255, 0.05);
 }
 .presentation-container.dark-mode .zone-mcp .zone-label {
-  background: rgba(150, 100, 255, 0.15);
-  color: #bb99ff;
+  background: rgba(0, 221, 255, 0.15);
+  color: #00ddff;
 }
 .presentation-container.dark-mode .zone-tool {
-  border-color: rgba(255, 170, 0, 0.35);
-  background: rgba(255, 170, 0, 0.05);
+  border-color: rgba(0, 221, 255, 0.35);
+  background: rgba(0, 221, 255, 0.05);
 }
 .presentation-container.dark-mode .zone-tool .zone-label {
-  background: rgba(255, 170, 0, 0.15);
-  color: #ffaa44;
+  background: rgba(0, 221, 255, 0.15);
+  color: #00ddff;
 }
 .presentation-container.dark-mode .card-title {
   color: #ffffff;
 }
 .presentation-container.dark-mode .card-desc {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.5);
 }
 .presentation-container.dark-mode .card-agent {
-  border-color: rgba(0, 217, 255, 0.3);
-  background: rgba(0, 217, 255, 0.07);
+  border-color: rgba(0, 221, 255, 0.3);
+  background: rgba(0, 221, 255, 0.07);
 }
 .presentation-container.dark-mode .card-agent-main {
-  border-color: rgba(0, 217, 255, 0.45);
-  background: rgba(0, 217, 255, 0.1);
+  border-color: rgba(0, 221, 255, 0.45);
+  background: rgba(0, 221, 255, 0.1);
 }
 .presentation-container.dark-mode .card-mcp-server {
-  border-color: rgba(150, 100, 255, 0.3);
-  background: rgba(150, 100, 255, 0.07);
+  border-color: rgba(0, 221, 255, 0.3);
+  background: rgba(0, 221, 255, 0.07);
 }
 .presentation-container.dark-mode .card-tool {
-  border-color: rgba(255, 170, 0, 0.3);
-  background: rgba(255, 170, 0, 0.06);
+  border-color: rgba(0, 221, 255, 0.3);
+  background: rgba(0, 221, 255, 0.06);
 }
 .presentation-container.dark-mode .card-salesforce {
   border-color: rgba(0, 200, 120, 0.3);
   background: rgba(0, 200, 120, 0.06);
 }
 .presentation-container.dark-mode .arrow-line-h {
-  background: linear-gradient(90deg, rgba(0, 217, 255, 0.3), rgba(0, 217, 255, 0.7));
+  background: linear-gradient(90deg, rgba(0, 221, 255, 0.3), rgba(0, 221, 255, 0.7));
 }
 .presentation-container.dark-mode .arrow-line-h::after {
-  border-left-color: rgba(0, 217, 255, 0.7);
+  border-left-color: rgba(0, 221, 255, 0.7);
 }
 .presentation-container.dark-mode .arrow-line-v {
   background: linear-gradient(180deg, rgba(0, 200, 120, 0.3), rgba(0, 200, 120, 0.7));
@@ -1454,10 +1453,10 @@
 }
 .presentation-container.dark-mode .arrow-label-h,
 .presentation-container.dark-mode .arrow-labels-v span {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.5);
 }
 .presentation-container.dark-mode .branch-line {
-  background: rgba(150, 100, 255, 0.5);
+  background: rgba(0, 221, 255, 0.5);
 }
 
 .presentation-container.dark-mode .detail-slide {
@@ -1465,17 +1464,19 @@
 }
 
 .presentation-container.dark-mode .step-badge {
-  background: rgba(0, 217, 255, 0.2);
-  border: 1px solid rgba(0, 217, 255, 0.4);
+  background: rgba(255, 255, 64, 0.15);
+  border: 1px solid rgb(255, 255, 64);
+  color: rgb(255, 255, 64);
 }
 
 .presentation-container.dark-mode .detail-step-box {
   background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  border: 1px solid rgba(0, 221, 255, 0.2);
 }
 
 .presentation-container.dark-mode .detail-step-box h3 {
   color: #ffffff;
+  font-weight: 700;
 }
 
 .presentation-container.dark-mode .detail-step-box p {
@@ -1488,7 +1489,8 @@
 }
 
 .presentation-container.dark-mode .info-card h4 {
-  color: #00d9ff;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .presentation-container.dark-mode .info-card li {
@@ -1497,26 +1499,26 @@
 
 .presentation-container.dark-mode .code-highlight {
   background: rgba(0, 0, 0, 0.3);
-  border-left: 3px solid #00d9ff;
+  border-left: 3px solid #00ddff;
 }
 
 .presentation-container.dark-mode .code-label {
-  color: #00d9ff;
+  color: #00ddff;
 }
 
 .presentation-container.dark-mode .code-item {
   color: rgba(255, 255, 255, 0.8);
-  background: rgba(0, 217, 255, 0.05);
+  background: rgba(0, 221, 255, 0.05);
 }
 
 .presentation-container.dark-mode .cart-preview {
-  border: 1px solid rgba(0, 217, 255, 0.3);
+  border: 1px solid rgba(0, 221, 255, 0.3);
 }
 
 .presentation-container.dark-mode .cart-header {
-  background: rgba(0, 217, 255, 0.1);
-  border-bottom: 1px solid rgba(0, 217, 255, 0.2);
-  color: #ffffff;
+  background: rgba(0, 153, 255, 0.15);
+  border-bottom: 1px solid rgba(0, 153, 255, 0.3);
+  color: #0099ff;
 }
 
 .presentation-container.dark-mode .cart-item {
@@ -1540,26 +1542,27 @@
 }
 
 .presentation-container.dark-mode .cart-total {
-  background: rgba(0, 217, 255, 0.1);
-  border-top: 1px solid rgba(0, 217, 255, 0.2);
-  color: #ffffff;
+  background: rgba(0, 153, 255, 0.15);
+  border-top: 1px solid rgba(0, 153, 255, 0.3);
+  color: #0099ff;
 }
 
 .presentation-container.dark-mode .total-amount {
-  color: #00d9ff;
+  color: #0099ff;
+  font-weight: 700;
 }
 
 .presentation-container.dark-mode .quote-summary {
-  border: 2px solid rgba(0, 217, 255, 0.3);
-  background: rgba(0, 217, 255, 0.05);
+  border: 2px solid rgba(0, 153, 255, 0.3);
+  background: rgba(0, 153, 255, 0.05);
 }
 
 .presentation-container.dark-mode .summary-header {
-  border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+  border-bottom: 1px solid rgba(0, 153, 255, 0.2);
 }
 
 .presentation-container.dark-mode .summary-label {
-  color: rgba(0, 217, 255, 0.7);
+  color: #0099ff;
 }
 
 .presentation-container.dark-mode .summary-value {
@@ -1572,7 +1575,7 @@
 }
 
 .presentation-container.dark-mode .summary-row span {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .summary-row strong {
@@ -1581,24 +1584,21 @@
 
 .presentation-container.dark-mode .next-step-hint {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(0, 217, 255, 0.8);
+  color: rgba(0, 221, 255, 0.8);
 }
 
 /* Slide 5 specific */
 .slide-5 .slide-title {
-  color: #1a1a1a;
+  color: #0099ff;
 }
 
 .presentation-container.dark-mode .slide-5 .slide-title {
-  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
 }
 
 /* Slide 8 specific */
 .slide-8 .slide-title {
-  color: #1a1a1a;
+  color: #0099ff;
 }
 
 .slide-8 .slide-subtitle {
@@ -1610,10 +1610,7 @@
 }
 
 .presentation-container.dark-mode .slide-8 .slide-title {
-  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
 }
 
 .presentation-container.dark-mode .slide-8 .slide-subtitle {
@@ -1627,6 +1624,7 @@
 
 .presentation-container.dark-mode .final-cta h3 {
   color: #ffffff;
+  font-weight: 700;
 }
 
 .presentation-container.dark-mode .final-cta p {
@@ -1662,7 +1660,7 @@
 .agent-loading {
   padding: 20px;
   text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: #ffffff;
   font-size: 14px;
 }
 
@@ -1687,7 +1685,7 @@
 }
 
 .slide-9 .slide-title {
-  color: #1a1a1a;
+  color: #0099ff;
   font-size: 42px;
   margin-bottom: 40px;
 }
@@ -1697,10 +1695,7 @@
 }
 
 .presentation-container.dark-mode .slide-9 .slide-title {
-  background: linear-gradient(135deg, #00d9ff 0%, #0099ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #ffffff;
 }
 
 /* Slide 10 - Prompts */
@@ -2056,17 +2051,17 @@
 .presentation-container.dark-mode .prompt-tab {
   border-color: rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.03);
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .presentation-container.dark-mode .prompt-tab:hover {
-  background: rgba(0, 217, 255, 0.08);
-  border-color: rgba(0, 217, 255, 0.3);
+  background: rgba(0, 221, 255, 0.08);
+  border-color: rgba(0, 221, 255, 0.3);
 }
 
 .presentation-container.dark-mode .prompt-tab.active {
-  background: rgba(0, 217, 255, 0.12);
-  border-color: rgba(0, 217, 255, 0.5);
+  background: rgba(0, 221, 255, 0.12);
+  border-color: rgba(0, 221, 255, 0.5);
   color: #00ddff;
 }
 
@@ -2075,7 +2070,7 @@
 }
 
 .presentation-container.dark-mode .prompt-tab.active .tab-number {
-  background: rgba(0, 217, 255, 0.3);
+  background: rgba(0, 221, 255, 0.3);
   color: #00ddff;
 }
 
@@ -2085,5 +2080,5 @@
 }
 
 .presentation-container.dark-mode .prompts-footnote p {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.5);
 }
