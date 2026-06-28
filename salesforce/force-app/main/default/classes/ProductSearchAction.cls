@@ -121,37 +121,12 @@ public with sharing class ProductSearchAction {
                     List<Object> content = (List<Object>) resultMap.get('content');
                     if (content != null && !content.isEmpty()) {
                         Map<String, Object> firstContent = (Map<String, Object>) content[0];
-                        String textStr = (String) firstContent.get('text');
-                        return filterByRelevance(textStr);
+                        return (String) firstContent.get('text');
                     }
                 }
                 return jsonData;
             }
         }
         return body;
-    }
-
-    private static String filterByRelevance(String jsonText) {
-        if (jsonText == null || jsonText == '') {
-            return jsonText;
-        }
-        try {
-            List<Object> products = (List<Object>) JSON.deserializeUntyped(jsonText);
-            List<Object> filtered = new List<Object>();
-
-            for (Object item : products) {
-                Map<String, Object> product = (Map<String, Object>) item;
-                Decimal score = (Decimal) product.get('score');
-                if (score != null && score >= 0.70) {
-                    filtered.add(product);
-                }
-            }
-
-            return filtered.isEmpty()
-                ? '{"error": "No products found matching your search criteria"}'
-                : JSON.serialize(filtered);
-        } catch (Exception e) {
-            return jsonText;
-        }
     }
 }
