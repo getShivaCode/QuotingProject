@@ -289,7 +289,7 @@ export default function HeadlessAgentForce() {
       case 'account_search':
         if (!data || !Array.isArray(data)) {
           return (
-            <div style={{ padding: '16px', textAlign: 'center', color: '#9ca3af' }}>
+            <div style={{ padding: '16px', textAlign: 'center', color: 'rgba(0, 0, 0, 0.6)' }}>
               No accounts found
             </div>
           );
@@ -345,7 +345,7 @@ export default function HeadlessAgentForce() {
       case 'product_search':
         if (!data || !Array.isArray(data)) {
           return (
-            <div style={{ padding: '16px', textAlign: 'center', color: '#9ca3af' }}>
+            <div style={{ padding: '16px', textAlign: 'center', color: 'rgba(0, 0, 0, 0.6)' }}>
               No products found
             </div>
           );
@@ -412,7 +412,7 @@ export default function HeadlessAgentForce() {
                       const total = item.lineTotal || item.subtotal || 0;
                       return (
                         <div key={idx} style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid #f0d4cf' }}>
-                          <div style={{ fontWeight: '500', color: '#0055a3' }}>{item.name}</div>
+                          <div style={{ fontWeight: '500', color: '#003d7a' }}>{item.name}</div>
                           <div style={{ color: 'rgba(26, 26, 26, 0.6)', marginTop: '4px', fontSize: '10px' }}>
                             SKU: {item.sku}
                           </div>
@@ -420,7 +420,7 @@ export default function HeadlessAgentForce() {
                             <span>Qty:</span>
                             <span>{item.quantity} @ ${Number(price).toFixed(2)}</span>
                             <span>Line:</span>
-                            <span style={{ color: '#0055a3', fontWeight: '500' }}>${Number(total).toFixed(2)}</span>
+                            <span style={{ color: '#003d7a', fontWeight: '500' }}>${Number(total).toFixed(2)}</span>
                           </div>
                         </div>
                       );
@@ -435,13 +435,13 @@ export default function HeadlessAgentForce() {
             <div style={{ borderTop: '1px solid #f0d4cf', paddingTop: '12px' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '16px', fontSize: '13px', marginBottom: '16px' }}>
                 <span style={{ color: 'rgba(26, 26, 26, 0.6)' }}>Grand Total:</span>
-                <span style={{ color: '#0055a3', fontWeight: '600' }}>
+                <span style={{ color: '#003d7a', fontWeight: '600' }}>
                   ${Number(grandTotal).toFixed(2)} {data?.currency || 'USD'}
                 </span>
               </div>
 
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ fontSize: '12px', color: '#0055a3', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
+                <label style={{ fontSize: '12px', color: '#003d7a', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
                   QUOTE NAME (Required)
                 </label>
                 <input
@@ -596,7 +596,7 @@ export default function HeadlessAgentForce() {
             {isLoggingOff && (
               <span style={{
                 fontSize: '11px',
-                color: 'rgb(255, 255, 64)',
+                color: '#003d7a',
                 fontFamily: "'Monaco', 'Courier New', monospace",
                 display: 'flex',
                 alignItems: 'center',
@@ -609,7 +609,7 @@ export default function HeadlessAgentForce() {
             {(isConnecting || isRestarting) && !isLoggingOff && (
               <span style={{
                 fontSize: '11px',
-                color: 'rgb(255, 255, 64)',
+                color: '#003d7a',
                 fontFamily: "'Monaco', 'Courier New', monospace",
                 display: 'flex',
                 alignItems: 'center',
@@ -622,7 +622,7 @@ export default function HeadlessAgentForce() {
             {sessionId && !isConnecting && !isRestarting && !isLoggingOff && (
               <span style={{
                 fontSize: '10px',
-                color: '#0099ff',
+                color: '#1a1a1a',
                 fontFamily: "'Monaco', 'Courier New', monospace",
                 wordBreak: 'break-all',
               }}>
@@ -690,7 +690,7 @@ export default function HeadlessAgentForce() {
                     <span></span>
                     <span></span>
                   </div>
-                  <span style={{ fontSize: '13px', color: '#666', fontStyle: 'italic' }}>
+                  <span style={{ fontSize: '13px', color: 'rgba(0, 0, 0, 0.6)', fontStyle: 'italic' }}>
                     {thinkingMessage}
                   </span>
                 </div>
@@ -737,7 +737,7 @@ export default function HeadlessAgentForce() {
         </div>
         {showSpeechError && speechError && (
           <div style={{
-            color: '#ff6b6b',
+            color: '#d32f2f',
             fontSize: '12px',
             padding: '8px 12px',
             marginTop: '8px',

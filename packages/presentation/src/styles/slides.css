@@ -17,11 +17,11 @@
   font-size: 48px;
   font-weight: 700;
   margin: 0 0 12px 0;
-  color: #0099ff !important;
+  color: #003d7a !important;
 }
 
 h2.slide-title {
-  color: #0099ff !important;
+  color: #003d7a !important;
 }
 
 .slide-subtitle {
@@ -40,13 +40,13 @@ h2.slide-title {
   font-size: 64px;
   font-weight: 700;
   margin: 0 0 16px 0;
-  color: #0099ff;
+  color: #003d7a;
   line-height: 1.2;
 }
 
 .value-subtitle {
   font-size: 28px;
-  color: #4a5a6a;
+  color: rgba(0, 0, 0, 0.6);
   margin: 0 0 60px 0;
   font-weight: 300;
 }
@@ -60,17 +60,17 @@ h2.slide-title {
 .value-item {
   padding: 30px;
   border-radius: 16px;
-  background: #fef3f1;
-  border: 1px solid #f0d4cf;
+  background: #f8f9fa;
+  border: 1px solid rgba(0, 102, 204, 0.4);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .value-item:hover {
-  background: #fde8e2;
-  border-color: #1B9B9E;
+  background: #f0f5fa;
+  border-color: #003d7a;
   transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(27, 155, 158, 0.2);
+  box-shadow: 0 8px 20px rgba(0, 153, 255, 0.15);
 }
 
 .value-icon {
@@ -82,12 +82,12 @@ h2.slide-title {
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 8px 0;
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .value-item p {
   font-size: 14px;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   margin: 0;
 }
 
@@ -106,15 +106,15 @@ h2.slide-title {
 .challenge-card {
   padding: 24px;
   border-radius: 16px;
-  background: #fef3f1;
-  border: 1px solid #f0d4cf;
+  background: #f8f9fa;
+  border: 1px solid rgba(0, 102, 204, 0.4);
   transition: all 0.3s ease;
 }
 
 .challenge-card:hover {
-  background: #fde8e2;
-  border-color: #d45a5a;
-  box-shadow: 0 8px 20px rgba(212, 90, 90, 0.15);
+  background: #f0f5fa;
+  border-color: #0099ff;
+  box-shadow: 0 8px 20px rgba(0, 153, 255, 0.15);
 }
 
 .challenge-icon {
@@ -126,12 +126,12 @@ h2.slide-title {
   font-size: 16px;
   font-weight: 600;
   margin: 0 0 8px 0;
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .challenge-card p {
   font-size: 13px;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   margin: 0;
   line-height: 1.5;
 }
@@ -156,8 +156,8 @@ h2.slide-title {
 .flow-item {
   padding: 28px 24px;
   border-radius: 12px;
-  background: #fef3f1;
-  border: 2px solid #f0d4cf;
+  background: #f8f9fa;
+  border: 2px solid rgba(0, 102, 204, 0.5);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -174,7 +174,7 @@ h2.slide-title {
 .flow-number {
   font-size: 36px;
   font-weight: 700;
-  color: #0099ff;
+  color: #003d7a;
   margin-bottom: 12px;
 }
 
@@ -182,12 +182,12 @@ h2.slide-title {
   font-size: 16px;
   font-weight: 600;
   margin: 0 0 8px 0;
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .flow-item p {
   font-size: 13px;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   margin: 0;
 }
 
@@ -209,12 +209,12 @@ h2.slide-title {
   align-items: center;
   gap: 12px;
   font-size: 15px;
-  color: #1a2332;
+  color: #1a1a1a;
 }
 
 .benefit-check {
   font-size: 20px;
-  color: #00a366;
+  color: #0099ff;
 }
 
 /* Slide 9 - Architecture */
@@ -250,7 +250,7 @@ h2.slide-title {
 .persona-label {
   font-size: 9px;
   font-weight: 600;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   text-align: center;
   max-width: 80px;
   line-height: 1.3;
@@ -283,12 +283,12 @@ h2.slide-title {
 }
 
 .zone-surface {
-  border-color: #f0d4cf;
-  background: #eef6f9;
+  border-color: rgba(0, 153, 255, 0.2);
+  background: #f0f5fa;
 }
 .zone-surface .zone-label {
-  background: #d4e3ec;
-  color: #0077b3;
+  background: #e8f1f9;
+  color: #0099ff;
 }
 
 .surface-logos {
@@ -308,7 +308,7 @@ h2.slide-title {
   background: rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.08);
   font-size: 16px;
-  color: #555;
+  color: rgba(0, 0, 0, 0.6);
   transition: all 0.2s;
 }
 .surface-logo-item:hover {
@@ -342,7 +342,7 @@ h2.slide-title {
 .arrow-label-h {
   font-size: 8px;
   font-weight: 600;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   margin-top: 4px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -363,7 +363,7 @@ h2.slide-title {
 }
 .zone-agent .zone-label {
   background: rgba(0, 217, 255, 0.12);
-  color: #00aadd;
+  color: #0099ff;
 }
 
 .agent-inner {
@@ -421,7 +421,7 @@ h2.slide-title {
 .arrow-labels-v span {
   font-size: 8px;
   font-weight: 600;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -432,7 +432,7 @@ h2.slide-title {
 }
 .zone-salesforce .zone-label {
   background: rgba(0, 200, 120, 0.1);
-  color: #009960;
+  color: #0099ff;
 }
 .sf-items {
   display: flex;
@@ -466,7 +466,7 @@ h2.slide-title {
 }
 .zone-mcp .zone-label {
   background: rgba(150, 100, 255, 0.1);
-  color: #7744cc;
+  color: #0099ff;
 }
 
 .mcp-tools-branch {
@@ -492,7 +492,7 @@ h2.slide-title {
 }
 .zone-tool .zone-label {
   background: rgba(255, 170, 0, 0.1);
-  color: #cc8800;
+  color: #0099ff;
   font-size: 8px;
 }
 
@@ -526,7 +526,7 @@ h2.slide-title {
 
 .card-desc {
   font-size: 10px;
-  color: #4a5a6a;
+  color: rgba(0, 0, 0, 0.6);
   line-height: 1.4;
 }
 
@@ -573,10 +573,10 @@ h2.slide-title {
   padding: 6px 14px;
   border-radius: 20px;
   background: #fef3f1;
-  border: 1px solid rgb(255, 255, 64);
+  border: 1px solid #ff7700;
   font-size: 12px;
   font-weight: 600;
-  color: rgb(255, 255, 64);
+  color: #ff7700;
   margin-bottom: 20px;
   letter-spacing: 0.5px;
 }
@@ -600,8 +600,8 @@ h2.slide-title {
 }
 
 .detail-step-box {
-  background: #fef3f1;
-  border: 1px solid #f0d4cf;
+  background: #f8f9fa;
+  border: 1px solid rgba(0, 102, 204, 0.4);
   border-radius: 16px;
   padding: 30px;
 }
@@ -615,12 +615,12 @@ h2.slide-title {
   font-size: 24px;
   font-weight: 600;
   margin: 0 0 12px 0;
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .detail-step-box p {
   font-size: 15px;
-  color: #4a5a6a;
+  color: rgba(0, 0, 0, 0.6);
   margin: 0 0 24px 0;
   line-height: 1.6;
 }
@@ -628,15 +628,15 @@ h2.slide-title {
 .info-card {
   padding: 20px;
   border-radius: 12px;
-  background: #fef3f1;
-  border: 1px solid #f0d4cf;
+  background: #f8f9fa;
+  border: 1px solid rgba(0, 102, 204, 0.4);
 }
 
 .info-card h4 {
   font-size: 14px;
   font-weight: 600;
   margin: 0 0 16px 0;
-  color: #0099ff;
+  color: #003d7a;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -649,7 +649,7 @@ h2.slide-title {
 
 .info-card li {
   font-size: 13px;
-  color: #4a5a6a;
+  color: rgba(0, 0, 0, 0.6);
   margin-bottom: 8px;
   line-height: 1.5;
 }
@@ -673,14 +673,14 @@ h2.slide-title {
 .code-label {
   font-size: 11px;
   font-weight: 700;
-  color: #0099ff;
+  color: #003d7a;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .code-item {
   font-size: 12px;
-  color: #4a5a6a;
+  color: rgba(0, 0, 0, 0.6);
   font-family: 'Monaco', 'Courier New', monospace;
   background: rgba(0, 217, 255, 0.08);
   padding: 4px 8px;
@@ -701,7 +701,7 @@ h2.slide-title {
   font-weight: 600;
   font-size: 13px;
   border-bottom: 1px solid rgba(0, 153, 255, 0.2);
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .cart-item {
@@ -729,7 +729,7 @@ h2.slide-title {
 }
 
 .item-qty {
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   font-size: 11px;
 }
 
@@ -741,7 +741,7 @@ h2.slide-title {
 }
 
 .item-unit {
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   font-size: 11px;
 }
 
@@ -762,7 +762,7 @@ h2.slide-title {
 }
 
 .total-amount {
-  color: #0099ff;
+  color: #003d7a;
   font-size: 16px;
   font-weight: 700;
 }
@@ -770,7 +770,7 @@ h2.slide-title {
 /* Quote Summary */
 .quote-summary {
   padding: 20px;
-  border: 2px solid rgba(0, 153, 255, 0.2);
+  border: 2px solid rgba(0, 102, 204, 0.5);
   border-radius: 12px;
   background: rgba(0, 153, 255, 0.05);
   margin: 20px 0;
@@ -824,7 +824,7 @@ h2.slide-title {
 }
 
 .summary-row span {
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .summary-row strong {
@@ -837,7 +837,7 @@ h2.slide-title {
   padding-top: 20px;
   border-top: 1px solid #f0d4cf;
   font-size: 14px;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   font-weight: 500;
 }
 
@@ -854,12 +854,12 @@ h2.slide-title {
 .final-cta h3 {
   font-size: 28px;
   margin: 0 0 12px 0;
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .final-cta p {
   font-size: 15px;
-  color: #4a5a6a;
+  color: rgba(0, 0, 0, 0.6);
   margin: 0 0 30px 0;
 }
 
@@ -891,7 +891,7 @@ h2.slide-title {
 
 .placeholder-subtext {
   font-size: 12px;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 /* Responsive */
@@ -1518,7 +1518,7 @@ h2.slide-title {
 .presentation-container.dark-mode .cart-header {
   background: rgba(0, 153, 255, 0.15);
   border-bottom: 1px solid rgba(0, 153, 255, 0.3);
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .presentation-container.dark-mode .cart-item {
@@ -1544,16 +1544,16 @@ h2.slide-title {
 .presentation-container.dark-mode .cart-total {
   background: rgba(0, 153, 255, 0.15);
   border-top: 1px solid rgba(0, 153, 255, 0.3);
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .presentation-container.dark-mode .total-amount {
-  color: #0099ff;
+  color: #003d7a;
   font-weight: 700;
 }
 
 .presentation-container.dark-mode .quote-summary {
-  border: 2px solid rgba(0, 153, 255, 0.3);
+  border: 2px solid rgba(0, 102, 204, 0.5);
   background: rgba(0, 153, 255, 0.05);
 }
 
@@ -1562,7 +1562,7 @@ h2.slide-title {
 }
 
 .presentation-container.dark-mode .summary-label {
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .presentation-container.dark-mode .summary-value {
@@ -1589,7 +1589,7 @@ h2.slide-title {
 
 /* Slide 5 specific */
 .slide-5 .slide-title {
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .presentation-container.dark-mode .slide-5 .slide-title {
@@ -1598,15 +1598,15 @@ h2.slide-title {
 
 /* Slide 8 specific */
 .slide-8 .slide-title {
-  color: #0099ff;
+  color: #003d7a;
 }
 
 .slide-8 .slide-subtitle {
-  color: #4a5a6a;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .slide-8 .agent-loading {
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .presentation-container.dark-mode .slide-8 .slide-title {
@@ -1685,7 +1685,7 @@ h2.slide-title {
 }
 
 .slide-9 .slide-title {
-  color: #0099ff;
+  color: #003d7a;
   font-size: 42px;
   margin-bottom: 40px;
 }
@@ -1733,7 +1733,7 @@ h2.slide-title {
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 13px;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .prompt-tab:hover {
@@ -1744,7 +1744,7 @@ h2.slide-title {
 .prompt-tab.active {
   background: rgba(0, 217, 255, 0.1);
   border-color: rgba(0, 217, 255, 0.5);
-  color: #0088cc;
+  color: #0099ff;
 }
 
 .tab-number {
@@ -1761,7 +1761,7 @@ h2.slide-title {
 
 .prompt-tab.active .tab-number {
   background: rgba(0, 217, 255, 0.3);
-  color: #006699;
+  color: #0099ff;
 }
 
 .tab-label {
@@ -1911,7 +1911,7 @@ h2.slide-title {
   background: rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.08);
   font-size: 14px;
-  color: #555;
+  color: rgba(0, 0, 0, 0.6);
   transition: all 0.2s;
 }
 
@@ -2038,7 +2038,7 @@ h2.slide-title {
 
 .prompts-footnote p {
   font-size: 15px;
-  color: #5a6b7a;
+  color: rgba(0, 0, 0, 0.6);
   font-style: italic;
   margin: 0;
 }
