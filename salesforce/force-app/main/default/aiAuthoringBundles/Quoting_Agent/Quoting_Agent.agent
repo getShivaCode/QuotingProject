@@ -324,6 +324,14 @@ subagent product_search:
                     "actions": ["add_to_cart", "search_products"]
                   }
 
+                  For type "product_search" with no results:
+                  {
+                    "type": "product_search",
+                    "message": "No products found matching '[search term]'. Try different keywords?",
+                    "data": [],
+                    "actions": ["search_products"]
+                  }
+
                   For type "cart_update":
                   {
                     "type": "cart_update",
@@ -341,6 +349,7 @@ subagent product_search:
                   - Always use "lineTotal" (never "subtotal")
                   - Always use camelCase (never snake_case)
                   - Always use "grandTotal" (never "grand_total")
+                  - NEVER fabricate products or SKUs - only show what search returned
                   Place ALL text in "message". Place ALL data in "data" object.
                   Do NOT include any text outside of JSON.
 
@@ -348,6 +357,9 @@ subagent product_search:
                 | **OUTPUT FORMAT: PLAINTEXT - FULLY ENUMERATED WITH ALL DETAILS**
                   You MUST enumerate EVERY product result with complete formatting.
                   NEVER embed JSON. NEVER say "results shown" without showing them.
+
+                  IMPORTANT: Products are filtered by relevance at the backend (score >= 0.70).
+                  If search returns error or empty, report: "No products found matching '[search term]'. Try different keywords?"
 
                   FORMATTING REQUIREMENTS:
                   - Header: "I found [N] products matching '[search term]':"
@@ -383,7 +395,7 @@ subagent product_search:
                   - Do NOT omit any results
                   - Do NOT say results shown without showing every one
                   - Do NOT promise data not displayed
-                  - Do NOT return empty result messages
+                  - Do NOT fabricate products or SKUs - if you don't see it in results, don't show it
                   - If action output contains JSON (updatedCart, pricedItems, etc.), parse it and format as plain text
 
                   For cart updates: show product names, quantities, unit prices, line totals, and grand total.
