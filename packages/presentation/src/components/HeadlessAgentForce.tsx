@@ -594,38 +594,19 @@ export default function HeadlessAgentForce() {
               {sessionId && <span className="live-badge">LIVE</span>}
             </div>
             {isLoggingOff && (
-              <span style={{
-                fontSize: '11px',
-                color: '#003d7a',
-                fontFamily: "'Monaco', 'Courier New', monospace",
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}>
+              <span className="status-message logging-off">
                 <span style={{ display: 'inline-block', animation: 'pulse 1.5s infinite' }}>●</span>
                 Logging off...
               </span>
             )}
             {(isConnecting || isRestarting) && !isLoggingOff && (
-              <span style={{
-                fontSize: '11px',
-                color: '#003d7a',
-                fontFamily: "'Monaco', 'Courier New', monospace",
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}>
+              <span className="status-message">
                 <span style={{ display: 'inline-block', animation: 'pulse 1.5s infinite' }}>●</span>
                 {isRestarting ? 'Restarting session...' : 'Connecting...'}
               </span>
             )}
             {sessionId && !isConnecting && !isRestarting && !isLoggingOff && (
-              <span style={{
-                fontSize: '10px',
-                color: '#1a1a1a',
-                fontFamily: "'Monaco', 'Courier New', monospace",
-                wordBreak: 'break-all',
-              }}>
+              <span className="session-id-display">
                 Session: {sessionId}
               </span>
             )}

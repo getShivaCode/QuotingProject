@@ -1,3 +1,41 @@
+/* Status message text for connecting/logging off */
+.status-message {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #003d7a;
+}
+
+.status-message.logging-off {
+  color: #003d7a;
+}
+
+@media (prefers-color-scheme: dark) {
+  .status-message {
+    color: #66b3ff;
+  }
+
+  .status-message.logging-off {
+    color: #66b3ff;
+  }
+}
+
+/* Session ID display */
+.session-id-display {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 10px;
+  color: #1a1a1a;
+  word-break: break-all;
+}
+
+@media (prefers-color-scheme: dark) {
+  .session-id-display {
+    color: #e0e0e0;
+  }
+}
+
 .agent-wrapper {
   display: flex;
   gap: 20px;
