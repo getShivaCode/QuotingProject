@@ -14,6 +14,7 @@ interface CartData {
   items: CartItem[];
   itemCount: number;
   grandTotal: number;
+  accountName?: string;
 }
 
 interface CartCardProps {
@@ -44,7 +45,7 @@ export default function CartCard({ cartData, onCreateQuote, isCreatingQuote }: C
       animate="visible"
     >
       <div className="viz-cart-header">
-        Shopping Cart ({cartData.itemCount} item{cartData.itemCount !== 1 ? 's' : ''})
+        {cartData.accountName || 'Shopping Cart'} ({cartData.itemCount} item{cartData.itemCount !== 1 ? 's' : ''})
       </div>
 
       <motion.div className="viz-cart-items" variants={containerVariants}>
@@ -76,7 +77,7 @@ export default function CartCard({ cartData, onCreateQuote, isCreatingQuote }: C
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          Create Quote
+          Review & Price
         </motion.button>
       )}
     </motion.div>

@@ -132,20 +132,54 @@
   flex-direction: column;
   gap: 0;
   z-index: 100;
+  padding: 8px;
   max-height: calc(100vh - 160px);
-  overflow: hidden;
-  padding: 8px 16px 8px 8px;
+  overflow: auto;
 }
 
 .breadcrumbs::before {
   content: '';
   position: absolute;
   left: 13px;
-  top: 22px;
+  top: 45px;
   bottom: 16px;
   width: 1px;
   background: linear-gradient(to bottom, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.3) 100%);
   pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.breadcrumbs.collapsed::before {
+  opacity: 0;
+}
+
+.breadcrumbs-toggle {
+  background: none;
+  border: none;
+  padding: 8px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+  width: 100%;
+  height: auto;
+}
+
+.presentation-container.dark-mode .breadcrumbs-toggle {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.breadcrumbs-toggle:hover {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.presentation-container.dark-mode .breadcrumbs-toggle:hover {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .breadcrumb {
@@ -159,6 +193,10 @@
   font-size: 13px;
   position: relative;
   z-index: 1;
+}
+
+.breadcrumbs.expanded .breadcrumb {
+  padding: 8px 0;
 }
 
 .breadcrumb:hover .breadcrumb-dot {
@@ -191,9 +229,11 @@
 .breadcrumb-label {
   font-weight: 400;
   color: rgba(0, 0, 0, 0.5);
-  transition: color 0.3s ease;
+  transition: color 0.2s ease;
   font-size: 11px;
   letter-spacing: 0.3px;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .breadcrumb.active .breadcrumb-label {
@@ -203,6 +243,18 @@
 
 .breadcrumb.completed .breadcrumb-label {
   color: rgba(0, 0, 0, 0.55);
+}
+
+.presentation-container.dark-mode .breadcrumb-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.presentation-container.dark-mode .breadcrumb.active .breadcrumb-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.presentation-container.dark-mode .breadcrumb.completed .breadcrumb-label {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* Navigation Controls */
@@ -661,6 +713,34 @@
 .presentation-container.dark-mode .standalone-agent-container {
   background: rgba(15, 23, 42, 0.98);
   border-color: rgba(0, 221, 255, 0.3);
+}
+
+.standalone-agent-theme-toggle {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.standalone-agent-theme-toggle:hover {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.presentation-container.dark-mode .standalone-agent-theme-toggle {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.presentation-container.dark-mode .standalone-agent-theme-toggle:hover {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .standalone-agent-close {

@@ -65,24 +65,13 @@ export default function QuoteCard({ quoteData }: QuoteCardProps) {
       <motion.div className="summary-header" variants={itemVariants}>
         <div>
           <div className="summary-label">Quote Number</div>
-          <div className="summary-value" style={{ fontSize: '16px' }}>
+          <div className="summary-value">
             {getQuoteUrl() ? (
               <a
                 href={getQuoteUrl()!}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{
-                  color: 'inherit',
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                  transition: 'opacity 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.opacity = '0.7';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.opacity = '1';
-                }}
+                className="quote-number-link"
               >
                 {quoteData.quoteNumber || 'Pending'}
               </a>

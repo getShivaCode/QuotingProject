@@ -38,6 +38,7 @@ export default function Presentation() {
   const [showNavConfirmation, setShowNavConfirmation] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<number | null>(null);
   const [showStandaloneAgent, setShowStandaloneAgent] = useState(false);
+  const [breadcrumbsExpanded, setBreadcrumbsExpanded] = useState(false);
   const { sessionId } = useSession();
 
   const isSlide8 = currentSlide === 7; // Slide 8 is at index 7
@@ -109,18 +110,11 @@ export default function Presentation() {
             Intelligent Quoting
             <span className="header-divider">powered by</span>
             <motion.button
-              className="agentforce-logo-button"
+              className="agentforce-logo-button logo-button"
               onClick={() => setShowStandaloneAgent(true)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               title="Open Agentforce Assistant"
-              style={{
-                background: 'none',
-                border: 'none',
-                padding: 0,
-                cursor: 'pointer',
-                display: 'inline-block',
-              }}
             >
               <img className="agentforce-logo-inline" src="https://content.partnerpage.io/eyJidWNrZXQiOiJwYXJ0bmVycGFnZS5wcm9kIiwia2V5IjoibWVkaWEvY29udGFjdF9pbWFnZXMvNWI4ZTAwYjMtNDY5YS00NTQ4LWI1MDgtNDZiZWQyOGRiY2ExL2RlYTVjMGM1LWVmN2QtNDJiNS04YTQwLTQ1ZjM2OGJlNDkxOC5wbmciLCJlZGl0cyI6eyJ0b0Zvcm1hdCI6IndlYnAiLCJyZXNpemUiOnsiZml0IjoiY29udGFpbiIsImJhY2tncm91bmQiOnsiciI6MjU1LCJnIjoyNTUsImIiOjI1NSwiYWxwaGEiOjB9fX19" alt="Agentforce" />
             </motion.button>
@@ -153,9 +147,18 @@ export default function Presentation() {
         </AnimatePresence>
       </div>
 
-      {/* Breadcrumbs Navigation - only show for visible slides */}
+      {/* Breadcrumbs Navigation - collapsible labels */}
       {currentSlide < slides.length && (
-        <div className="breadcrumbs">
+        <div className={`breadcrumbs ${breadcrumbsExpanded ? 'expanded' : 'collapsed'}`}>
+          <motion.button
+            className="breadcrumbs-toggle"
+            onClick={() => setBreadcrumbsExpanded(!breadcrumbsExpanded)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            title={breadcrumbsExpanded ? 'Hide labels' : 'Show labels'}
+          >
+            {breadcrumbsExpanded ? '–' : '+'}
+          </motion.button>
           {slides.map((slide, index) => (
             <motion.div
               key={slide.id}
@@ -172,7 +175,19 @@ export default function Presentation() {
               whileTap={{ scale: 0.95 }}
             >
               <div className="breadcrumb-dot"></div>
-              <span className="breadcrumb-label">{slide.title}</span>
+              <AnimatePresence>
+                {breadcrumbsExpanded && (
+                  <motion.span
+                    className="breadcrumb-label"
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: 'auto' }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {slide.title}
+                  </motion.span>
+                )}
+              </AnimatePresence>
             </motion.div>
           ))}
         </div>
@@ -274,6 +289,15 @@ export default function Presentation() {
               onClick={(e) => e.stopPropagation()}
             >
               <motion.button
+                className="standalone-agent-theme-toggle"
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </motion.button>
+              <motion.button
                 className="standalone-agent-close"
                 onClick={() => setShowStandaloneAgent(false)}
                 whileHover={{ scale: 1.1 }}
@@ -282,7 +306,7 @@ export default function Presentation() {
               >
                 <X size={20} />
               </motion.button>
-              <HeadlessAgentForce />
+              <HeadlessAgentForce isDarkMode={isDarkMode} setIsDarkMode={undefined} />
             </motion.div>
           </motion.div>
         )}

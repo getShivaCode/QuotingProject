@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, LogOut, Code, RotateCw, Mic, MicOff } from 'lucide-react';
+import { Send, MessageCircle, LogOut, Code, RotateCw, Mic, MicOff, Moon, Sun } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { startSession, sendMessage as sendAgentMessage, endSession } from '../services/agentApi';
 import useSpeechRecognition from '../hooks/useSpeechRecognition';
@@ -38,7 +38,12 @@ interface Message {
   timestamp: Date;
 }
 
-export default function HeadlessAgentForce() {
+interface HeadlessAgentForceProps {
+  isDarkMode?: boolean;
+  setIsDarkMode?: (value: boolean) => void;
+}
+
+export default function HeadlessAgentForce({ isDarkMode = false, setIsDarkMode }: HeadlessAgentForceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { setSessionId: setContextSessionId, setInstanceUrl } = useSession();
 
@@ -68,6 +73,15 @@ export default function HeadlessAgentForce() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
+
+  useEffect(() => {
+    if (liveResponseData?.type === 'cart_update') {
+      setIsCreatingQuote(false);
+    }
+    if (liveResponseData && liveResponseData.type !== 'pricing') {
+      setQuoteName('');
+    }
+  }, [liveResponseData?.type]);
 
   useEffect(() => {
     if (transcript && !isListening) {
@@ -259,24 +273,8 @@ export default function HeadlessAgentForce() {
     // Show raw JSON if toggled
     if (showJson) {
       return (
-        <div style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}>
-          <pre style={{
-            flex: 1,
-            overflow: 'auto',
-            padding: '12px',
-            background: '#2c3e50',
-            borderRadius: '6px',
-            fontSize: '11px',
-            fontFamily: "'Monaco', 'Courier New', monospace",
-            color: '#66dd99',
-            margin: 0,
-            lineHeight: '1.4',
-          }}>
+        <div className="json-viewer-container">
+          <pre className="json-display">
             {JSON.stringify(liveResponseData, null, 2)}
           </pre>
         </div>
@@ -289,7 +287,7 @@ export default function HeadlessAgentForce() {
       case 'account_search':
         if (!data || !Array.isArray(data)) {
           return (
-            <div style={{ padding: '16px', textAlign: 'center', color: 'rgba(0, 0, 0, 0.6)' }}>
+            <div className="empty-state-message">
               No accounts found
             </div>
           );
@@ -345,7 +343,7 @@ export default function HeadlessAgentForce() {
       case 'product_search':
         if (!data || !Array.isArray(data)) {
           return (
-            <div style={{ padding: '16px', textAlign: 'center', color: 'rgba(0, 0, 0, 0.6)' }}>
+            <div className="empty-state-message">
               No products found
             </div>
           );
@@ -369,7 +367,11 @@ export default function HeadlessAgentForce() {
       case 'cart_update':
         return (
           <CartCard
-            cartData={data}
+            cartData={{
+              ...data,
+              accountName: selectedAccount?.Name,
+              itemCount: data?.items?.length || 0
+            }}
             isCreatingQuote={isCreatingQuote}
             onCreateQuote={() => {
               setIsCreatingQuote(true);
@@ -386,62 +388,56 @@ export default function HeadlessAgentForce() {
 
         return (
           <motion.div
-            className="viz-draft-quote"
+            className="viz-draft-quote draft-quote-wrapper"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-            }}
           >
-            <div style={{ marginBottom: '16px' }}>
-              <div style={{ fontSize: '14px', fontWeight: '600', color: '#1a1a1a' }}>
+            <div className="draft-quote-header">
+              <div className="draft-quote-account-name">
                 {data?.accountName || 'Quote'}
               </div>
             </div>
 
-            <div style={{ flex: 1, overflow: 'auto', marginBottom: '12px' }}>
-              <div style={{ fontSize: '11px' }}>
+            <div className="draft-quote-items-container">
+              <div className="draft-quote-items-list">
                 {Array.isArray(items) && items.length > 0 ? (
                   <div>
                     {items.map((item: any, idx: number) => {
                       const price = item.unitPrice || item.unit_price || 0;
                       const total = item.lineTotal || item.subtotal || 0;
                       return (
-                        <div key={idx} style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid #f0d4cf' }}>
-                          <div style={{ fontWeight: '500', color: '#003d7a' }}>{item.name}</div>
-                          <div style={{ color: 'rgba(26, 26, 26, 0.6)', marginTop: '4px', fontSize: '10px' }}>
-                            SKU: {item.sku}
+                        <div key={idx} className="draft-quote-item">
+                          <div className="draft-quote-item-left">
+                            <div className="draft-quote-item-name">{item.name}</div>
+                            <div className="draft-quote-item-sku">
+                              SKU: {item.sku}
+                            </div>
                           </div>
-                          <div style={{ color: 'rgba(26, 26, 26, 0.7)', marginTop: '6px', display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '8px', fontSize: '10px' }}>
-                            <span>Qty:</span>
-                            <span>{item.quantity} @ ${Number(price).toFixed(2)}</span>
-                            <span>Line:</span>
-                            <span style={{ color: '#003d7a', fontWeight: '500' }}>${Number(total).toFixed(2)}</span>
+                          <div className="draft-quote-item-details">
+                            <div>Qty: {item.quantity} @ ${Number(price).toFixed(2)}</div>
+                            <div className="cart-item-total">${Number(total).toFixed(2)}</div>
                           </div>
                         </div>
                       );
                     })}
                   </div>
                 ) : (
-                  <div style={{ color: 'rgba(26, 26, 26, 0.4)' }}>No items in quote</div>
+                  <div className="draft-quote-items-empty">No items in quote</div>
                 )}
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid #f0d4cf', paddingTop: '12px' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '16px', fontSize: '13px', marginBottom: '16px' }}>
-                <span style={{ color: 'rgba(26, 26, 26, 0.6)' }}>Grand Total:</span>
-                <span style={{ color: '#003d7a', fontWeight: '600' }}>
+            <div className="draft-quote-total-section">
+              <div className="draft-quote-total-row">
+                <span className="draft-quote-total-label">Grand Total:</span>
+                <span className="draft-quote-total-value">
                   ${Number(grandTotal).toFixed(2)} {data?.currency || 'USD'}
                 </span>
               </div>
 
-              <div style={{ marginBottom: '12px' }}>
-                <label style={{ fontSize: '12px', color: '#003d7a', fontWeight: '600', display: 'block', marginBottom: '6px' }}>
+              <div className="draft-quote-name-section">
+                <label className="draft-quote-name-label">
                   QUOTE NAME (Required)
                 </label>
                 <input
@@ -452,21 +448,10 @@ export default function HeadlessAgentForce() {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && isReadyToSubmit && !isLoading) {
                       handleLiveMessage(`Create quote with name: ${quoteName}`);
-                      setQuoteName('');
                     }
                   }}
                   disabled={isLoading}
-                  style={{
-                    width: '100%',
-                    padding: '8px 10px',
-                    borderRadius: '4px',
-                    border: isReadyToSubmit ? '1px solid #0055a3' : '1px solid #f0d4cf',
-                    backgroundColor: '#ffffff',
-                    color: '#1a1a1a',
-                    fontSize: '12px',
-                    fontFamily: 'inherit',
-                    boxSizing: 'border-box',
-                  }}
+                  className={`draft-quote-name-input ${isReadyToSubmit ? 'ready' : ''}`}
                 />
               </div>
 
@@ -474,25 +459,12 @@ export default function HeadlessAgentForce() {
                 onClick={() => {
                   if (isReadyToSubmit && !isLoading) {
                     handleLiveMessage(`Create quote with name: ${quoteName}`);
-                    setQuoteName('');
                   }
                 }}
                 disabled={!isReadyToSubmit || isLoading}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  borderRadius: '4px',
-                  border: 'none',
-                  background: isReadyToSubmit && !isLoading ? 'linear-gradient(135deg, #0077b3 0%, #0055a3 100%)' : 'rgba(0, 85, 163, 0.3)',
-                  color: '#ffffff',
-                  fontWeight: '600',
-                  fontSize: '12px',
-                  cursor: isReadyToSubmit && !isLoading ? 'pointer' : 'not-allowed',
-                  transition: 'all 0.2s ease',
-                  opacity: isReadyToSubmit && !isLoading ? 1 : 0.5,
-                }}
-                whileHover={isReadyToSubmit && !isLoading ? { scale: 1.02 } : {}}
-                whileTap={isReadyToSubmit && !isLoading ? { scale: 0.98 } : {}}
+                className="create-quote-button"
+                whileHover={isReadyToSubmit && !isLoading ? { scale: 1.05 } : {}}
+                whileTap={isReadyToSubmit && !isLoading ? { scale: 0.95 } : {}}
               >
                 {isLoading ? 'Creating...' : 'Create Quote'}
               </motion.button>
@@ -523,24 +495,8 @@ export default function HeadlessAgentForce() {
 
       default:
         return (
-          <div style={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            overflow: 'hidden',
-          }}>
-            <pre style={{
-              flex: 1,
-              overflow: 'auto',
-              padding: '12px',
-              background: '#2c3e50',
-              borderRadius: '6px',
-              fontSize: '11px',
-              fontFamily: "'Monaco', 'Courier New', monospace",
-              color: '#66dd99',
-              margin: 0,
-              lineHeight: '1.4',
-            }}>
+          <div className="json-viewer-container">
+            <pre className="json-display">
               {JSON.stringify(data, null, 2)}
             </pre>
           </div>
@@ -587,7 +543,7 @@ export default function HeadlessAgentForce() {
     <div className="agent-wrapper">
       <div className="agent-left">
         <div className="agent-header">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+          <div className="agent-header-content">
             <div className="agent-title">
               <MessageCircle size={20} />
               <span>Tally</span>
@@ -595,13 +551,13 @@ export default function HeadlessAgentForce() {
             </div>
             {isLoggingOff && (
               <span className="status-message">
-                <span style={{ display: 'inline-block', animation: 'pulse 1.5s infinite' }}>●</span>
+                <span className="status-dot">●</span>
                 Logging off...
               </span>
             )}
             {(isConnecting || isRestarting) && !isLoggingOff && (
               <span className="status-message">
-                <span style={{ display: 'inline-block', animation: 'pulse 1.5s infinite' }}>●</span>
+                <span className="status-dot">●</span>
                 {isRestarting ? 'Restarting session...' : 'Connecting...'}
               </span>
             )}
@@ -611,7 +567,7 @@ export default function HeadlessAgentForce() {
               </span>
             )}
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div className="button-container">
             {sessionId && !isConnecting && !isRestarting && !isLoggingOff && (
               <motion.button
                 className="new-session-button"
@@ -665,7 +621,7 @@ export default function HeadlessAgentForce() {
               animate={{ opacity: 1, y: 0 }}
             >
               <div className="message-bubble">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div className="thinking-content">
                   <div className="typing-indicator">
                     <span></span>
                     <span></span>
@@ -689,17 +645,15 @@ export default function HeadlessAgentForce() {
             onKeyDown={(e) => { if (e.key === 'Enter' && !isLoading && !isListening) { e.preventDefault(); handleSendMessage(); } }}
             placeholder={authenticated && sessionId ? (isListening ? "Listening..." : "Type or click mic...") : "Click 'Try It Live' to start"}
             disabled={isLoading || !authenticated || !sessionId || isListening || !isSessionReady || isRestarting || isLoggingOff}
-            className="input-field"
-            style={isLoading || isListening || isRestarting || isLoggingOff ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
+            className={`input-field ${isLoading || isListening || isRestarting || isLoggingOff ? 'disabled-opacity' : ''}`}
           />
           {isSpeechSupported && (
             <motion.button
               onClick={() => isListening ? stopListening() : startListening()}
               disabled={isLoading || !authenticated || !sessionId || !isSessionReady || isRestarting || isLoggingOff}
-              className={`microphone-button ${isListening ? 'listening' : ''}`}
+              className={`microphone-button ${isListening ? 'listening' : ''} ${isLoading || isListening || isRestarting || isLoggingOff ? 'disabled-opacity' : ''}`}
               whileHover={!isLoading && !isListening && !isRestarting && !isLoggingOff ? { scale: 1.05 } : {}}
               whileTap={!isLoading && !isRestarting && !isLoggingOff ? { scale: 0.95 } : {}}
-              style={isLoading || isListening || isRestarting || isLoggingOff ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
               title={isListening ? "Stop listening" : "Click to speak"}
             >
               {isListening ? <MicOff size={18} /> : <Mic size={18} />}
@@ -708,22 +662,15 @@ export default function HeadlessAgentForce() {
           <motion.button
             onClick={() => handleSendMessage()}
             disabled={!inputValue.trim() || isLoading || !authenticated || !sessionId || isListening || !isSessionReady || isRestarting || isLoggingOff}
-            className="send-button"
+            className={`send-button ${isLoading || isListening || isRestarting || isLoggingOff ? 'disabled-opacity' : ''}`}
             whileHover={!isLoading && !isListening && !isRestarting && !isLoggingOff ? { scale: 1.05 } : {}}
             whileTap={!isLoading && !isRestarting && !isLoggingOff ? { scale: 0.95 } : {}}
-            style={isLoading || isListening || isRestarting || isLoggingOff ? { opacity: 0.6, cursor: 'not-allowed' } : {}}
           >
             <Send size={18} />
           </motion.button>
         </div>
         {showSpeechError && speechError && (
-          <div style={{
-            color: '#d32f2f',
-            fontSize: '12px',
-            padding: '8px 12px',
-            marginTop: '8px',
-            textAlign: 'center',
-          }}>
+          <div className="speech-error-message">
             {speechError === 'network' ? 'Network error. Please check your connection.' : `Error: ${speechError}`}
           </div>
         )}

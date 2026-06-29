@@ -9,7 +9,366 @@
 }
 
 .presentation-container.dark-mode .status-message {
-  color: rgba(0, 217, 255, 0.7);
+  color: #ffffcc;
+}
+
+.status-dot {
+  display: inline-block;
+  animation: pulse 1.5s infinite;
+}
+
+/* Layout Containers */
+.json-viewer-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.json-display {
+  flex: 1;
+  overflow: auto;
+  padding: 0.75em;
+  background: #2c3e50;
+  border-radius: 0.375em;
+  font-size: 0.6875em;
+  font-family: 'Monaco', 'Courier New', monospace;
+  color: #66dd99;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.empty-state-message {
+  padding: 1em;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.presentation-container.dark-mode .empty-state-message {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.agent-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  flex: 1;
+}
+
+.button-container {
+  display: flex;
+  gap: 0.5em;
+}
+
+.thinking-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.speech-error-message {
+  color: #d32f2f;
+  font-size: 0.75em;
+  padding: 0.5em 0.75em;
+  margin-top: 0.5em;
+  text-align: center;
+}
+
+.presentation-container.dark-mode .speech-error-message {
+  color: #ff6b6b;
+}
+
+/* Logo Button */
+.logo-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-block;
+}
+
+/* Disabled Controls */
+.input-field.disabled-opacity,
+.microphone-button.disabled-opacity,
+.send-button.disabled-opacity {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Draft Quote Styles */
+.draft-quote-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.draft-quote-header {
+  font-size: 0.875em;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 0.75em;
+  padding-bottom: 0.75em;
+  border-bottom: 0.125em solid #a8c8d8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.draft-quote-account-name {
+  font-size: 0.875em;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.presentation-container.dark-mode .draft-quote-header {
+  color: #00ddff;
+  border-bottom-color: #374151;
+}
+
+.presentation-container.dark-mode .draft-quote-account-name {
+  color: #ffffff;
+}
+
+.draft-quote-items-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625em;
+  margin-bottom: 0.75em;
+  overflow-y: auto;
+  max-height: 18.75em;
+}
+
+.draft-quote-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625em;
+}
+
+.draft-quote-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.625em;
+  background: #f8f9fa;
+  border-radius: 0.375em;
+  border: 1px solid rgba(0, 102, 204, 0.4);
+}
+
+.presentation-container.dark-mode .draft-quote-item {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+.draft-quote-item-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125em;
+}
+
+.draft-quote-item-name {
+  font-size: 0.75em;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.presentation-container.dark-mode .draft-quote-item-name {
+  color: #ffffff;
+}
+
+.draft-quote-item-sku {
+  font-size: 0.625em;
+  color: rgba(0, 0, 0, 0.6);
+  font-family: 'Monaco', 'Courier New', monospace;
+  text-transform: uppercase;
+}
+
+.presentation-container.dark-mode .draft-quote-item-sku {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.draft-quote-item-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.125em;
+  font-size: 0.6875em;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.presentation-container.dark-mode .draft-quote-item-details {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.draft-quote-line-total {
+  font-weight: 700;
+  color: #003d7a;
+  font-size: 0.9em;
+}
+
+.presentation-container.dark-mode .draft-quote-line-total {
+  color: #ffffff;
+}
+
+.draft-quote-items-empty {
+  color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  padding: 1em;
+}
+
+.presentation-container.dark-mode .draft-quote-items-empty {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.draft-quote-total-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+
+.draft-quote-total-row {
+  padding: 0.75em;
+  background: linear-gradient(135deg, #eef6f9 0%, #e4f0f6 100%);
+  border-radius: 0.375em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125em;
+  border: 1px solid rgba(0, 102, 204, 0.4);
+}
+
+.presentation-container.dark-mode .draft-quote-total-row {
+  background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  border-color: #374151;
+}
+
+.draft-quote-total-label {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.presentation-container.dark-mode .draft-quote-total-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.draft-quote-total-value {
+  color: #003d7a;
+  font-weight: 600;
+}
+
+.presentation-container.dark-mode .draft-quote-total-value {
+  color: #ffffff;
+}
+
+.draft-quote-name-section {
+  margin-bottom: 0.375em;
+}
+
+.draft-quote-name-label {
+  font-size: 0.75em;
+  color: #003d7a;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.375em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.presentation-container.dark-mode .draft-quote-name-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.draft-quote-name-input {
+  width: 100%;
+  padding: 0.5em 0.625em;
+  border-radius: 0.25em;
+  background-color: #ffffff;
+  color: #1a1a1a;
+  font-size: 0.75em;
+  font-family: inherit;
+  box-sizing: border-box;
+  border: 1px solid #f0d4cf;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.draft-quote-name-input:focus {
+  outline: none;
+  border-color: #0055a3;
+  background-color: #ffffff;
+}
+
+.draft-quote-name-input.ready {
+  border-color: #0055a3;
+}
+
+.presentation-container.dark-mode .draft-quote-name-input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 221, 255, 0.2);
+  color: #ffffff;
+}
+
+.presentation-container.dark-mode .draft-quote-name-input:focus {
+  background-color: rgba(0, 221, 255, 0.1);
+  border-color: rgba(0, 221, 255, 0.5);
+}
+
+.presentation-container.dark-mode .draft-quote-name-input.ready {
+  border-color: rgba(0, 221, 255, 0.5);
+}
+
+.draft-quote-button {
+  width: 100%;
+  padding: 0.625em;
+  border-radius: 0.25em;
+  border: none;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.75em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(0, 85, 163, 0.3);
+}
+
+.draft-quote-button.ready {
+  background: linear-gradient(135deg, #0077b3 0%, #0055a3 100%);
+  cursor: pointer;
+  opacity: 1;
+}
+
+.draft-quote-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.draft-quote-button.ready:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0088cc 0%, #0066b3 100%);
+}
+
+.presentation-container.dark-mode .draft-quote-button {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.2) 100%);
+  border: 1px solid rgba(0, 217, 255, 0.4);
+  color: #00d9ff;
+}
+
+.presentation-container.dark-mode .draft-quote-button.ready {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.4) 0%, rgba(0, 217, 255, 0.3) 100%);
+}
+
+/* Quote Link Styles */
+.quote-number-link {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.quote-number-link:hover {
+  opacity: 0.7;
+}
+
+.quote-number-link:active {
+  opacity: 0.6;
 }
 
 /* Session ID display */
@@ -21,7 +380,7 @@
 }
 
 .presentation-container.dark-mode .session-id-display {
-  color: #ffffff;
+  color: rgb(0, 217, 255);
 }
 
 .agent-wrapper {
@@ -198,6 +557,7 @@
   justify-content: space-between;
   background: #f8f9fa;
   flex-shrink: 0;
+  gap: 0.5em;
 }
 
 .agent-title {
@@ -542,6 +902,10 @@
   font-family: 'Monaco', 'Courier New', monospace;
 }
 
+.presentation-container.dark-mode .viz-account-card .account-number {
+  color: rgb(0, 217, 255);
+}
+
 /* Product Card */
 .viz-product-card {
   padding: 0.875em 1em;
@@ -818,7 +1182,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 0.75em;
+  margin-top: 0;
   transition: all 0.2s ease;
 }
 
@@ -828,6 +1192,11 @@
 
 .create-quote-button:active {
   opacity: 0.9;
+}
+
+.create-quote-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Quote Card */
@@ -1515,7 +1884,7 @@
 }
 
 .presentation-container.dark-mode .agent-title {
-  color: #00ddff;
+  color: #ffffff;
 }
 
 .presentation-container.dark-mode .new-session-button {
@@ -2061,12 +2430,14 @@
   color: #f3f4f6;
 }
 
-/* Draft Quote Card */
+/* Draft Quote Card - reuse cart card styling */
 .viz-draft-quote {
-  padding: 1em;
-  border-radius: 0.5em;
-  background-color: #fef3f1;
+  background: #f8f9fa;
   border: 1px solid rgba(0, 102, 204, 0.4);
+  border-radius: 0.5em;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
 }
 
 .presentation-container.dark-mode .viz-draft-quote {
@@ -2092,22 +2463,24 @@
 }
 
 .presentation-container.dark-mode .viz-draft-quote label {
-  color: rgba(0, 217, 255, 0.7) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
 }
 
-.presentation-container.dark-mode .viz-draft-quote button {
+.presentation-container.dark-mode .viz-draft-quote button:not(.create-quote-button) {
   background: linear-gradient(135deg, rgba(0, 217, 255, 0.3) 0%, rgba(0, 217, 255, 0.2) 100%) !important;
   border: 1px solid rgba(0, 217, 255, 0.4) !important;
   color: #00d9ff !important;
 }
 
-.presentation-container.dark-mode .viz-draft-quote button:not(:disabled):hover {
+.presentation-container.dark-mode .viz-draft-quote button:not(.create-quote-button):not(:disabled):hover {
   background: linear-gradient(135deg, rgba(0, 217, 255, 0.4) 0%, rgba(0, 217, 255, 0.3) 100%) !important;
 }
 
 /* Dark Mode - Create Quote Button */
 .presentation-container.dark-mode .create-quote-button {
   background: linear-gradient(135deg, #1B9B9E 0%, #157A7E 100%);
+  color: #ffffff;
+  border: none;
 }
 
 .presentation-container.dark-mode .create-quote-button:hover {
