@@ -1,3 +1,28 @@
+/* Headless Dark Mode Toggle */
+.headless-theme-toggle {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.headless-theme-toggle:hover {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.presentation-container.dark-mode .headless-theme-toggle {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.presentation-container.dark-mode .headless-theme-toggle:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /* Status message text for connecting/logging off */
 .status-message {
   font-family: 'Monaco', 'Courier New', monospace;

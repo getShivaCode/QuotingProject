@@ -10,6 +10,12 @@
   overflow: hidden;
 }
 
+.presentation-container.headless-mode {
+  padding: 1em;
+  height: 100%;
+  box-sizing: border-box;
+}
+
 /* Header */
 .presentation-header {
   padding: 16px 20px;

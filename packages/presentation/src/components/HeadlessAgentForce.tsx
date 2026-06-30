@@ -43,9 +43,10 @@ interface HeadlessAgentForceProps {
   setIsDarkMode?: (value: boolean) => void;
 }
 
-export default function HeadlessAgentForce({ isDarkMode = false, setIsDarkMode }: HeadlessAgentForceProps) {
+export default function HeadlessAgentForce({ isDarkMode, setIsDarkMode }: HeadlessAgentForceProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { setSessionId: setContextSessionId, setInstanceUrl } = useSession();
+  const isHeadlessMode = !new URLSearchParams(window.location.search).get('preso');
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -81,7 +82,7 @@ export default function HeadlessAgentForce({ isDarkMode = false, setIsDarkMode }
     if (liveResponseData && liveResponseData.type !== 'pricing') {
       setQuoteName('');
     }
-  }, [liveResponseData?.type]);
+  }, [liveResponseData]);
 
   useEffect(() => {
     if (transcript && !isListening) {
@@ -568,6 +569,17 @@ export default function HeadlessAgentForce({ isDarkMode = false, setIsDarkMode }
             )}
           </div>
           <div className="button-container">
+            {isHeadlessMode && setIsDarkMode && (
+              <motion.button
+                className="headless-theme-toggle"
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                title={isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              </motion.button>
+            )}
             {sessionId && !isConnecting && !isRestarting && !isLoggingOff && (
               <motion.button
                 className="new-session-button"

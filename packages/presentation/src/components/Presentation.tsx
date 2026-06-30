@@ -32,9 +32,13 @@ const hiddenSlides = [
 
 const allSlides = [...slides, ...hiddenSlides];
 
-export default function Presentation() {
+interface PresentationProps {
+  isDarkMode: boolean;
+  setIsDarkMode: (value: boolean) => void;
+}
+
+export default function Presentation({ isDarkMode, setIsDarkMode }: PresentationProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const [showNavConfirmation, setShowNavConfirmation] = useState(false);
   const [pendingNavigation, setPendingNavigation] = useState<number | null>(null);
   const [showStandaloneAgent, setShowStandaloneAgent] = useState(false);
