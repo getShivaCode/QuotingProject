@@ -34,9 +34,13 @@ h2.slide-title {
 
 .slide-subtitle {
   font-size: 1.25em;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 20, 20, 0.7);
   margin: 0 0 40px 0;
   font-weight: 400;
+}
+
+.presentation-container.dark-mode .slide-subtitle {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Slide 1 - Value Statement */
@@ -1722,16 +1726,16 @@ h2.slide-title {
 }
 
 .prompts-content {
-  max-width: 1000px;
+  max-width: 50em;
 }
 
 .prompts-layout {
-  margin-top: 1.5em;
+  margin-top: 1.25em;
 }
 
 .prompts-tabs {
   display: flex;
-  gap: 0.5em;
+  gap: 1em;
   margin-bottom: 1em;
 }
 
@@ -1756,20 +1760,20 @@ h2.slide-title {
 
 .prompt-tab:hover {
   background: rgba(0, 217, 255, 0.05);
-  border-color: rgba(0, 217, 255, 0.3);
+  border-color: rgba(17, 18, 18, 0.3);
 }
 
 .prompt-tab.active {
-  background: rgba(0, 217, 255, 0.1);
-  border-color: rgba(0, 217, 255, 0.5);
-  color: #0099ff;
+  background: rgba(100, 255, 255, 0.15);
+  border-color: rgba(28, 54, 58, 0.9);
+  color: #0f659f;
 }
 
 .tab-number {
   font-weight: 700;
   font-size: 0.6875em;
-  width: 1.25em;
-  height: 1.25em;
+  width: 2em;
+  height: 2em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1778,12 +1782,12 @@ h2.slide-title {
 }
 
 .prompt-tab.active .tab-number {
-  background: rgba(0, 217, 255, 0.3);
-  color: #0099ff;
+  background: rgba(0, 40, 40, 0.9);
+  color: #dddddd;
 }
 
 .tab-label {
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .prompt-display {
