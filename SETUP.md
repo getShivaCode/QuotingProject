@@ -1,381 +1,172 @@
-# QuotingProject - Setup & Getting Started
+# Setup
 
-## ✅ Project Structure
+How to point this repo at a Salesforce org and run the live agent. What the app is, and how to start it, is in [README.md](README.md).
 
-```
-QuotingProject/
-├── packages/
-│   └── presentation/              # 8-slide presentation + live agent + backend server
-│       ├── src/components/        # Slide components + HeadlessAgentForce chat widget
-│       ├── src/services/          # Agent API integration (agentApi.ts)
-│       ├── src/utils/             # REST API client (restApiClient.js)
-│       ├── server.js              # Express backend (dual-mode: CLI for dev, REST for prod)
-│       ├── package.json
-│       ├── .env.local             # OAuth credentials and configuration
-│       ├── .env.example           # Configuration template
-│       └── README.md
-│
-├── salesforce/                    # Salesforce backend
-│   ├── force-app/main/default/
-│   │   ├── aiAuthoringBundles/   # Agent definition (Quoting_Agent v18 only)
-│   │   ├── bots/                 # Bot versioning (v18 only, v1-v17 removed)
-│   │   ├── genAiPlannerBundles/   # Planning bundles (v18 only)
-│   │   ├── classes/              # Apex actions
-│   │   └── flows/                # Salesforce flows
-│   ├── agent-api-flows/          # E2E test scripts
-│   └── sfdx-project.json
-│
-├── docs/                          # Documentation
-│   └── AGENT_ARCHITECTURE.md     # Complete technical guide
-│
-├── README.md                      # Project overview
-├── SETUP.md                       # This file
-├── SESSION_SUMMARY.md             # Latest session accomplishments
-├── REST_API_ARTIFACTS_INDEX.md    # REST API documentation
-└── .gitignore
-```
+The demo org is `pricing-demo`. The old `trailsignup` alias points at an expired org. Do not use it.
 
-## 🚀 Quick Start
+| | |
+|---|---|
+| CLI alias | `pricing-demo` |
+| Username | `trailsignup.f46e26a8bd57ae@salesforce.com` |
+| Instance | `https://trailsignup-f46e26a8bd57ae.my.salesforce.com` |
+| Org id | `00Dak00001QTif8EAD` |
+| Agent | `Quoting_Agent` (Quoting Assistant), employee agent, active version 1 |
+| Agent id | `0Xxak000004hFW9CAM` |
+| Standard price book | `01sak00000O15vtAAB` |
+| Demo account | Omega Systems `001ak00004I2p3iAAB` |
+| Hosted app | `https://headless-quoting-a41dfa247fb0.herokuapp.com` |
 
-### Development Mode (Using SF CLI)
+Agentforce is already on. The admin user has the Copilot admin and user permission sets. `Copilot_for_Salesforce` is the org's default employee agent and is not the demo agent.
 
-**One command, one terminal:**
-```bash
-cd packages/presentation
-npm install
-npm run dev
-```
-
-This starts:
-- **React frontend** (Slide presentation + agent chat widget) on `http://localhost:3000`
-- **Express backend** (Agent session manager) on `http://localhost:3001` - CLI mode
-
-Both are required for the live agent on Slide 8 to work.
-
-**What happens automatically (dev mode):**
-- Uses SF CLI for session management (faster local iteration)
-- Session creation with server-side JSON mode initialization
-- Agent responses formatted as structured JSON
-- No OAuth configuration needed for UI development
-
-### Production Mode (Using REST API)
+## 1. Authorize the CLI
 
 ```bash
-cd packages/presentation
-NODE_ENV=production npm run start:server
+sf config set target-org pricing-demo
+sf org display --target-org pricing-demo
 ```
 
-Starts only the Express backend on `http://localhost:3001` - REST API mode
+If the alias is missing:
 
-**Production advantages:**
-- Direct Salesforce REST API (no CLI dependency)
-- Ready for Heroku or cloud deployment
-- Automatic OAuth token refresh and caching (1-hour TTL, 5-minute buffer)
-- 28% faster performance, 15.5× better CPU efficiency
-- Requires OAuth credentials in environment variables
-
-## 📋 What Each Component Does
-
-### Presentation + Backend (`packages/presentation/`)
-
-**Frontend (React):**
-- **8 Slides** showcasing the quoting workflow
-  - Slides 1-7: Value statement → our solution → workflow steps
-  - **Slide 8: Try It Live** — Interactive live agent widget
-- Features: Breadcrumbs, keyboard navigation, dark/light theme, mobile responsive
-- Chat widget (left panel) + visualization panel (right panel)
-
-**Backend (Express, `server.js`):**
-- **Dual-mode operation:** Uses SF CLI for development, REST API for production
-- Automatically initializes JSON mode on session creation (no dummy messages)
-- Handles message routing to/from Quoting Agent
-- Extracts and formats agent responses as structured JSON
-- Wakes up MCP pricing server before session creation
-- REST API mode includes automatic token refresh (configurable TTL)
-
-### Salesforce (`salesforce/`)
-
-**Agent Definition:**
-- `Quoting_Agent` with 3 subagents:
-  - `account_selection` — Find and select customer account
-  - `product_search` — Search products via MCP
-  - `quote_management` — Create, modify, view quotes
-
-**Apex Actions:**
-- Account search (queries Salesforce)
-- Product search (calls MCP server)
-- Quote creation/management
-- External service integration
-
-**Testing:**
-- `agent-api-flows/capture-agent-responses.sh` — E2E test script
-  - Full workflow: account → products → cart → quote
-  - Validates JSON responses at each step
-
-### Documentation (`docs/`)
-- `AGENT_ARCHITECTURE.md`: Complete technical guide
-  - Agent flow diagrams and variable lifecycle
-  - Subagent design and external integrations
-  - How JSON mode initialization works
-
-## 🔧 Configuration
-
-### Salesforce Setup (Required for Live Agent)
-
-1. **Connect to your org:**
-   ```bash
-   cd salesforce
-   sf org login web --alias demo-org
-   sf config set target-org demo-org
-   ```
-
-2. **Deploy metadata:**
-   ```bash
-   sf project deploy start --target-org demo-org
-   ```
-
-3. **Verify agent compiles:**
-   ```bash
-   sf agent validate authoring-bundle --json --api-name Quoting_Agent
-   ```
-
-4. **Test agent via CLI (optional):**
-   ```bash
-   sf agent preview start --json --use-live-actions --authoring-bundle Quoting_Agent
-   sf agent preview send --json --authoring-bundle Quoting_Agent --session-id <ID> --utterance "find Omega Systems"
-   ```
-
-### Backend Server Configuration
-
-**Environment Variables (in `.env.local`):**
-- `SF_CLIENT_ID` - OAuth client ID for REST API auth
-- `SF_CLIENT_SECRET` - OAuth client secret
-- `SF_INSTANCE_URL` - Salesforce instance URL
-- `EXTERNAL_APP_KEY` - External app key
-- `EXTERNAL_APP_SECRET` - External app secret
-- `SF_AGENT_ID` - Agentforce agent ID
-- `REACT_APP_SF_INSTANCE_URL` - Client-side instance URL (for quote links)
-- `TOKEN_TTL_SECONDS` - Token refresh interval (default: 3600 seconds)
-- `NODE_ENV` - Set to `production` for REST API mode
-- `LOG_LEVEL` - Debug logging level (default: debug)
-
-**Mode Selection:**
-- **Development (CLI):** `npm run dev` or `node server.js` (uses SF CLI)
-- **Production (REST API):** `NODE_ENV=production npm run start:server` (uses OAuth + REST API)
-
-The Express server automatically:
-- Initializes JSON mode on every session
-- Calls MCP pricing server before creating sessions
-- Logs all requests and responses (with DEBUG markers for [OAUTH], [REST_API], [CLIENT], [RESPONSE])
-- Refreshes OAuth tokens proactively (5 minutes before expiration)
-
-## 🧪 Testing the Agent
-
-### Manual Testing (UI)
-
-1. Start dev mode: `cd packages/presentation && npm run dev`
-2. Navigate to Slide 8: "Try It Live"
-3. Click "Login with Salesforce"
-4. Type: "find Omega" (or any account name)
-5. Select an account from the results
-6. Search for products: "search for fertilizer"
-7. Add to cart: "add 10 units"
-8. Create quote: "I'm ready to create a quote"
-9. Name the quote and confirm
-10. View JSON responses via the code icon in the right panel
-
-**UI Features:**
-- Logout button: Shows "Logging off...", clears all state, returns to login screen
-- Restart button: Shows "Restarting session..." → "Connecting...", clears all cards
-- Quote cards: Click quote number to open Salesforce record (new window)
-- Status badges: Yellow pill style matching Slide 7 design
-- Navigation modal: Appears only on Slide 8 when session is active
-
-### Automated E2E Testing
-
-**Test via Express server (both CLI and REST modes):**
 ```bash
-cd packages/presentation
-npm run start:server &
-sleep 2
+sf org login web --alias pricing-demo --set-default
+```
+
+## 2. Deploy Apex, the flow, the remote site, and the price book
+
+From `salesforce/`:
+
+```bash
+sf project deploy start \
+  --target-org pricing-demo \
+  --test-level NoTestRun \
+  --metadata ApexClass \
+  --metadata Flow:Save_Quote_Flow \
+  --metadata RemoteSiteSetting:PricingMCP \
+  --metadata CustomObject:Quoting_Settings__mdt \
+  --metadata CustomMetadata:Quoting_Settings.Default
+```
+
+`salesforce/sfdx-project.json` is source API 62.0. That manifest cannot deploy the agent. It also rejects `McpServerDefinition`, because `url` is not valid on that type at this API version. Leave `mcpServerDefinitions/Pricing_MCP` undeployed. Apex calls `https://pricingmcp.onrender.com/mcp` itself, and the `PricingMCP` remote site allows that callout.
+
+Do not deploy `bots/Quoting_Agent` or `genAiPlannerBundles` from the previous org. Those files contain the old org's ids. Publishing the authoring bundle creates the runtime in the new org.
+
+### Price book
+
+`GenerateAndSaveQuote` reads `Quoting_Settings__mdt` record `Default`, field `Pricebook_Id__c`. In this repo that value is `01sak00000O15vtAAB`, the standard price book. A blank value makes Apex query `Pricebook2 WHERE IsStandard = true`.
+
+Redeploying `Quoting_Settings.Default` overwrites the org value with the value in source. The agent saves quotes through `GenerateAndSaveQuote`. `Save_Quote_Flow` uses the same custom metadata for the opportunity and quote price book. Its line-item `PricebookEntryId` is still an id from the old org, and the agent does not call that flow.
+
+## 3. Publish the agent
+
+Deploy the authoring bundle with an explicit API 66 manifest. A normal project deploy builds the manifest at API 62.0, and the bundle is not deployable there.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Quoting_Agent</members>
+        <name>AiAuthoringBundle</name>
+    </types>
+    <version>66.0</version>
+</Package>
+```
+
+```bash
+sf project deploy start --manifest /tmp/deploy-agent.xml --target-org pricing-demo --test-level NoTestRun
+sf agent publish authoring-bundle --api-name Quoting_Agent --target-org pricing-demo
+sf agent activate --api-name Quoting_Agent --target-org pricing-demo
+```
+
+Publish creates the Bot. Confirm the id:
+
+```bash
+sf org list metadata --metadata-type Bot --target-org pricing-demo
+```
+
+`SF_AGENT_ID` for this org is `0Xxak000004hFW9CAM`. The agent type is `AgentforceEmployeeAgent`, so there is no Einstein Agent user.
+
+Do not retrieve the authoring bundle after publish. A retrieve writes `<target>` into `bundle-meta.xml` and locks the bundle to this org.
+
+`sf agent preview start --api-name Quoting_Agent` talks to the published agent. `--authoring-bundle` talks to the draft.
+
+## 4. External Client App
+
+Heroku cannot use the Salesforce CLI. The server in `packages/presentation/src/utils/restApiClient.js` asks for a token with `grant_type=client_credentials`, then calls the Agent API. The Login button does not send the browser to Salesforce. It asks the server to open a session.
+
+In Setup, open **External Client App Manager** and create a local app.
+
+- Enable OAuth. The callback field is required and unused. Set it to `http://localhost:3001/oauth/callback`. Leave the Heroku URL off this form.
+- Scopes: Manage user data via APIs (`api`), Access chatbot services (`chatbot_api`), Perform requests at any time (`refresh_token`, `offline_access`), Access the Salesforce API Platform (`sfap_api`).
+- Enable Client Credentials Flow.
+- Enable **Issue JWT-based access tokens for named users**. Without this, the token call succeeds and every session call returns an empty 404.
+
+Save, then open the app from the manager list. The Run As and IP settings are on **Policies**, not on the create screen.
+
+- Policies, Edit. Under OAuth Flows, enable Client Credentials Flow. Run As appears after that box is checked. Set it to `trailsignup.f46e26a8bd57ae@salesforce.com`.
+- Under App Authorization, set IP Relaxation to Relax IP restrictions. Heroku's outbound addresses change.
+
+Copy the consumer key and secret after Salesforce verifies your identity. The key starts with `3MVG9` and is longer than 64 characters. The secret is 64 hex characters. They are not interchangeable. Putting the secret in `EXTERNAL_APP_KEY` returns `invalid_client_id`.
+
+## 5. Environment
+
+Create `packages/presentation/.env.local` from `.env.example`. That file is gitignored. The server reads it once at startup, so restart Node after any change.
+
+```env
+SF_AGENT_TRANSPORT=rest
+SF_TARGET_ORG=pricing-demo
+SF_AGENT_NAME=Quoting_Agent
+SF_INSTANCE_URL=https://trailsignup-f46e26a8bd57ae.my.salesforce.com
+SF_AGENT_ID=0Xxak000004hFW9CAM
+SF_ORG_ID=00Dak00001QTif8EAD
+EXTERNAL_APP_KEY=<consumer key>
+EXTERNAL_APP_SECRET=<consumer secret>
+REACT_APP_SF_INSTANCE_URL=https://trailsignup-f46e26a8bd57ae.my.salesforce.com
+TOKEN_TTL_SECONDS=3600
+LOG_LEVEL=info
+```
+
+`SF_AGENT_TRANSPORT` chooses the client:
+
+- `rest` uses the External Client App.
+- `cli` shells out to `sf agent preview` as `SF_TARGET_ORG`. Local only.
+- Unset: REST when both `EXTERNAL_APP_KEY` and `EXTERNAL_APP_SECRET` are set, otherwise CLI.
+
+`NODE_ENV` does not choose the transport. `npm run dev` and `npm run start:server` both start the server with `NODE_ENV=production`.
+
+`REACT_APP_SF_INSTANCE_URL` is baked into the React build. Set it before `npm start` or `npm run build`. Quote links use it.
+
+The REST client caches the access token for `TOKEN_TTL_SECONDS` (default 3600) and requests a new one five minutes before that window ends. Salesforce's client-credentials response does not include `expires_in`.
+
+Heroku app `headless-quoting` needs the same variables, with `SF_AGENT_TRANSPORT=rest` and `NODE_ENV=production`. Config changes restart the dyno. A swapped key and secret is the failure mode behind `invalid_client_id` in `heroku logs -a headless-quoting`.
+
+## 6. Check that it works
+
+Start the app with `npm run dev` from `packages/presentation`, open slide 8, and log in.
+
+1. "find Omega" returns Omega Industrial Compounders, Omega Synthesis & Processing, and Omega Systems.
+2. Select an account, search for a product, add it to the cart, and create a quote.
+3. The quote number opens the record on the instance above.
+
+Server tests, from `packages/presentation` with the server already running:
+
+```bash
 ./test-cases/run-e2e-test.sh
-```
-
-**Test via direct REST API:**
-```bash
-cd packages/presentation
 ./test-cases/run-e2e-test-rest-api.sh
 ```
 
-Both test scripts validate:
-- Session creation with auto-initialization
-- Account search and selection
-- Product search
-- Cart operations
-- Quote creation
-- All responses are valid JSON
+`run-e2e-test-sf-cli.sh` talks to the authoring-bundle draft through `sf agent preview`, not to the published agent.
 
-Check the output for `✅` marks on each step.
+## Troubleshooting
 
-## 🎯 Next Steps
+| What you see | What to change |
+|---|---|
+| `invalid_client_id` | `EXTERNAL_APP_KEY` is not the consumer key. It must start with `3MVG9`. The 64-character hex value is the secret. |
+| Token succeeds, session is an empty 404 | On the External Client App, enable Issue JWT-based access tokens for named users, and include the `refresh_token` scope. |
+| Login spins and the server never answers | The Node process was started before `.env.local` changed. Restart it. |
+| CLI session fails while parsing JSON | `cliAgentClient.js` has to skip the CLI's plugin warning text. `SF_API_VERSION` must not be passed through to `sf`. |
+| Quote link opens the wrong org | `REACT_APP_SF_INSTANCE_URL` still points at the old instance. Rebuild the client after changing it. |
+| `sf` says the org is expired | The command is using `trailsignup`. Use `--target-org pricing-demo`. |
 
-### Immediate
-- [ ] Run the app locally: `cd packages/presentation && npm run dev`
-- [ ] Navigate to Slide 8 and test the live agent
-- [ ] Try the full workflow: account → products → cart → quote
-- [ ] Test logout button (shows "Logging off..." message)
-- [ ] Test restart button (clears all state and creates new session)
-- [ ] Click a quote number to verify Salesforce link
+Port 3000 or 3001 already in use means a previous `npm run dev` is still running. Stop that process before starting another.
 
-### Short Term (When Ready)
-- [ ] Set up OAuth credentials for production deployment
-- [ ] Deploy to Heroku using `NODE_ENV=production npm run start:server`
-- [ ] Monitor REST API performance (28% improvement over CLI)
-- [ ] Set up CI/CD for Salesforce deployment
-
-### Production Deployment
-- [ ] Configure `.env` with OAuth credentials (use `.env.example` as template)
-- [ ] Set `NODE_ENV=production` on deployment server
-- [ ] Configure `TOKEN_TTL_SECONDS` if needed (default: 3600 = 1 hour)
-- [ ] Set `REACT_APP_SF_INSTANCE_URL` for quote record links
-- [ ] Run E2E tests before going live: `./test-cases/run-e2e-test-rest-api.sh`
-
-### Future Enhancements
-- [ ] Add rich message types (interactive buttons, forms)
-- [ ] Deploy presentation to Vercel/Netlify
-- [ ] Implement role-based access controls
-- [ ] Add quote versioning and history tracking
-
-## 📚 File Reference
-
-| Path | Purpose |
-|------|---------|
-| `packages/presentation/src/components/slides/` | Individual slide components |
-| `packages/presentation/src/styles/` | Presentation styling |
-| `packages/headlessAgentForce/src/components/HeadlessAgentForce.tsx` | Main agent component |
-| `packages/headlessAgentForce/src/styles/agent.css` | Agent styling |
-| `salesforce/force-app/main/default/aiAuthoringBundles/` | Agent definitions |
-| `salesforce/force-app/main/default/classes/` | Apex action handlers |
-| `docs/AGENT_ARCHITECTURE.md` | Technical documentation |
-| `.claude/` | Project memory (persists across sessions) |
-
-## 🐛 Troubleshooting
-
-### Port Already in Use
-```bash
-# Change port for presentation
-cd packages/presentation
-PORT=3001 npm start
-
-# Change port for agent
-cd packages/headlessAgentForce
-PORT=3002 npm start
-```
-
-### Missing Dependencies
-```bash
-# Clean install
-rm -rf node_modules package-lock.json
-npm install
-```
-
-### Salesforce Connection Issues
-```bash
-# Reconnect to org
-sf org login web --alias demo-org --set-default
-
-# List authorized orgs
-sf org list --all
-```
-
-## 📝 Implementation Details
-
-### Session Initialization
-
-**REST API mode:**
-The server initializes JSON mode server-side during session creation:
-```javascript
-// server.js - POST /api/agent/session
-// Uses restApiClient to call Salesforce Agent API
-const sessionId = await restApiClient.initializeSession(agentId);
-// Then sends set_json_format message
-await restApiClient.sendMessage(sessionId, 'set_json_format');
-```
-
-**CLI mode (development):**
-The server uses SF CLI for development iteration (faster feedback loop).
-
-### Agent Variables
-
-The agent uses special variables for JSON mode:
-- `json_mode: mutable boolean` — When True, agent outputs JSON
-- `json_mode_initialized: mutable boolean` — Prevents re-initialization
-
-### Token Caching (REST API mode)
-
-**Proactive refresh pattern:**
-- Tokens cached with 1-hour default TTL (configurable via `TOKEN_TTL_SECONDS`)
-- Refreshed automatically 5 minutes before expiration
-- No `expires_in` in Salesforce OAuth response; uses conservative TTL to ensure token validity
-- Sliding window: Token expiration resets on every successful API call
-
-**Token acquisition:**
-```javascript
-// REST API client - OAuth client credentials flow
-POST https://{instance}/services/oauth2/token
-- grant_type: client_credentials
-- client_id: {EXTERNAL_APP_KEY}
-- client_secret: {EXTERNAL_APP_SECRET}
-```
-
-See `docs/AGENT_ARCHITECTURE.md` for complete variable lifecycle.
-
-## 📚 Documentation
-
-- [Presentation README](packages/presentation/README.md) — Frontend features and environment variables
-- [Agent Architecture Guide](docs/AGENT_ARCHITECTURE.md) — Full technical details
-- [Session Summary](SESSION_SUMMARY.md) — Latest accomplishments and current state
-- [REST API Documentation](REST_API_ARTIFACTS_INDEX.md) — REST API architecture and token management
-- [Salesforce Agentforce Docs](https://developer.salesforce.com/docs/atlas.en-us.agentforce.meta/agentforce/)
-
-## 🐛 Troubleshooting
-
-### REST API OAuth Issues
-
-**Token acquisition fails (HTTP 401):**
-- Verify `EXTERNAL_APP_KEY` and `EXTERNAL_APP_SECRET` are correct
-- Check that external app is enabled in Salesforce
-- Confirm `SF_INSTANCE_URL` matches where app is registered
-
-**Token refresh not working:**
-- Check logs for `[OAUTH]` markers to see refresh attempts
-- Verify `TOKEN_TTL_SECONDS` is set correctly
-- Ensure 5-minute buffer is appropriate for your use case
-
-### Quote Links Not Working
-
-**Quote number not hyperlinked:**
-- Verify `REACT_APP_SF_INSTANCE_URL` is set in `.env.local`
-- Confirm `quoteId` is being returned in agent response
-- Check browser console for errors
-
-**Link opens wrong URL:**
-- Verify `REACT_APP_SF_INSTANCE_URL` matches your Salesforce instance
-- Use format: `https://your-instance.my.salesforce.com` (without trailing slash)
-
-### UI State Issues
-
-**Logout button not working:**
-- Check browser console for errors
-- Verify `endSession()` completes (check network tab)
-- Session deletion should complete before returning to login screen
-
-**Restart button stuck on "Restarting session...":**
-- Increase `endSession()` timeout if network is slow (currently 5 seconds)
-- Check server logs for DELETE endpoint errors
-
----
-
-**Status**: ✅ REST API fully implemented | ✅ Dual-mode (CLI + REST) | ✅ E2E tests passing | ✅ Production-ready
-
-**Last Updated**: June 25, 2026
+Agent variables and the topic flow are in [docs/AGENT_ARCHITECTURE.md](docs/AGENT_ARCHITECTURE.md).
