@@ -1,0 +1,14 @@
+{
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "quoteDetail" : {
+      "title" : "Quote Detail",
+      "description" : "Full quote details including products, amounts, and status",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isDisplayable" : true,
+      "copilotAction:isUsedByPlanner" : true
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

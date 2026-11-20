@@ -26,7 +26,7 @@ cat > "$PLAINTEXT_TRACE" << 'EOF'
 EOF
 
 echo "Starting Plaintext Mode Session..."
-PLAIN_START=$(sf agent preview start --json --use-live-actions --authoring-bundle Quoting_Agent --target-org trailsignup 2>&1)
+PLAIN_START=$(sf agent preview start --json --use-live-actions --authoring-bundle Quoting_Agent --target-org pricing-demo 2>&1)
 PLAIN_SESSION=$(echo "$PLAIN_START" | jq -r '.result.sessionId' 2>/dev/null)
 
 if [ -z "$PLAIN_SESSION" ] || [ "$PLAIN_SESSION" = "null" ]; then
@@ -49,7 +49,7 @@ send_plain_msg() {
   echo '```' >> "$PLAINTEXT_TRACE"
   echo "" >> "$PLAINTEXT_TRACE"
 
-  local response=$(sf agent preview send --json --authoring-bundle Quoting_Agent --session-id "$PLAIN_SESSION" --target-org trailsignup -u "$msg" 2>&1)
+  local response=$(sf agent preview send --json --authoring-bundle Quoting_Agent --session-id "$PLAIN_SESSION" --target-org pricing-demo -u "$msg" 2>&1)
   local agent_msg=$(echo "$response" | jq -r '.result.messages[0].message // empty' 2>/dev/null)
 
   echo "### Agent Response" >> "$PLAINTEXT_TRACE"
@@ -110,7 +110,7 @@ cat > "$JSON_TRACE" << 'EOF'
 EOF
 
 echo "Starting JSON Mode Session..."
-JSON_START=$(sf agent preview start --json --use-live-actions --authoring-bundle Quoting_Agent --target-org trailsignup 2>&1)
+JSON_START=$(sf agent preview start --json --use-live-actions --authoring-bundle Quoting_Agent --target-org pricing-demo 2>&1)
 JSON_SESSION=$(echo "$JSON_START" | jq -r '.result.sessionId' 2>/dev/null)
 
 if [ -z "$JSON_SESSION" ] || [ "$JSON_SESSION" = "null" ]; then
@@ -133,7 +133,7 @@ send_json_msg() {
   echo '```' >> "$JSON_TRACE"
   echo "" >> "$JSON_TRACE"
 
-  local response=$(sf agent preview send --json --authoring-bundle Quoting_Agent --session-id "$JSON_SESSION" --target-org trailsignup -u "$msg" 2>&1)
+  local response=$(sf agent preview send --json --authoring-bundle Quoting_Agent --session-id "$JSON_SESSION" --target-org pricing-demo -u "$msg" 2>&1)
   local agent_msg=$(echo "$response" | jq -r '.result.messages[0].message // empty' 2>/dev/null)
 
   echo "### Agent Response" >> "$JSON_TRACE"

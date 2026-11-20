@@ -7,6 +7,21 @@ const fs = require('fs');
 const logger = require('./logger');
 const serverLogger = require('./src/utils/serverLogger');
 const restApiClient = require('./src/utils/restApiClient');
+const cliAgentClient = require('./src/utils/cliAgentClient');
+
+function agentClient() {
+  const transport = (process.env.SF_AGENT_TRANSPORT || '').toLowerCase();
+  if (transport === 'cli') {
+    return cliAgentClient;
+  }
+  if (transport === 'rest') {
+    return restApiClient;
+  }
+  if (process.env.EXTERNAL_APP_KEY && process.env.EXTERNAL_APP_SECRET) {
+    return restApiClient;
+  }
+  return cliAgentClient;
+}
 
 const app = express();
 app.use(cors());
@@ -55,15 +70,16 @@ app.post('/api/agent/session', async (req, res) => {
     .catch((err) => logger.debug('MCP server wake-up call failed', { error: err.message }));
 
   try {
+    const client = agentClient();
     const agentId = process.env.SF_AGENT_ID;
-    logger.debug('[REST_API] Session init request', { agentId });
-    const sessionId = await restApiClient.initializeSession(agentId);
+    logger.debug('[AGENT] Session init request', { agentId, transport: process.env.SF_AGENT_TRANSPORT || 'auto' });
+    const sessionId = await client.initializeSession(agentId);
     logger.info('>>> Session created', { sessionId });
     logger.debug('[REST_API] Session init response', { sessionId });
 
     // Initialize JSON mode for REST API
-    serverLogger.clientRequest('/api/agent/message (set_json_format)', { sessionId, message: 'set_json_format', debug: false });
-    const jsonModeResponse = await restApiClient.sendMessage(sessionId, 'set_json_format');
+    serverLogger.clientRequest('/api/agent/message (json_format)', { sessionId, message: 'json_format', debug: false });
+    const jsonModeResponse = await client.sendMessage(sessionId, 'json_format');
     serverLogger.clientResponse('/api/agent/message (set_json_format)', { agentMessage: jsonModeResponse });
     logger.debug('>>> JSON mode initialized', { sessionId });
 
@@ -105,7 +121,7 @@ app.post('/api/agent/message', async (req, res) => {
   }
 
   try {
-    const restResult = await restApiClient.sendMessage(sessionId, message);
+    const restResult = await agentClient().sendMessage(sessionId, message);
     const agentMessage = restResult.agentMessage || '';
     const rawResult = restResult;
 
@@ -144,7 +160,7 @@ app.delete('/api/agent/session/:sessionId', async (req, res) => {
 
   try {
     logger.debug('[REST_API] Session end request', { sessionId });
-    await restApiClient.endSession(sessionId);
+    await agentClient().endSession(sessionId);
     logger.info('>>> Session ended', { sessionId });
 
     const duration = Date.now() - startTime;

@@ -1,0 +1,14 @@
+{
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "updatedCart" : {
+      "title" : "Updated Cart",
+      "description" : "The updated shopping cart after removal",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isDisplayable" : true,
+      "copilotAction:isUsedByPlanner" : true
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -14,7 +14,7 @@
         <locationX>50</locationX>
         <locationY>0</locationY>
         <connector>
-            <targetReference>Create_Opportunity</targetReference>
+            <targetReference>Get_Quoting_Settings</targetReference>
         </connector>
     </start>
     <status>Active</status>
@@ -122,7 +122,7 @@
         <inputAssignments>
             <field>Pricebook2Id</field>
             <value>
-                <stringValue>01sfj000007sHPdAAM</stringValue>
+                <elementReference>Get_Quoting_Settings.Pricebook_Id__c</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
@@ -165,7 +165,7 @@
         <inputAssignments>
             <field>Pricebook2Id</field>
             <value>
-                <stringValue>01sfj000007sHPdAAM</stringValue>
+                <elementReference>Get_Quoting_Settings.Pricebook_Id__c</elementReference>
             </value>
         </inputAssignments>
         <object>Quote</object>
@@ -214,6 +214,28 @@
         <object>QuoteLineItem</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordCreates>
+
+    <recordLookups>
+        <name>Get_Quoting_Settings</name>
+        <label>Get Quoting Settings</label>
+        <locationX>176</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Create_Opportunity</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Default</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Quoting_Settings__mdt</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
 
     <!-- Step 4: Get Quote to retrieve QuoteNumber -->
     <recordLookups>

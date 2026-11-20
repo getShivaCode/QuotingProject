@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AiAgentDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <agentDSLEnabled>true</agentDSLEnabled>
+    <agentDescription>Helps sales reps create and manage quotes by searching accounts, building a shopping cart with products, pricing items, and saving quotes to Salesforce</agentDescription>
+    <agentType>AgentforceEmployeeAgent</agentType>
+    <logPrivateConversationData>false</logPrivateConversationData>
+    <richContentEnabled>true</richContentEnabled>
+    <type>InternalCopilot</type>
+</AiAgentDefinition>

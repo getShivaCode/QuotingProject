@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AiAgentDefinitionVersion xmlns="http://soap.sforce.com/2006/04/metadata">
+    <articleAnswersGPTEnabled>false</articleAnswersGPTEnabled>
+    <billingMode>ActionBased</billingMode>
+    <citationsEnabled>false</citationsEnabled>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The agent instructions</description>
+        <developerName>AgentScriptInternal_agent_instructions</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Agent Instructions</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Runtime condition evaluation for if statements</description>
+        <developerName>AgentScriptInternal_condition_1</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Runtime Condition 1</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The next topic to be visited</description>
+        <developerName>AgentScriptInternal_next_topic</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Next Topic</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Whether the user has confirmed the account selection</description>
+        <developerName>account_confirmed</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Account Confirmed</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The Salesforce Account ID for the quote</description>
+        <developerName>account_id</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Account Id</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The Account Name for the quote</description>
+        <developerName>account_name</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Account Name</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Whether the shopping cart is empty</description>
+        <developerName>cart_empty</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Cart Empty</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Number</dataType>
+        <description>Number of distinct items in the shopping cart</description>
+        <developerName>cart_item_count</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Cart Item Count</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The grand total price of all items in the shopping cart</description>
+        <developerName>cart_total</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Cart Total</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Whether to respond in JSON format</description>
+        <developerName>json_mode</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Json Mode</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Whether json_mode initialization action has been called</description>
+        <developerName>json_mode_initialized</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Json Mode Initialized</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>JSON string of product search results from the pricing MCP</description>
+        <developerName>product_search_results</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Product Search Results</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The final quote details including all cart items and pricing</description>
+        <developerName>quote_description</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Quote Description</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The ID of the saved quote record</description>
+        <developerName>quote_id</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Quote Id</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The Salesforce-generated quote number</description>
+        <developerName>quote_number</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Quote Number</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>JSON array of cart items: [{sku, productName, description, quantity, unitPrice, lineTotal}]</description>
+        <developerName>shopping_cart</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Shopping Cart</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <copilotPrimaryLanguage>en_US</copilotPrimaryLanguage>
+    <genAiPlannerName>Quoting_Agent_v1</genAiPlannerName>
+    <isScriptCompatibleAgent>true</isScriptCompatibleAgent>
+    <knowledgeActionEnabled>false</knowledgeActionEnabled>
+    <knowledgeFallbackEnabled>false</knowledgeFallbackEnabled>
+    <planner>
+        <fullName>Quoting_Agent_v1</fullName>
+        <agentGraphRef>20Zak00000C7H8U</agentGraphRef>
+        <description>Helps sales reps create and manage quotes by searching accounts, building a shopping cart with products, pricing items, and saving quotes to Salesforce</description>
+        <localTopicLinks>
+            <genAiPluginName>account_selection</genAiPluginName>
+        </localTopicLinks>
+        <localTopicLinks>
+            <genAiPluginName>agent_router</genAiPluginName>
+        </localTopicLinks>
+        <localTopicLinks>
+            <genAiPluginName>product_search</genAiPluginName>
+        </localTopicLinks>
+        <localTopicLinks>
+            <genAiPluginName>quote_generation</genAiPluginName>
+        </localTopicLinks>
+        <localTopics>
+            <canEscalate>false</canEscalate>
+            <description>Identify and confirm the account for the quote</description>
+            <genAiPluginInstructions>
+                <description>You are a Quoting Assistant that helps sales representatives create quotes for customers.
+You guide users through the quoting process: identifying the account, searching for products,
+building a shopping cart with product quantities, reviewing pricing, and generating a quote.
+Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+You are an AI assistant, not a human.</description>
+                <developerName>instruction0_179ak000005gbMs</developerName>
+                <language>en_US</language>
+                <masterLabel>instruction0_179ak000005gbMs</masterLabel>
+                <sortOrder>1</sortOrder>
+            </genAiPluginInstructions>
+            <language>en_US</language>
+            <localActionLinks>
+                <functionName>search_accounts</functionName>
+            </localActionLinks>
+            <localActions>
+                <description>Search for Salesforce accounts by name or other criteria</description>
+                <invocationTarget>AccountSearchAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>search_accounts</localDeveloperName>
+                <masterLabel>Search Accounts</masterLabel>
+            </localActions>
+            <localDeveloperName>account_selection</localDeveloperName>
+            <masterLabel>Account Selection</masterLabel>
+            <pluginType>Topic</pluginType>
+        </localTopics>
+        <localTopics>
+            <canEscalate>false</canEscalate>
+            <description>Route users to the appropriate quoting subagent</description>
+            <genAiPluginInstructions>
+                <description>You are a Quoting Assistant that helps sales representatives create quotes for customers.
+You guide users through the quoting process: identifying the account, searching for products,
+building a shopping cart with product quantities, reviewing pricing, and generating a quote.
+Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+You are an AI assistant, not a human.</description>
+                <developerName>instruction0_179ak000005gbMu</developerName>
+                <language>en_US</language>
+                <masterLabel>instruction0_179ak000005gbMu</masterLabel>
+                <sortOrder>1</sortOrder>
+            </genAiPluginInstructions>
+            <language>en_US</language>
+            <localDeveloperName>agent_router</localDeveloperName>
+            <masterLabel>Agent Router</masterLabel>
+            <pluginType>Topic</pluginType>
+        </localTopics>
+        <localTopics>
+            <canEscalate>false</canEscalate>
+            <description>Search for products and add them to the shopping cart</description>
+            <genAiPluginInstructions>
+                <description>You are a Quoting Assistant that helps sales representatives create quotes for customers.
+You guide users through the quoting process: identifying the account, searching for products,
+building a shopping cart with product quantities, reviewing pricing, and generating a quote.
+Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+You are an AI assistant, not a human.</description>
+                <developerName>instruction0_179ak000005gbMr</developerName>
+                <language>en_US</language>
+                <masterLabel>instruction0_179ak000005gbMr</masterLabel>
+                <sortOrder>1</sortOrder>
+            </genAiPluginInstructions>
+            <language>en_US</language>
+            <localActionLinks>
+                <functionName>search_products</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>update_cart_quantity</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>remove_from_cart</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>view_cart</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>add_to_cart</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>get_pricing</functionName>
+            </localActionLinks>
+            <localActions>
+                <description>Add priced items to the shopping cart and update cart total</description>
+                <invocationTarget>AddToCartAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>add_to_cart</localDeveloperName>
+                <masterLabel>Add To Cart</masterLabel>
+            </localActions>
+            <localActions>
+                <description>Get current pricing and details for selected products to add to cart</description>
+                <invocationTarget>GetPricingAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>get_pricing</localDeveloperName>
+                <masterLabel>Get Pricing</masterLabel>
+            </localActions>
+            <localActions>
+                <description>Remove an item from the shopping cart by SKU</description>
+                <invocationTarget>RemoveFromCartAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>remove_from_cart</localDeveloperName>
+                <masterLabel>Remove From Cart</masterLabel>
+            </localActions>
+            <localActions>
+                <description>Search for products using semantic search on the external pricing MCP server</description>
+                <invocationTarget>ProductSearchAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>search_products</localDeveloperName>
+                <masterLabel>Search Products</masterLabel>
+            </localActions>
+            <localActions>
+                <description>Update the quantity of an item in the shopping cart</description>
+                <invocationTarget>UpdateCartQuantityAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>update_cart_quantity</localDeveloperName>
+                <masterLabel>Update Cart Quantity</masterLabel>
+            </localActions>
+            <localActions>
+                <description>View the current shopping cart</description>
+                <invocationTarget>ViewCartAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>view_cart</localDeveloperName>
+                <masterLabel>View Cart</masterLabel>
+            </localActions>
+            <localDeveloperName>product_search</localDeveloperName>
+            <masterLabel>Product Search &amp; Add to Cart</masterLabel>
+            <pluginType>Topic</pluginType>
+        </localTopics>
+        <localTopics>
+            <canEscalate>false</canEscalate>
+            <description>Finalize pricing, save quotes to Salesforce, and view quote history</description>
+            <genAiPluginInstructions>
+                <description>You are a Quoting Assistant that helps sales representatives create quotes for customers.
+You guide users through the quoting process: identifying the account, searching for products,
+building a shopping cart with product quantities, reviewing pricing, and generating a quote.
+Be professional, concise, and helpful. Always confirm details with the user before proceeding.
+You are an AI assistant, not a human.</description>
+                <developerName>instruction0_179ak000005gbMt</developerName>
+                <language>en_US</language>
+                <masterLabel>instruction0_179ak000005gbMt</masterLabel>
+                <sortOrder>1</sortOrder>
+            </genAiPluginInstructions>
+            <language>en_US</language>
+            <localActionLinks>
+                <functionName>get_final_pricing</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>clear_cart</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>get_quote_details</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>get_quote_history</functionName>
+            </localActionLinks>
+            <localActionLinks>
+                <functionName>create_and_save_quote</functionName>
+            </localActionLinks>
+            <localActions>
+                <description>Clear the shopping cart after quote is created</description>
+                <invocationTarget>ClearCartAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>clear_cart</localDeveloperName>
+                <masterLabel>Clear Cart</masterLabel>
+            </localActions>
+            <localActions>
+                <description>Create quote from cart and save to Salesforce</description>
+                <invocationTarget>GenerateAndSaveQuote</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>create_and_save_quote</localDeveloperName>
+                <masterLabel>Create And Save Quote</masterLabel>
+            </localActions>
+            <localActions>
+                <description>Get final pricing for all items in shopping cart (prices may have changed)</description>
+                <invocationTarget>GetPricingAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>get_final_pricing</localDeveloperName>
+                <masterLabel>Get Final Pricing</masterLabel>
+            </localActions>
+            <localActions>
+                <description>Get detailed information about a specific quote</description>
+                <invocationTarget>QuoteDetailsAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>get_quote_details</localDeveloperName>
+                <masterLabel>Get Quote Details</masterLabel>
+            </localActions>
+            <localActions>
+                <description>Retrieve quote history for an account from Salesforce</description>
+                <invocationTarget>QuoteHistoryAction</invocationTarget>
+                <invocationTargetType>apex</invocationTargetType>
+                <isConfirmationRequired>false</isConfirmationRequired>
+                <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+                <localDeveloperName>get_quote_history</localDeveloperName>
+                <masterLabel>Get Quote History</masterLabel>
+            </localActions>
+            <localDeveloperName>quote_generation</localDeveloperName>
+            <masterLabel>Quote Generation &amp; Management</masterLabel>
+            <pluginType>Topic</pluginType>
+        </localTopics>
+        <masterLabel>Quoting Assistant</masterLabel>
+        <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+    </planner>
+    <smallTalkEnabled>false</smallTalkEnabled>
+    <staticPromptsEnabled>false</staticPromptsEnabled>
+    <status>Inactive</status>
+    <stopRecPrompts>false</stopRecPrompts>
+    <surfacesEnabled>false</surfacesEnabled>
+    <toneType>Casual</toneType>
+    <version>1</version>
+    <welcomeMessage>Hi! I&apos;m Tally, your Quoting Assistant. I&apos;m here to help you create quotes for your customers. Let&apos;s start by identifying the account you want to quote for. What&apos;s the account name, or any details you can provide to help me find it?</welcomeMessage>
+</AiAgentDefinitionVersion>

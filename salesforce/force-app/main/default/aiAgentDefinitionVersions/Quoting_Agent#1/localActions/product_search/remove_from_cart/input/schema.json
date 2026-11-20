@@ -1,0 +1,21 @@
+{
+  "required" : [ "sku", "currentCart" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "currentCart" : {
+      "title" : "Current Cart",
+      "description" : "The current cart contents JSON (pass the shopping_cart variable)",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "sku" : {
+      "title" : "Sku",
+      "description" : "The SKU of the product to remove",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -23,17 +23,17 @@ QuotingProject/
 │   └── presentation/              # Main presentation app (8 slides + live agent)
 │       ├── src/components/        # Slide components, Presentation controller
 │       ├── src/services/          # Agent API integration (agentApi.ts)
-│       ├── src/utils/             # REST API client (restApiClient.js)
+│       ├── src/utils/             # REST client and local CLI client
 │       ├── src/styles/            # Theme CSS, animations
 │       ├── server.js              # Express backend (dual-mode: CLI or REST)
 │       ├── .env.local             # OAuth credentials and configuration
 │       └── .env.example           # Configuration template
 ├── salesforce/                    # Salesforce backend & metadata
 │   ├── force-app/main/default/
-│   │   ├── aiAuthoringBundles/   # Agent definition (Quoting_Agent v18)
-│   │   ├── bots/                 # Bot versioning (v18 only)
-│   │   ├── genAiPlannerBundles/   # Planning bundles (v18 only)
-│   │   └── classes/              # Apex actions
+│   │   ├── aiAuthoringBundles/   # Quoting_Agent authoring bundle
+│   │   ├── classes/              # Apex actions
+│   │   ├── objects/              # Quoting_Settings__mdt
+│   │   └── customMetadata/       # Per-org pricebook id
 │   ├── agent-api-flows/          # E2E test scripts
 │   └── sfdx-project.json         # Salesforce configuration
 ├── docs/                          # Documentation
@@ -158,30 +158,126 @@ Output goes to `build/` directory. Then start with:
 NODE_ENV=production npm run start:server
 ```
 
-## Salesforce Backend
+## Salesforce org setup (`pricing-demo`)
 
-The `salesforce/` directory contains production Agentforce agent metadata:
+This is the org the demo runs against. The old `trailsignup` alias points at an expired org and must not be used.
 
-- **Agent**: `Quoting_Agent` (v18) - Multi-turn agent orchestrating account → product → quote workflows
-- **Apex Actions**: Account/product search, quote generation, history, and details handlers
-- **External Integration**: MCP server connection for pricing and semantic product search
-- **Cleaned versions**: Only v18 kept; v1-v17 removed for repo cleanliness
+| | |
+|---|---|
+| CLI alias | `pricing-demo` |
+| Username | `trailsignup.f46e26a8bd57ae@salesforce.com` |
+| Instance | `https://trailsignup-f46e26a8bd57ae.my.salesforce.com` |
+| Org id | `00Dak00001QTif8EAD` |
+| Agent | `Quoting_Agent` (Quoting Assistant), employee agent, active version 1 |
+| Agent id | `0Xxak000004hFW9CAM` |
+| Standard price book | `01sak00000O15vtAAB` |
+| Demo account | Omega Systems `001ak00004I2p3iAAB` |
+| Hosted app | `https://headless-quoting-a41dfa247fb0.herokuapp.com` |
 
-### Deployment
+Agentforce is already on in this org. The admin user has the Copilot admin and user permission sets. A default employee agent, `Copilot_for_Salesforce`, is also present and is not the demo agent.
+
+### 1. Authorize the CLI
+
+The org is already authorized as `pricing-demo`. Point the project at it:
 
 ```bash
-cd salesforce/
-sf org login web --alias demo-org
-sf project deploy start --target-org demo-org
+sf config set target-org pricing-demo
+sf org display --target-org pricing-demo
 ```
 
-### Preview Agent
+### 2. Deploy Apex, the flow, and the remote site
+
+From `salesforce/`:
 
 ```bash
-sf agent preview --name Quoting_Agent --target-org demo-org
+sf project deploy start \
+  --target-org pricing-demo \
+  --test-level NoTestRun \
+  --metadata ApexClass \
+  --metadata Flow:Save_Quote_Flow \
+  --metadata RemoteSiteSetting:PricingMCP \
+  --metadata CustomObject:Quoting_Settings__mdt \
+  --metadata CustomMetadata:Quoting_Settings.Default
 ```
 
-See `docs/AGENT_ARCHITECTURE.md` for complete technical details on agent flows, variable persistence, and integrations.
+`salesforce/sfdx-project.json` is source API 62.0. A plain project deploy cannot deploy the agent, and it also rejects `McpServerDefinition` (`url` is not valid on that type at this API version). Leave `mcpServerDefinitions/Pricing_MCP` undeployed. Product search does not need it: Apex calls `https://pricingmcp.onrender.com/mcp` directly, and the `PricingMCP` remote site allows that callout.
+
+Do not deploy `bots/Quoting_Agent` or `genAiPlannerBundles` retrieved from the previous org. Those files contain the old org's ids. Publishing the authoring bundle creates the new runtime.
+
+### 3. Price book
+
+Quote creation reads `Quoting_Settings__mdt` record `Default`, field `Pricebook_Id__c`. For this org that value is the standard price book, `01sak00000O15vtAAB`. If the field is blank, `GenerateAndSaveQuote` queries `Pricebook2 WHERE IsStandard = true`.
+
+Redeploying `Quoting_Settings.Default` overwrites whatever is in the org with the value in source. The agent saves quotes through `GenerateAndSaveQuote`. `Save_Quote_Flow` reads the same custom metadata for the opportunity and quote price book. Its line-item `PricebookEntryId` is still an id from the old org, and the agent does not call that flow.
+
+### 4. Deploy, publish, and activate the agent
+
+The authoring bundle has to be deployed with API 66 or newer. `sf project deploy start` generates a manifest from source API 62.0, so use an explicit manifest:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>Quoting_Agent</members>
+        <name>AiAuthoringBundle</name>
+    </types>
+    <version>66.0</version>
+</Package>
+```
+
+```bash
+sf project deploy start --manifest /tmp/deploy-agent.xml --target-org pricing-demo --test-level NoTestRun
+sf agent publish authoring-bundle --api-name Quoting_Agent --target-org pricing-demo
+sf agent activate --api-name Quoting_Agent --target-org pricing-demo
+```
+
+Publish creates the Bot and version 1. The id for `SF_AGENT_ID` is `0Xxak000004hFW9CAM` (`sf org list metadata --metadata-type Bot`). This agent is an `AgentforceEmployeeAgent`, so it has no Einstein Agent user.
+
+Do not retrieve the authoring bundle after publish. A retrieve writes `<target>` into `bundle-meta.xml` and locks the bundle to this org.
+
+Check the published agent from the CLI:
+
+```bash
+sf agent preview start --api-name Quoting_Agent --target-org pricing-demo
+```
+
+`--authoring-bundle` talks to the draft. `--api-name` talks to the published agent.
+
+### 5. External Client App for Heroku
+
+Heroku cannot use the Salesforce CLI. The Express server uses the OAuth client-credentials flow in `packages/presentation/src/utils/restApiClient.js`. The "Login with Salesforce" button does not send the browser through a Salesforce login. It asks the server to open an agent session.
+
+In Setup, open **External Client App Manager** and create a local app. **Enable OAuth** is required. The callback field is required by the form and is unused by this flow. Set it to `http://localhost:3001/oauth/callback`. Do not add the Heroku URL. Selected scopes:
+
+- Manage user data via APIs (`api`)
+- Access chatbot services (`chatbot_api`)
+- Perform requests at any time (`refresh_token`, `offline_access`)
+- Access the Salesforce API Platform (`sfap_api`)
+
+On the same OAuth settings, enable **Client Credentials Flow** and **Issue JWT-based access tokens for named users**. Without the JWT setting, the token call succeeds and every Agent API session call returns an empty 404.
+
+After the app exists, open it from the manager list, then **Policies → Edit**:
+
+- Under OAuth Flows, enable **Client Credentials Flow**. **Run As** appears after that box is checked. Set it to `trailsignup.f46e26a8bd57ae@salesforce.com`.
+- Under App Authorization, set **IP Relaxation** to **Relax IP restrictions**. Heroku's outbound addresses change.
+
+Consumer Key and Secret are on the app after you verify your identity. The key starts with `3MVG9`. Put them only in `packages/presentation/.env.local` and in Heroku config vars. `.env.local` is gitignored. Restart the Node process after changing it. The server reads that file once at startup.
+
+```env
+SF_AGENT_TRANSPORT=rest
+SF_INSTANCE_URL=https://trailsignup-f46e26a8bd57ae.my.salesforce.com
+SF_AGENT_ID=0Xxak000004hFW9CAM
+SF_ORG_ID=00Dak00001QTif8EAD
+EXTERNAL_APP_KEY=<consumer key>
+EXTERNAL_APP_SECRET=<consumer secret>
+REACT_APP_SF_INSTANCE_URL=https://trailsignup-f46e26a8bd57ae.my.salesforce.com
+```
+
+Heroku needs those same variables, plus `NODE_ENV=production`. Leave `SF_AGENT_TRANSPORT` unset or set it to `rest`. `cli` cannot run there.
+
+`SF_AGENT_TRANSPORT=cli` is the local-only path. It shells out to `sf agent preview` as `pricing-demo`. The session route then sends the utterance `json_format`, which turns on JSON responses. The action inside the agent is named `set_json_format`. The utterance that works is `json_format`.
+
+See `docs/AGENT_ARCHITECTURE.md` for agent flows and variable persistence.
 
 ## Key Features
 
@@ -250,23 +346,17 @@ presentation/src/
 Create `.env.local` in `packages/presentation/`:
 
 ```env
-# OAuth Configuration
-SF_CLIENT_ID=your_client_id
-SF_CLIENT_SECRET=your_client_secret
-EXTERNAL_APP_KEY=your_app_key
-EXTERNAL_APP_SECRET=your_app_secret
-SF_INSTANCE_URL=https://your-instance.my.salesforce.com
-
-# Agent Configuration
-SF_AGENT_ID=your_agent_id
-
-# Client Configuration
-REACT_APP_SF_INSTANCE_URL=https://your-instance.my.salesforce.com
-
-# Server Configuration
-NODE_ENV=development  # or 'production' for REST API mode
-LOG_LEVEL=debug
-TOKEN_TTL_SECONDS=3600  # 1 hour (REST API mode only)
+SF_AGENT_TRANSPORT=rest
+SF_TARGET_ORG=pricing-demo
+SF_AGENT_NAME=Quoting_Agent
+SF_INSTANCE_URL=https://trailsignup-f46e26a8bd57ae.my.salesforce.com
+SF_AGENT_ID=0Xxak000004hFW9CAM
+SF_ORG_ID=00Dak00001QTif8EAD
+EXTERNAL_APP_KEY=<consumer key from the External Client App>
+EXTERNAL_APP_SECRET=<consumer secret from the External Client App>
+REACT_APP_SF_INSTANCE_URL=https://trailsignup-f46e26a8bd57ae.my.salesforce.com
+TOKEN_TTL_SECONDS=3600
+LOG_LEVEL=info
 ```
 
 See `SETUP.md` for full configuration details.
@@ -283,7 +373,7 @@ See `SETUP.md` for full configuration details.
 
 ✅ **Complete**
 - All 8 slides built and styled with live agent on Slide 8
-- Real Agentforce agent integration (CLI-based, no mocks)
+- Real Agentforce agent integration on `pricing-demo`
 - Server-side session initialization with JSON mode
 - Dark/light theme with full responsiveness
 - Mobile optimizations
@@ -291,7 +381,5 @@ See `SETUP.md` for full configuration details.
 - E2E test scripts for full workflow validation
 
 🚀 **Ready for**
-- Customer demos
-- REST API refactor (when needed; see `REST_API_IMPLEMENTATION_GUIDE.md` for parked work)
-- Production deployment (replace CLI with REST API)
-- Heroku deployment (requires REST API)
+- Customer demos on `pricing-demo`
+- Heroku, using `SF_AGENT_TRANSPORT=rest` and the External Client App

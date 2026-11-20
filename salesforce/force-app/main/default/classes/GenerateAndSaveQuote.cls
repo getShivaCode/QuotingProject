@@ -85,7 +85,8 @@ public with sharing class GenerateAndSaveQuote {
                 opp.StageName = 'Prospecting';
                 opp.CloseDate = Date.today().addDays(30);
                 opp.Amount = grandTotal;
-                opp.Pricebook2Id = '01sfj000007sHPdAAM';
+                Id pricebookId = getPricebookId();
+                opp.Pricebook2Id = pricebookId;
                 insert opp;
 
                 // Create Quote
@@ -93,7 +94,7 @@ public with sharing class GenerateAndSaveQuote {
                 q.Name = req.quoteName;
                 q.OpportunityId = opp.Id;
                 q.Description = description;
-                q.Pricebook2Id = '01sfj000007sHPdAAM';
+                q.Pricebook2Id = pricebookId;
                 insert q;
 
                 // Create QuoteLineItems from breakdown with quantities from original request
@@ -126,12 +127,12 @@ public with sharing class GenerateAndSaveQuote {
             if (sku != null) skus.add(sku);
         }
 
-        // Query PricebookEntries for matching SKUs in Standard Price Book
         Map<String, Id> skuToPbeId = new Map<String, Id>();
+        Id pricebookId = getPricebookId();
         for (PricebookEntry pbe : [
             SELECT Id, Product2.ProductCode
             FROM PricebookEntry
-            WHERE Pricebook2Id = '01sfj000007sHPdAAM'
+            WHERE Pricebook2Id = :pricebookId
             AND Product2.ProductCode IN :skus
         ]) {
             skuToPbeId.put(pbe.Product2.ProductCode, pbe.Id);
@@ -176,6 +177,14 @@ public with sharing class GenerateAndSaveQuote {
         if (!lineItems.isEmpty()) {
             insert lineItems;
         }
+    }
+
+    private static Id getPricebookId() {
+        Quoting_Settings__mdt settings = Quoting_Settings__mdt.getInstance('Default');
+        if (settings != null && String.isNotBlank(settings.Pricebook_Id__c)) {
+            return (Id) settings.Pricebook_Id__c;
+        }
+        return [SELECT Id FROM Pricebook2 WHERE IsStandard = true LIMIT 1].Id;
     }
 
     private static String callMcpForQuote(String products) {
